@@ -41,7 +41,7 @@ export const Sidebar = observer((props) => {
     return React.useContext(MobXProviderContext)
   }
 
-  const { store: { sidebar } } = getStore()
+  const { store: { sidebar, app } } = getStore()
 
   const handleItemClick = id => {
     if(sidebar.activeItem === id){
@@ -52,7 +52,9 @@ export const Sidebar = observer((props) => {
   }
 
   return (
-    <div className='sidebar'>
+    <div 
+      className='sidebar'
+    >
       <div className='sidebar_toggles'>
         {slideList.map(item => (
           <div className={`sidebar_toggle ${item.id}${item.id === sidebar.activeItem ? ' active' : ''}`} key={item.id} onClick={() => handleItemClick(item.id)}>

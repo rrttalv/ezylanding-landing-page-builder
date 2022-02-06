@@ -1,6 +1,7 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect } from 'react'
 import { BuildArea } from './BuildArea/BuildArea'
+import { Element } from './BuildArea/Element'
 import { Sidebar } from './Sidebar/Sidebar'
 
 export const Editor = observer((props) => {
@@ -12,17 +13,33 @@ export const Editor = observer((props) => {
 
   const { store: { app, sidebar } } = getStore()
 
-  const handleItemDrop = (e) => {
-    console.log('here')
-    return
-  }
-
-  const handleDragMove = e => {
-    const { clientX, clientY } = e
+  
+  const shouldCloseSidebar = e => {
+    if(app.activeDrag){
+      const { x, width } = document.querySelector('.slide-wrapper').getBoundingClientRect()
+      if(e.clientX > (x + width - 50)){
+        sidebar.unsetActiveItem()
+      }
+    }
   }
 
   const handleMouseMove = e => {
-    
+    const { clientX, clientY } = e
+    const { x, y } = document.querySelector('.editor').getBoundingClientRect()
+    if(app.activeDrag){
+      app.handleItemDragMove(clientX - x, clientY - y)
+      shouldCloseSidebar(e)
+    }
+  }
+
+  const handleMouseUp = e => {
+    if(app.activeDrag){
+      app.setActiveDragItem(null)
+    }
+  }
+
+  const handleItemDrop = e => {
+    e.preventDefault()
   }
 
   useEffect(() => {
@@ -35,14 +52,21 @@ export const Editor = observer((props) => {
 
   return (
     <div
-      onDragEnd={e => handleItemDrop(e)}
-      onDrag={e => handleDragMove(e)}
       onMouseMove={e => handleMouseMove(e)}
+      onMouseUp={e => handleMouseUp()}
       className='container-fluid editor'
     >
       <div className='editor_area'>
         <Sidebar />
-        <BuildArea /> 
+        <BuildArea />
+        {
+          app.activeDrag ? 
+          (
+            <Element item={app.activeDrag} />
+          )
+          :
+          undefined
+        }
       </div>
     </div>
   )

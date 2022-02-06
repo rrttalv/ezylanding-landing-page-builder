@@ -22,17 +22,23 @@ export const Components = observer((props) => {
     )
   }
 
-  const handleItemMouseDown = (e, item) => {
+  const handleItemDragStart = (e, item) => {
     const { clientX, clientY } = e
-    app.setMouseDown(clientX, clientY, 'sidebarComponentDrag')
-    app.setActiveDragItem(item, clientX, clientY)
-    console.log(item)
+    const { x, y } = document.querySelector('.editor').getBoundingClientRect()
+    app.setActiveDragItem(item, clientX + x, clientY - y, 'sidebarComponentDrag')
+    e.preventDefault()
     return
   }
 
-  const handleItemMouseUp = () => {
-    app.setMouseUp()
-    app.setActiveDragItem(null)
+  const handleItemDragEnd = () => {
+    if(app.activeDrag){
+      app.setMouseUp()
+      app.setActiveDragItem(null)
+    }
+  }
+
+  const insertItem = (e, item) => {
+    e.preventDefault()
   }
 
   const getRows = (elem) => {
@@ -47,7 +53,9 @@ export const Components = observer((props) => {
               <div 
                 className='component-preview'
                 draggable
-                onPointerDown={e => handleItemMouseDown(e, item)}
+                onClick={e => insertItem(e, item)}
+                onDragStart={e => handleItemDragStart(e, item)}
+                onDragEnd={e => handleItemDragEnd()}
               >
                 <img src={item.thumb} className="component-img" />
                 <span className='component-title' style={{userSelect: 'none'}}>{item.title}</span>
@@ -62,7 +70,7 @@ export const Components = observer((props) => {
   return (
     <div 
       className='component-slide'
-      onPointerUp={() => handleItemMouseUp()}
+      onPointerUp={() => handleItemDragEnd()}
     >
       {
         getExpanded()

@@ -100,14 +100,78 @@ class AppStore {
     this.mouseEventList = copy
   }
 
+  handleItemDragMove(clientX, clientY){
+    if(!this.activeDrag){
+      return
+    }
+    const dx = (clientX - this.mouseStartX)
+    const dy = (clientY - this.mouseStartY)
+    this.activeDrag.dragPosition.xPos += dx
+    this.activeDrag.dragPosition.yPos += dy
+    this.mouseStartX = clientX
+    this.mouseStartY = clientY
+  }
+
   setMouseDown(x, y, type){
     this.mouseStartX = x
     this.mouseStartY = y
     this.toggleActiveMouseEvent(type, true)
   }
 
-  setActiveDragItem(item){
-    this.activeDrag = item
+  convertPixelsToNumber(val){
+    if(val.includes('px')){
+      return Number(val.replace('px', ''))
+    }else{
+      return false
+    }
+  }
+
+  convertPrecentToNumber(val){
+    if(val.includes('%')){
+      return Number(val.replace('%', ''))
+    }
+    return false
+  }
+
+  setActiveDragItem(item, x, y, type){
+    if(item){
+      const copy = {...item}
+      let width = item.style.width
+      let height = item.style.height
+      const pxWidth = this.convertPixelsToNumber(width)
+      const precentWidth = this.convertPrecentToNumber(width)
+      const pxHeight = this.convertPixelsToNumber(height)
+      let xOffset = 0
+      let yOffset = 0
+      if(precentWidth){
+        const elem = document.querySelector('.build-area_page')
+        const { width: pageWidth } = elem.getBoundingClientRect()
+        width = pageWidth * (precentWidth / 100)
+        xOffset = width / 2
+      }
+      if(pxWidth){
+        width = pxWidth
+        xOffset = pxWidth / 2
+      }
+      if(pxHeight){
+        yOffset = pxHeight / 2
+      }
+      copy.dragPosition = {
+        xPos: x - xOffset,
+        yPos: y - yOffset,
+        width: width + 'px',
+        height: pxHeight + 'px'
+      }
+      this.activeDrag = copy
+      this.mouseStartX = x
+      this.mouseStartY = y
+      this.toggleActiveMouseEvent(type, true)
+    }else{
+      this.activeDrag = null
+      this.mouseStartX = 0
+      this.mouseStartY = 0
+      this.toggleActiveMouseEvent(null, false)
+    }
   }
 
   setMouseUp(){
