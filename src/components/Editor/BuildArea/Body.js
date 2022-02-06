@@ -9,12 +9,16 @@ export const Body = observer((props) => {
   const { store: { app, sidebar } } = getStore()
   const activePage = app.getActivePage()
 
-  const getHeaderComponents = () => {
-    
-  }
-
   return (
-    <div className='build-area_body'>
+    <div 
+      onMouseMove={e => app.setActiveSection('body', e)}
+      className='build-area_body'
+      style={{
+        top: props.top,
+        height: props.height,
+        width: '100%'
+      }}
+    >
 
     </div>
   )

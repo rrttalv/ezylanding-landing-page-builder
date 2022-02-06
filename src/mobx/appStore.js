@@ -16,133 +16,17 @@ class AppStore {
   activePage = null
   selectedElement = null
   selectedElementGroup = null
+  activeSection = null
   pages = [
     {
       route: '/',
       id: uuidv4(),
-      header: [
-        {
-          id: uuidv4(),
-          title: '2 Part Fixed header',
-          type: 'header',
-          partitions: [1, 2],
-          content: {
-            1: {
-              type: 'section',
-              style: {
-                display: 'flex',
-                'flex-direction': 'row',
-                width: '50%',
-                'align-items': 'center',
-                'justify-content': 'flex-start'
-              },
-              className: 'col-6',
-              children: [
-                {
-                  type: 'link',
-                  className: 'link',
-                  style: {
-                    color: '#000',
-                    'font-size': '15px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    marginRight: '10px'
-                  },
-                  content: 'Homepage'
-                },
-                {
-                  type: 'link',
-                  className: 'link',
-                  style: {
-                    color: '#000',
-                    'font-size': '15px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    marginRight: '10px'
-                  },
-                  content: 'Pricing'
-                },
-                {
-                  type: 'link',
-                  className: 'link',
-                  style: {
-                    color: '#000',
-                    'font-size': '15px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    marginRight: '10px'
-                  },
-                  content: 'Demo'
-                },
-                {
-                  type: 'link',
-                  className: 'link',
-                  style: {
-                    color: '#000',
-                    'font-size': '15px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    marginRight: '10px'
-                  },
-                  content: 'Contact'
-                }
-              ]
-            },
-            2: {
-              type: 'section',
-              className: 'col-6',
-              style: {
-                display: 'flex',
-                'flex-direction': 'row',
-                width: '50%',
-                'align-items': 'center',
-                'justify-content': 'flex-end'
-              },
-              children: [
-                {
-                  type: 'button',
-                  className: 'btn',
-                  style: {
-                    padding: '0.3rem 1rem',
-                    margin: '0 5px',
-                    'font-size': '16px',
-                    background: '#f9f9f9'
-                  },
-                  content: 'Log in'
-                },
-                {
-                  type: 'button',
-                  className: 'btn',
-                  style: {
-                    padding: '0.3rem 1rem',
-                    margin: '0 5px',
-                    'font-size': '16px',
-                    background: '#ff8ff0'
-                  },
-                  content: 'Sign up'
-                }
-              ]
-            }
-          },
-          style: {
-            height: '50px',
-            padding: '5px 20px',
-            display: 'flex',
-            'flex-direction': 'row',
-            width: `80%`,
-            position: 'absolute',
-            top: 0,
-            left: '10%',
-            background: '#ffffff',
-            'border-bottom': '1px solid rgba(0,0,0,0.1)'
-          }
-        }
-      ],
+      header: [],
+      body: [],
+      footer: [],
       headerHeight: 60,
       bodyHeight: 500,
       footerHeight: 100,
-      components: [],
-      footer: [],
       style: {
         background: '#ffffff',
       },
@@ -233,6 +117,53 @@ class AppStore {
       return Number(val.replace('%', ''))
     }
     return false
+  }
+
+  insertComponent(e){
+    if(this.activeDrag){
+      const { clientX, clientY } = e
+      const areas = [
+        {
+          section: 'header',
+          selector: '.build-area_header',
+        },
+        {
+          section: 'body',
+          selector: '.build-area_body'
+        }
+      ]
+      let activeArea = null
+      areas.forEach(area => {
+        const domArea = document.querySelector(area.selector)
+        if(domArea){
+          const { x, y, width, height } = domArea.getBoundingClientRect()
+          if(clientX > x && clientX < x + width && clientY > y && clientY < y + height){
+            activeArea = area.section
+          }
+        }
+      })
+      const page = this.getActivePage()
+      const comp = {
+        ...this.activeDrag,
+        id: uuidv4()
+      }
+      page[activeArea].push(comp)
+    }
+  }
+
+  setActiveSection(section, e){
+    if(section){
+      const { width, height, x, y } = e.target.getBoundingClientRect()
+      this.activeSection = {
+        section,
+        x,
+        y,
+        width,
+        height
+      }
+    }else{
+      this.activeSection = null
+    }
   }
 
   setActiveDragItem(item, x, y, type){

@@ -34,7 +34,6 @@ export const IFrame = observer((props) => {
   }, [app.pages])
 
   const getCorrectElement = (elem) => {
-    console.log(elem)
     switch(elem.type){
       case 'header':
         return getHeader(elem)
@@ -65,7 +64,7 @@ export const IFrame = observer((props) => {
     Object.keys(page.style).forEach(key => {
       pageStyle += `${key}:${page.style[key]};`
     })
-    const { components, header, footer } = page
+    const { body, header, footer } = page
     const container = (
       <div id="EMBED-CONTAINER">
         <div id="PAGE-STYLES">
@@ -76,6 +75,9 @@ export const IFrame = observer((props) => {
             header.map(headerElem => {
               return getCorrectElement(headerElem)
             })
+          }
+          {
+            body.map(elem => getCorrectElement(elem))
           }
         </div>
       </div>

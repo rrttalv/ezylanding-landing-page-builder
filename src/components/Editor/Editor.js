@@ -34,6 +34,7 @@ export const Editor = observer((props) => {
 
   const handleMouseUp = e => {
     if(app.activeDrag){
+      app.insertComponent(e)
       app.setActiveDragItem(null)
     }
   }
@@ -53,7 +54,7 @@ export const Editor = observer((props) => {
   return (
     <div
       onMouseMove={e => handleMouseMove(e)}
-      onMouseUp={e => handleMouseUp()}
+      onMouseUp={e => handleMouseUp(e)}
       className='container-fluid editor'
     >
       <div className='editor_area'>

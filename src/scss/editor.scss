@@ -36,6 +36,9 @@
         position: absolute;
       }
     }
+    &_body, &_header, &_footer {
+      position: absolute;
+    }
   }
   .floating-element {
     z-index: 3;

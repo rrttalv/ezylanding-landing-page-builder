@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { Body } from './Body'
+import { Header } from './Header'
 
 export const Page = observer((props) => {
 
@@ -54,6 +55,7 @@ export const Page = observer((props) => {
 
   const { width } = style
   const activePage = app.getActivePage()
+  const { headerHeight, bodyHeight, footerHeight } = activePage
 
   return (
     <div 
@@ -61,10 +63,8 @@ export const Page = observer((props) => {
       className='build-area_page'
       style={style}
     >
-      <Body />
-      <div className='build-area_footer'>
-
-      </div>
+      <Header height={headerHeight} top={0} />
+      <Body height={bodyHeight} top={headerHeight} />
       <div 
         className='build-area_page_separator' 
         style={{

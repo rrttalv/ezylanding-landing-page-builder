@@ -14,7 +14,15 @@ export const Header = observer((props) => {
   }
 
   return (
-    <div className='build-area_header'>
+    <div 
+      onMouseMove={e => app.setActiveSection('header', e)}
+      className='build-area_header'
+      style={{
+        top: props.top,
+        height: props.height,
+        width: '100%'
+      }}
+    >
 
     </div>
   )
