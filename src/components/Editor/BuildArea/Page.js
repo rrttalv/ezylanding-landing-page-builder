@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
+import { Body } from './Body'
 
 export const Page = observer((props) => {
 
@@ -8,6 +9,18 @@ export const Page = observer((props) => {
     height: 0
   })
 
+  const [separators, setSeparators] = useState({
+    header: 0,
+    footer: 0
+  })
+
+  const getStore = () => {
+    return React.useContext(MobXProviderContext)
+  }
+
+  const { store: { app, sidebar } } = getStore()
+
+
   const {
     route,
     id,
@@ -15,20 +28,32 @@ export const Page = observer((props) => {
     customCode
   } = props.page
 
+  const iframe = document.querySelector('#HTML-FRAME')
+
 
   useEffect(() => {
-    const iframe = document.querySelector('#HTML-FRAME')
     if(iframe){
       setStyle({
         width: iframe.clientWidth + 'px',
         height: iframe.clientHeight + 'px'
       })
     }
-  }, [])
+    const activePage = app.getActivePage()
+    if(activePage){
+      const { headerHeight, bodyHeight, footerHeight } = activePage
+      setSeparators({
+        header: headerHeight,
+        footer: headerHeight + bodyHeight
+      })
+    }
+  }, [app.pages, iframe])
 
   const handlePointerDown = e => {
     console.log(e)
   }
+
+  const { width } = style
+  const activePage = app.getActivePage()
 
   return (
     <div 
@@ -36,6 +61,24 @@ export const Page = observer((props) => {
       className='build-area_page'
       style={style}
     >
+      <Body />
+      <div className='build-area_footer'>
+
+      </div>
+      <div 
+        className='build-area_page_separator' 
+        style={{
+          width,
+          top: separators.header
+        }}
+      />
+      <div 
+        className='build-area_page_separator'
+        style={{
+          width,
+          top: separators.footer
+        }}
+       />
     </div>
   )
 

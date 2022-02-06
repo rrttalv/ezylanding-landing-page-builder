@@ -14,64 +14,160 @@ class AppStore {
   }
   activeDrag = null
   activePage = null
+  selectedElement = null
+  selectedElementGroup = null
   pages = [
     {
       route: '/',
       id: uuidv4(),
       header: [
         {
+          id: uuidv4(),
           title: '2 Part Fixed header',
           type: 'header',
           partitions: [1, 2],
-          partitionStyles: {
+          content: {
             1: {
-              display: 'flex',
-              'flex-direction': 'row',
-              width: '50%',
-              'align-items': 'center',
-              'justify-content': 'flex-start'
+              type: 'section',
+              style: {
+                display: 'flex',
+                'flex-direction': 'row',
+                width: '50%',
+                'align-items': 'center',
+                'justify-content': 'flex-start'
+              },
+              className: 'col-6',
+              children: [
+                {
+                  type: 'link',
+                  className: 'link',
+                  style: {
+                    color: '#000',
+                    'font-size': '15px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    marginRight: '10px'
+                  },
+                  content: 'Homepage'
+                },
+                {
+                  type: 'link',
+                  className: 'link',
+                  style: {
+                    color: '#000',
+                    'font-size': '15px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    marginRight: '10px'
+                  },
+                  content: 'Pricing'
+                },
+                {
+                  type: 'link',
+                  className: 'link',
+                  style: {
+                    color: '#000',
+                    'font-size': '15px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    marginRight: '10px'
+                  },
+                  content: 'Demo'
+                },
+                {
+                  type: 'link',
+                  className: 'link',
+                  style: {
+                    color: '#000',
+                    'font-size': '15px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    marginRight: '10px'
+                  },
+                  content: 'Contact'
+                }
+              ]
             },
             2: {
-              display: 'flex',
-              'flex-direction': 'row',
-              width: '50%',
-              'align-items': 'center',
-              'justify-content': 'flex-end'
+              type: 'section',
+              className: 'col-6',
+              style: {
+                display: 'flex',
+                'flex-direction': 'row',
+                width: '50%',
+                'align-items': 'center',
+                'justify-content': 'flex-end'
+              },
+              children: [
+                {
+                  type: 'button',
+                  className: 'btn',
+                  style: {
+                    padding: '0.3rem 1rem',
+                    margin: '0 5px',
+                    'font-size': '16px',
+                    background: '#f9f9f9'
+                  },
+                  content: 'Log in'
+                },
+                {
+                  type: 'button',
+                  className: 'btn',
+                  style: {
+                    padding: '0.3rem 1rem',
+                    margin: '0 5px',
+                    'font-size': '16px',
+                    background: '#ff8ff0'
+                  },
+                  content: 'Sign up'
+                }
+              ]
             }
-          },
-          partitionContent: {
-            1: [
-              {
-
-              }
-            ],
-            2: [1]
           },
           style: {
             height: '50px',
             padding: '5px 20px',
             display: 'flex',
             'flex-direction': 'row',
-            width: `calc(100% - 40px);`,
+            width: `80%`,
             position: 'absolute',
             top: 0,
-            left: 0,
+            left: '10%',
             background: '#ffffff',
             'border-bottom': '1px solid rgba(0,0,0,0.1)'
           }
         }
       ],
-      headerHeight: '100px',
-      bodyHeight: '500px',
-      footerHeight: '100px',
+      headerHeight: 60,
+      bodyHeight: 500,
+      footerHeight: 100,
       components: [],
       footer: [],
       style: {
         background: '#ffffff',
       },
+      hideHeader: false,
+      hideBody: false,
+      hideFooter: false,
       customCode: ''
     }
   ]
+
+  setSelectedElement(id, group){
+    this.selectedElement = id
+    this.selectedElementGroup = group
+  }
+
+  unsetSelectedElement(){
+    this.selectedElement = null
+    this.selectedElementGroup = null
+  }
+
+  moveElement(clientX, clientY){
+    if(this.selectedElementGroup && this.selectedElementGroup){
+
+    }
+  }
 
   setActivePage(id){
     if(!id){
@@ -116,6 +212,12 @@ class AppStore {
     this.mouseStartX = x
     this.mouseStartY = y
     this.toggleActiveMouseEvent(type, true)
+  }
+
+  setMouseUp(){
+    this.mouseStartX = 0
+    this.mouseStartY = 0
+    this.toggleActiveMouseEvent(null, false)
   }
 
   convertPixelsToNumber(val){
@@ -172,12 +274,6 @@ class AppStore {
       this.mouseStartY = 0
       this.toggleActiveMouseEvent(null, false)
     }
-  }
-
-  setMouseUp(){
-    this.mouseStartX = 0
-    this.mouseStartY = 0
-    this.toggleActiveMouseEvent(null, false)
   }
 
 }
