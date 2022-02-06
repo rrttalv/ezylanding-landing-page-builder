@@ -3,7 +3,7 @@ import { MobXProviderContext, observer } from 'mobx-react'
 
 export const Element = observer((props) => {
 
-  const { dragPosition: { width, height, xPos, yPos } } = props.item
+  const { position: { width, height, xPos, yPos } } = props.item
 
 
   return (

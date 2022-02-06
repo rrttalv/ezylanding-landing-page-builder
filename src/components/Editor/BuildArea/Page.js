@@ -31,27 +31,29 @@ export const Page = observer((props) => {
 
   const iframe = document.querySelector('#HTML-FRAME')
 
-
   useEffect(() => {
-    if(iframe){
+    const activePage = app.getActivePage()
+    if(iframe && activePage && activePage.body.length === 0){
+      console.log('here')
       setStyle({
         width: iframe.clientWidth + 'px',
         height: iframe.clientHeight + 'px'
       })
     }
+  }, [iframe])
+
+  useEffect(() => {
     const activePage = app.getActivePage()
     if(activePage){
-      const { headerHeight, bodyHeight, footerHeight } = activePage
-      setSeparators({
-        header: headerHeight,
-        footer: headerHeight + bodyHeight
-      })
+      setTimeout(() => {
+        const { headerHeight, bodyHeight, footerHeight } = activePage
+        setSeparators({
+          header: headerHeight,
+          footer: headerHeight + bodyHeight
+        })
+      }, 10)
     }
-  }, [app.pages, iframe])
-
-  const handlePointerDown = e => {
-    console.log(e)
-  }
+  }, [app.pages, app.selectedElement, iframe])
 
   const { width } = style
   const activePage = app.getActivePage()
@@ -59,7 +61,6 @@ export const Page = observer((props) => {
 
   return (
     <div 
-      onPointerDown={e => handlePointerDown(e)}
       className='build-area_page'
       style={style}
     >

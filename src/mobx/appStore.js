@@ -42,14 +42,52 @@ class AppStore {
     this.selectedElementGroup = group
   }
 
+  updateActivePageProp(propName, value){
+    const idx = this.pages.findIndex(({ id: pageId }) => pageId === this.activePage)
+    this.pages[idx][propName] = value
+  }
+
   unsetSelectedElement(){
     this.selectedElement = null
     this.selectedElementGroup = null
   }
 
-  moveElement(clientX, clientY){
-    if(this.selectedElementGroup && this.selectedElementGroup){
+  findNestedChild(children, id){
+    let target = null
+    children.forEach(element => {
+      if(!target){
+        if(element.id !== id && element.children){
+          target = this.findNestedChild(element.children, id)
+        }
+        if(element.id === id){
+          target = element
+        }
+      }
+    })
+    return target
+  }
 
+  moveElement(clientX, clientY){
+    if(this.selectedElement && this.selectedElementGroup){
+      const page = this.getActivePage()
+      let target = null
+      page[this.selectedElementGroup].forEach((element, idx) => {
+        if(!target){
+          if(element.id === this.selectedElement){
+            target = element
+          }
+          if(element.id !== this.selectedElement && element.children && element.children.length){
+            target = this.searchNestedChildren(element.children, this.selectedElement)
+          }
+        }
+      })
+      //Only allow SHIFTING
+      if(target.type === 'section'){
+
+      }else{
+
+      }
+      console.log(target)
     }
   }
 
@@ -86,8 +124,8 @@ class AppStore {
     }
     const dx = (clientX - this.mouseStartX)
     const dy = (clientY - this.mouseStartY)
-    this.activeDrag.dragPosition.xPos += dx
-    this.activeDrag.dragPosition.yPos += dy
+    this.activeDrag.position.xPos += dx
+    this.activeDrag.position.yPos += dy
     this.mouseStartX = clientX
     this.mouseStartY = clientY
   }
@@ -142,12 +180,20 @@ class AppStore {
           }
         }
       })
+      const editor = document.querySelector('.editor')
+      if(!activeArea || !editor){
+        return
+      }
+      const { x: editorX, y: editorY } = editor.getBoundingClientRect()
       const page = this.getActivePage()
       const comp = {
         ...this.activeDrag,
         id: uuidv4()
       }
+      comp.position.xPos -= editorX
+      comp.position.yPos -= editorY
       page[activeArea].push(comp)
+      this.setSelectedElement(comp.id, activeArea)
     }
   }
 
@@ -189,7 +235,7 @@ class AppStore {
       if(pxHeight){
         yOffset = pxHeight / 2
       }
-      copy.dragPosition = {
+      copy.position = {
         xPos: x - xOffset,
         yPos: y - yOffset,
         width: width + 'px',

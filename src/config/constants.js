@@ -48,7 +48,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'column',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       },
@@ -61,7 +63,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'column',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       },
@@ -74,7 +78,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'column',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       },
@@ -87,7 +93,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'row',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       },
@@ -100,7 +108,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'row',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       },
@@ -113,7 +123,9 @@ const constants = {
           display: 'flex',
           'flex-direction': 'row',
           width: '80%',
-          margin: '2rem auto',
+          margin: '0 auto',
+          padding: '3rem 0',
+          position: 'relative',
           height: '300px'
         },
       }

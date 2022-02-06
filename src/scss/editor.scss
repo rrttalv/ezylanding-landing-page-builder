@@ -19,7 +19,7 @@
       border: 1px solid rgba(0,0,0,0.15);
       position: relative;
       min-height: 100%;
-      overflow-y: visible;
+      overflow-y: auto;
       padding-bottom: 50px;
     }
     &_page {
@@ -38,6 +38,31 @@
     }
     &_body, &_header, &_footer {
       position: absolute;
+      .comp {
+        position: absolute;
+      }
+      .active-component {
+        &::after {
+          content: '';
+          position: absolute;    
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 1px solid rgba(62, 227, 197, 0.5);      
+        }
+      }
+      .comp-border {
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 1px solid rgba(62, 227, 197, 0.5);      
+        }
+      }
     }
   }
   .floating-element {
