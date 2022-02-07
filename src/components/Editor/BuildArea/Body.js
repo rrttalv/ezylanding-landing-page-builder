@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
+import { PartitionBorder } from './PartitionBorder'
 
 export const Body = observer((props) => {
   
@@ -45,6 +46,7 @@ export const Body = observer((props) => {
       {
         activePage[props.area].map((elem, idx) => {
           const { style, children, id } = elem
+          const isSelected = app.selectedElement === id
           return (
             <>
               {
@@ -57,14 +59,17 @@ export const Body = observer((props) => {
               <div 
                 onClick={e => selectComponent(e, id)}
                 data-uuid={elem.id}
-                className={`section-component ${app.selectedElement === id ? ' active-component' : ''}`}
+                className={`section-component ${isSelected ? ' active-component' : ''}`}
                 style={{
                   ...style,
                   zIndex: 0
                 }}
               >
                 {
-                  app.selectedElement === id ? <ComponentBorder style={style} /> : undefined
+                  isSelected ? <ComponentBorder style={style} /> : undefined
+                }
+                {
+                  (app.activeDrag && id === app.childDragParentId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
                 }
               </div>
               {

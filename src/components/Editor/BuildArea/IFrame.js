@@ -63,6 +63,8 @@ export const IFrame = observer((props) => {
         return <a href={`#`} className={elem.className} style={style}>{elem.content}</a>
       case 'button':
         return <button style={style} className={elem.className}>{elem.content}</button>
+      case 'input':
+        return <input type={elem.inputType} className={elem.className} style={style} />
       case 'img':
         return <img style={style} className={elem.className} alt={elem.alt || ''} />
       case 'style':

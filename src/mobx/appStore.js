@@ -14,11 +14,15 @@ class AppStore {
   }
   dragIndex = 0
   dragSection = null
+  childDragIndex = 0
+  childDragSection = null
+  childDragParentId = null
   activeDrag = null
   activePage = null
   selectedElement = null
   selectedElementGroup = null
   activeSection = null
+  parentElements = ['section', 'header']
   pages = [
     {
       route: '/',
@@ -166,7 +170,7 @@ class AppStore {
     return activeArea
   }
 
-  checkDragIndex(x, y, clientX, clientY){
+  checkDragIndex(clientX, clientY){
     const area = this.getActiveDragArea(clientX, clientY)
     const elements = this.pages[0][area]
     if(!area){
@@ -198,6 +202,26 @@ class AppStore {
     }
   }
 
+  checkChildComponentDragIndex(clientX, clientY){
+    const area = this.getActiveDragArea(clientX, clientY)
+    const elements = this.pages[0][area]
+    if(!area){
+      return
+    }
+    elements.forEach((section, idx) => {
+      const elem = document.querySelector(`[data-uuid="${section.id}"]`)
+      if(elem){
+        const { x, y, width, height } = elem.getBoundingClientRect()
+        const xMax = width + x
+        const yMax = height + y
+        if(x < clientX && xMax > clientX && y < clientY && yMax > clientY){
+          this.childDragParentId = section.id
+          this.childDragSection = area
+        }
+      }
+    })
+  }
+
   handleItemDragMove(clientX, clientY, rawX, rawY){
     if(!this.activeDrag){
       return
@@ -214,8 +238,10 @@ class AppStore {
     }
     this.mouseStartX = clientX
     this.mouseStartY = clientY
-    if(this.activeDrag.type === 'section'){
-      this.checkDragIndex(xPos, yPos, rawX, rawY)
+    if(this.parentElements.includes(this.activeDrag.type)){
+      this.checkDragIndex(rawX, rawY)
+    }else{
+
     }
   }
 
@@ -232,6 +258,7 @@ class AppStore {
   }
 
   convertPixelsToNumber(val){
+    if(!val) return false
     if(val.includes('px')){
       return Number(val.replace('px', ''))
     }else{
@@ -240,6 +267,7 @@ class AppStore {
   }
 
   convertPrecentToNumber(val){
+    if(!val) return false
     if(val.includes('%')){
       return Number(val.replace('%', ''))
     }
@@ -270,7 +298,7 @@ class AppStore {
         ...this.activeDrag,
         id: uuidv4()
       }
-      if(this.activeDrag.type === 'section'){
+      if(this.parentElements.includes(this.activeDrag.type)){
         comp.position.xPos -= editorX
         comp.position.yPos -= editorY
         page[activeArea].splice(this.dragIndex, 0, comp)

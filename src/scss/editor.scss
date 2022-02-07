@@ -70,6 +70,19 @@
           border: 1px solid rgba(62, 227, 197, 0.5);      
         }
       }
+      .section-partition {
+        &_border {
+          position: absolute;
+          &::after {
+            content: '';
+            width: 2px;
+            height: 100%;
+            background: rgba(62, 227, 197, 0.5);
+            position: absolute;
+            right: 1px;
+          }
+        }
+      }
     }
   }
   .floating-element {

@@ -14,7 +14,7 @@ export const Components = observer((props) => {
 
   const { store: { sidebar, app } } = getStore()
 
-  const { sections } = constants
+  const { sections, inputs } = constants
 
   const getExpanded = () => {
     return (
@@ -57,7 +57,7 @@ export const Components = observer((props) => {
                 onDragStart={e => handleItemDragStart(e, item)}
                 onDragEnd={e => handleItemDragEnd()}
               >
-                <img src={item.thumb} className="component-img" />
+                {item.thumb ? <img src={item.thumb} className="component-img" /> : <div style={{ width: '50px', height: '50px', background: 'red' }} />}
                 <span className='component-title' style={{userSelect: 'none'}}>{item.title}</span>
               </div>
             ))
@@ -77,6 +77,9 @@ export const Components = observer((props) => {
       }
       {
         getRows(sections)
+      }
+      {
+        getRows(inputs)
       }
     </div>
   )

@@ -130,6 +130,44 @@ const constants = {
         },
       }
     ]
+  },
+  inputs: {
+    id: 'inputs',
+    title: 'Inputs',
+    elements: [
+      {
+        title: 'Text input',
+        type: 'input',
+        inputType: 'text',
+        style: {
+          'border-radius': '4px',
+          width: '100px',
+          height: '30px',
+          margin: '0 auto',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          border: '1px solid rgba(0,0,0,0.175)'
+        }
+      },
+      {
+        title: 'Rounded button',
+        type: 'button',
+        content: 'Click me!',
+        style: {
+          'border-radius': '4px',
+          width: '100px',
+          height: '50px',
+          margin: '0 auto',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          border: '1px solid rgba(0,0,0,0.175)'
+        }
+      },
+    ]
   }
   
 
