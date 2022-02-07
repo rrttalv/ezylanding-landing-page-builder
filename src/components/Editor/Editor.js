@@ -27,7 +27,7 @@ export const Editor = observer((props) => {
     const { clientX, clientY } = e
     const { x, y } = document.querySelector('.editor').getBoundingClientRect()
     if(app.activeDrag){
-      app.handleItemDragMove(clientX - x, clientY - y)
+      app.handleItemDragMove(clientX - x, clientY - y, clientX, clientY)
       shouldCloseSidebar(e)
     }
   }

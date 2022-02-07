@@ -15,25 +15,27 @@ export const Body = observer((props) => {
 
   const selectComponent = (e, id) => {
     e.preventDefault()
-    app.setSelectedElement(id, 'body')
+    app.setSelectedElement(id, props.area)
   }
 
   useEffect(() => {
     setTimeout(() => {
-      const frame = document.querySelector("iframe").contentWindow.document.querySelector("#PAGE-BODY")
+      const frame = document.querySelector("iframe").contentWindow.document.querySelector(props.iframeSelector)
       if(frame){
         const { width, height } = frame.getBoundingClientRect()
-        if(activePage.bodyHeight !== height){
-          app.updateActivePageProp('bodyHeight', height)
+        if(activePage[props.heightPropName] !== height){
+          app.updateActivePageProp(props.heightPropName, height)
         }
       }
     }, 10)
   }, [app.pages, app.selectedElement])
 
+  const { dragIndex, dragSection, activeDrag, } = app
+
   return (
     <div 
-      onMouseMove={e => app.setActiveSection('body', e)}
-      className='build-area_body'
+      onMouseMove={e => app.setActiveSection(props.area, e)}
+      className={`build-area_${props.area}`}
       style={{
         top: props.top,
         height: props.height,
@@ -41,13 +43,21 @@ export const Body = observer((props) => {
       }}
     >
       {
-        activePage.body.map(elem => {
+        activePage[props.area].map((elem, idx) => {
           const { style, children, id } = elem
           return (
             <>
+              {
+                idx === dragIndex && activeDrag && dragSection === props.area ? (
+                  <div className='build-area_insert-preview insert-above' />
+                )
+                :
+                undefined
+              }
               <div 
                 onClick={e => selectComponent(e, id)}
-                className={`body-component${app.selectedElement === id ? ' active-component' : ''}`}
+                data-uuid={elem.id}
+                className={`section-component ${app.selectedElement === id ? ' active-component' : ''}`}
                 style={{
                   ...style,
                   zIndex: 0
@@ -57,6 +67,13 @@ export const Body = observer((props) => {
                   app.selectedElement === id ? <ComponentBorder style={style} /> : undefined
                 }
               </div>
+              {
+                activePage[props.area].length - 1 === idx && idx + 1 === dragIndex && activeDrag && dragSection === props.area ? (
+                  <div className='build-area_insert-preview insert-below' />
+                )
+                :
+                undefined
+              }
             </>
           )
         })

@@ -64,8 +64,20 @@ export const Page = observer((props) => {
       className='build-area_page'
       style={style}
     >
-      <Header height={headerHeight} top={0} />
-      <Body height={bodyHeight} top={headerHeight} />
+      <Body 
+        height={headerHeight} 
+        heightPropName={'headerHeight'} 
+        area={'header'} 
+        top={0} 
+        iframeSelector={'#PAGE-HEADER'}
+      />
+      <Body 
+        height={bodyHeight} 
+        heightPropName={'bodyHeight'} 
+        top={headerHeight} 
+        area={'body'} 
+        iframeSelector={'#PAGE-BODY'}
+      />
       <div 
         className='build-area_page_separator' 
         style={{

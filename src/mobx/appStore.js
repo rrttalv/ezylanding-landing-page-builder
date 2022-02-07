@@ -12,6 +12,8 @@ class AppStore {
     sidebarComponentDrag: false,
     elementDrag: false,
   }
+  dragIndex = 0
+  dragSection = null
   activeDrag = null
   activePage = null
   selectedElement = null
@@ -118,16 +120,103 @@ class AppStore {
     this.mouseEventList = copy
   }
 
-  handleItemDragMove(clientX, clientY){
+  findParentByClass(targetClass, element){
+    if(!element){
+      return null
+    }
+    const stringClass = typeof(element.className) === 'string'
+    if(!element.className || !stringClass){
+      if(!element.parentElement){
+        return null
+      }
+      return this.findParentByClass(targetClass, element.parentElement)
+    }
+    if(!element.parentElement){
+      return null
+    }
+    if(element.className.includes(targetClass)){
+      return element
+    }
+    if(!element.className.includes(targetClass) && element.parentElement){
+      return this.findParentByClass(targetClass, element.parentElement)
+    }
+  }
+
+  getActiveDragArea(clientX, clientY){
+    const areas = [
+      {
+        section: 'header',
+        selector: '.build-area_header',
+      },
+      {
+        section: 'body',
+        selector: '.build-area_body'
+      }
+    ]
+    let activeArea = null
+    areas.forEach(area => {
+      const domArea = document.querySelector(area.selector)
+      if(domArea){
+        const { x, y, width, height } = domArea.getBoundingClientRect()
+        if(clientX > x && clientX < x + width && clientY > y && clientY < y + height){
+          activeArea = area.section
+        }
+      }
+    })
+    return activeArea
+  }
+
+  checkDragIndex(x, y, clientX, clientY){
+    const area = this.getActiveDragArea(clientX, clientY)
+    const elements = this.pages[0][area]
+    if(!area){
+      return
+    }
+    elements.forEach((section, idx) => {
+      const elem = document.querySelector(`[data-uuid="${section.id}"]`)
+      const nextIndex = idx + 1
+      const nextElem = elements.length - 1 > nextIndex ? document.querySelector(`[data-uuid="${elements[nextIndex].id}]"`) : false
+      if(elem){
+        const { x, y, width, height } = elem.getBoundingClientRect()
+        const yTopBound = y - 60
+        const yMidBound = y + (height / 2)
+        const yBottomBound = y + height + 60
+        if(clientY > yTopBound && clientY < yMidBound){
+          this.dragIndex = idx
+          this.dragSection = area
+        }
+        if(clientY > yMidBound && clientY < yBottomBound){
+          this.dragIndex = idx + 1
+          this.dragSection = area
+        }
+      }
+    })
+    if(elements.length === 0){
+      this.dragSection = area
+      this.dragIndex = 0
+      return
+    }
+  }
+
+  handleItemDragMove(clientX, clientY, rawX, rawY){
     if(!this.activeDrag){
       return
     }
     const dx = (clientX - this.mouseStartX)
     const dy = (clientY - this.mouseStartY)
-    this.activeDrag.position.xPos += dx
-    this.activeDrag.position.yPos += dy
+    const { position } = this.activeDrag
+    const xPos = position.xPos + dx
+    const yPos = position.yPos + dy
+    this.activeDrag.position = {
+      ...position,
+      xPos,
+      yPos
+    }
     this.mouseStartX = clientX
     this.mouseStartY = clientY
+    if(this.activeDrag.type === 'section'){
+      this.checkDragIndex(xPos, yPos, rawX, rawY)
+    }
   }
 
   setMouseDown(x, y, type){
@@ -170,16 +259,7 @@ class AppStore {
           selector: '.build-area_body'
         }
       ]
-      let activeArea = null
-      areas.forEach(area => {
-        const domArea = document.querySelector(area.selector)
-        if(domArea){
-          const { x, y, width, height } = domArea.getBoundingClientRect()
-          if(clientX > x && clientX < x + width && clientY > y && clientY < y + height){
-            activeArea = area.section
-          }
-        }
-      })
+      const activeArea = this.getActiveDragArea(clientX, clientY)
       const editor = document.querySelector('.editor')
       if(!activeArea || !editor){
         return
@@ -190,10 +270,16 @@ class AppStore {
         ...this.activeDrag,
         id: uuidv4()
       }
-      comp.position.xPos -= editorX
-      comp.position.yPos -= editorY
-      page[activeArea].push(comp)
-      this.setSelectedElement(comp.id, activeArea)
+      if(this.activeDrag.type === 'section'){
+        comp.position.xPos -= editorX
+        comp.position.yPos -= editorY
+        page[activeArea].splice(this.dragIndex, 0, comp)
+        this.setSelectedElement(comp.id, activeArea)
+        this.dragIndex = 0
+        this.dragSection = null
+      }else{
+        //Insert the component inside of a section
+      }
     }
   }
 
