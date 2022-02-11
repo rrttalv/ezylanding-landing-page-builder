@@ -41,27 +41,44 @@ export const Components = observer((props) => {
     e.preventDefault()
   }
 
-  const getRows = (elem) => {
+  const getRows = (elem, type) => {
     const copy = [...elem.elements]
-    const list = copy.slice(0, 2)
+    const list = copy.slice(0, 3)
     return (
-      <div className='component-slide_list'>
+      <div className='component-slide_wrapper'>
         <h6 className='component-slide_title'>{elem.title}</h6>
-        <div className='component-slide_rows'>
-          {
-            list.map(item => (
-              <div 
-                className='component-preview'
-                draggable
-                onClick={e => insertItem(e, item)}
-                onDragStart={e => handleItemDragStart(e, item)}
-                onDragEnd={e => handleItemDragEnd()}
-              >
-                {item.thumb ? <img src={item.thumb} className="component-img" /> : <div style={{ width: '50px', height: '50px', background: 'red' }} />}
-                <span className='component-title' style={{userSelect: 'none'}}>{item.title}</span>
-              </div>
-            ))
-          }
+        <div className='component-slide_list'>
+          <div className='component-slide_rows'>
+            {
+              list.map(item => {
+                const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {}
+                const imgStyle = item.displayStyle ? item.displayStyle.image : {}
+                if(item.type === 'section'){
+                  imgStyle.boxShadow = '0 4px 4px 0 rgba(0,0,0,0.15)'
+                  imgStyle.border = '1px solid #3EE3C5'
+                }
+                return (
+                  <div 
+                    className='component-preview'
+                    draggable
+                    style={{...displayStyle}}
+                    onClick={e => insertItem(e, item)}
+                    onDragStart={e => handleItemDragStart(e, item)}
+                    onDragEnd={e => handleItemDragEnd()}
+                  >
+                    {item.thumb ? (
+                      <img 
+                        src={item.thumb} 
+                        className="component-img" 
+                        style={{...imgStyle}}
+                      />
+                    ) : <div style={{ width: '50px', height: '50px', background: 'red' }} />}
+                    <span className='component-title' style={{userSelect: 'none'}}>{item.title}</span>
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
       </div>
     )
@@ -76,7 +93,7 @@ export const Components = observer((props) => {
         getExpanded()
       }
       {
-        getRows(sections)
+        getRows(sections, 'sections')
       }
       {
         getRows(inputs)

@@ -33,14 +33,18 @@ export const IFrame = observer((props) => {
     }
   }, [app.pages])
 
-  const getCorrectElement = elem => {
-    const { position: { xPos, yPos, width, height }, style: elemStyle } = elem
-    const elemPositionStyle = {
-      position: 'absolute',
-      transform: `translate(${xPos}px, ${yPos}px)`,
-      width,
-      height
-    }
+  const getCorrectElement = (elem, isSectionChild) => {
+    const { position, style: elemStyle } = elem
+    let elemPositionStyle = {}
+    if(elem.position){
+      const { xPos, yPos, width, height } = elem.position
+      elemPositionStyle = {
+        position: 'absolute',
+        transform: `translate(${xPos}px, ${yPos}px)`,
+        width,
+        height
+      }
+    } 
     const style = {
       ...elemPositionStyle,
       ...elemStyle
@@ -55,10 +59,18 @@ export const IFrame = observer((props) => {
               style={elemStyle}
             >
               {
-                elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined
+                elem.children ? elem.children.map(child => getCorrectElement(child, true)) : undefined
               }
             </div>
           )
+      case 'div':
+        return (
+          <div className={elem.className} style={elem.style}>
+            {
+              elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined
+            }
+          </div>
+        )
       case 'link':
         return <a href={`#`} className={elem.className} style={style}>{elem.content}</a>
       case 'button':

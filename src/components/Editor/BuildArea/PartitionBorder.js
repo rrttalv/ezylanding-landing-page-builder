@@ -16,7 +16,6 @@ export const PartitionBorder = observer((props) => {
       top: 0,
       left: 0,
     })
-    console.log(props)
     //Incase user is using bootstrap or equivalent
     if(props.partitionStyles){
 

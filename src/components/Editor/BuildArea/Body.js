@@ -31,6 +31,35 @@ export const Body = observer((props) => {
     }, 10)
   }, [app.pages, app.selectedElement])
 
+  const getChildElemBorder = (elem, idx) => {
+    const { position, style: elemStyle, id } = elem
+    let elemPositionStyle = {}
+    if(elem.position){
+      const { xPos, yPos, width, height } = elem.position
+      elemPositionStyle = {
+        position: 'absolute',
+        transform: `translate(${xPos}px, ${yPos}px)`,
+        width,
+        height
+      }
+    }
+    const style = {
+      ...elemPositionStyle,
+      ...elemStyle
+    }
+    if(app.selectedElement === id){
+      style.display = 'initial'
+    }else{
+      style.display = 'none'
+    }
+    switch(elem.type){
+      case 'div':
+        return <div style={{...style}} data-uuid={id} />
+      default:
+        return <div />
+    }
+  }
+
   const { dragIndex, dragSection, activeDrag, } = app
 
   return (
@@ -62,12 +91,13 @@ export const Body = observer((props) => {
                 className={`section-component ${isSelected ? ' active-component' : ''}`}
                 style={{
                   ...style,
+                  flexDirection: 'column',
                   zIndex: 0
                 }}
               >
-                {
-                  isSelected ? <ComponentBorder style={style} /> : undefined
-                }
+                <ComponentBorder style={style} display={isSelected}>
+                  {children ? children.map((child, idx) => getChildElemBorder(child, idx)) : undefined}
+                </ComponentBorder>
                 {
                   (app.activeDrag && id === app.childDragParentId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
                 }

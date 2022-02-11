@@ -241,7 +241,7 @@ class AppStore {
     if(this.parentElements.includes(this.activeDrag.type)){
       this.checkDragIndex(rawX, rawY)
     }else{
-
+      this.checkChildComponentDragIndex(rawX, rawY)
     }
   }
 
@@ -298,6 +298,14 @@ class AppStore {
         ...this.activeDrag,
         id: uuidv4()
       }
+      if(comp.children && comp.children.length){
+        comp.children = comp.children.map(child => {
+          return {
+            ...child,
+            id: uuidv4()
+          }
+        })
+      }
       if(this.parentElements.includes(this.activeDrag.type)){
         comp.position.xPos -= editorX
         comp.position.yPos -= editorY
@@ -307,6 +315,52 @@ class AppStore {
         this.dragSection = null
       }else{
         //Insert the component inside of a section
+        const domSection = document.querySelector(`[data-uuid="${this.childDragParentId}"] .comp-border`)
+        const section = page[activeArea].find(({ id }) => id === this.childDragParentId)
+        if(domSection && section){
+          const ids = section.children.map(child => child.id)
+          let targetDiv = null
+          let posMap = {}
+          domSection.childNodes.forEach((node, idx) => {
+            const { width: cW, height: cH, x: cX, y: cY } = node.getBoundingClientRect()
+            const xMax = cW + cX
+            const yMax = cH + cY
+            if(clientY > cY && clientY < yMax && clientX > cX && clientX < xMax){
+              targetDiv = node.getAttribute('data-uuid')
+              posMap.xPos = clientX - cX
+              posMap.yPos = clientY - cY
+              posMap.parentHeight = cH
+              posMap.parentWidth = cW
+            }
+          })
+          if(targetDiv){
+            //If there is a target div inside the section
+            const childIdx = section.children.findIndex(({ id: childId }) => childId === targetDiv)
+            console.log(targetDiv, childIdx)
+            if(comp.style.width && comp.style.height){
+              let compHeight = this.convertPixelsToNumber(comp.style.height)
+              let compWidth = this.convertPixelsToNumber(comp.style.width)
+              //Calculate the offset of the component width and height since the clientX and clientY will always be in the center of the component
+              if(!compWidth){
+                let compWidth = this.convertPrecentToNumber(comp.style.width)
+                posMap.xPos -= ((posMap.parentWidth * compWidth) / 2)
+              }else{
+                posMap.xPos -= (compWidth / 2)
+              }
+              comp.xPos = posMap.xPos
+              comp.yPos = posMap.yPos
+              comp.position = {
+                ...comp.position,
+                xPos: posMap.xPos,
+                yPos: posMap.yPos
+              }
+              section.children[childIdx].children.push(comp)
+              //insert the component
+            }
+          }else{
+            //If there is not a target div, insert the component with position absolute inside the section element
+          }
+        }
       }
     }
   }

@@ -43,40 +43,101 @@ const constants = {
         title: '2 Columns',
         type: 'section',
         partitions: 2,
-        thumb: '/images/2-col.svg',
+        thumb: '/images/sections/flex-row-2.svg',
         style: {
           display: 'flex',
-          'flex-direction': 'column',
+          'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
           padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
+        children: [
+          {
+            type: 'div',
+            className: 'col-6',
+            style: {
+              position: 'relative',
+              width: '50%',
+              height: '100%'
+            },
+            children: []
+          },
+          {
+            type: 'div',
+            className: 'col-6',
+            style: {
+              position: 'relative',
+              width: '50%',
+              height: '100%'
+            },
+            children: []
+          }
+        ]
       },
       {
         title: '3 Columns',
         type: 'section',
         partitions: 3,
-        thumb: '/images/3-col.svg',
+        thumb: '/images/sections/flex-row-3.svg',
         style: {
           display: 'flex',
-          'flex-direction': 'column',
+          'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
           padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
+        
+        children: [
+          {
+            type: 'div',
+            className: 'col-4',
+            style: {
+              position: 'relative',
+              width: '33.3%',
+              height: '100%'
+            },
+            children: []
+          },
+          {
+            type: 'div',
+            className: 'col-4',
+            style: {
+              position: 'relative',
+              width: '33.3%',
+              height: '100%'
+            },
+            children: []
+          },
+          {
+            type: 'div',
+            className: 'col-4',
+            style: {
+              position: 'relative',
+              width: '33.3%',
+              height: '100%'
+            },
+            children: []
+          }
+        ]
       },
       {
         title: '4 Columns',
         type: 'section',
         partitions: 4,
-        thumb: '',
+        thumb: '/images/sections/flex-row-4.svg',
+        displayStyle: {
+          wrapper: {},
+          image: {
+            padding: '0 10px'
+          }
+        },
         style: {
           display: 'flex',
-          'flex-direction': 'column',
+          'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
           padding: '3rem 0',
@@ -138,7 +199,17 @@ const constants = {
       {
         title: 'Text input',
         type: 'input',
-        inputType: 'text',
+        inputType: 'textarea',
+        displayStyle: {
+          wrapper: {
+            width: '100%',
+            height: '100px'
+          },
+          image: {
+            width: '250px'
+          }
+        },
+        thumb: '/images/inputs/text-area.svg',
         style: {
           'border-radius': '4px',
           width: '100px',
@@ -155,6 +226,24 @@ const constants = {
         title: 'Rounded button',
         type: 'button',
         content: 'Click me!',
+        thumb: '/images/inputs/regular-btn.svg',
+        style: {
+          'border-radius': '4px',
+          width: '100px',
+          height: '50px',
+          margin: '0 auto',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          border: '1px solid rgba(0,0,0,0.175)'
+        }
+      },
+      {
+        title: 'Box-shadow button',
+        type: 'button',
+        content: 'Click me!',
+        thumb: '/images/inputs/box-shadow-btn.svg',
         style: {
           'border-radius': '4px',
           width: '100px',
