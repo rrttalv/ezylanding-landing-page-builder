@@ -5,12 +5,11 @@ import ReactDOMServer from 'react-dom/server'
 export const IFrame = observer((props) => {
 
   const [frameHeight, setFrameHeight] = useState(0)
+  const [blobUrl, setBlobUrl] = useState(null)
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
   }
-
-  const { store: { app, sidebar } } = getStore()
 
   const getHeader = elem => {
     const { partitions, content, style } = elem
@@ -25,13 +24,19 @@ export const IFrame = observer((props) => {
     )
   }
 
+  const { store: { app, sidebar } } = getStore()
+
   useEffect(() => {
     const activePage = app.getActivePage()
     if(activePage && activePage.body.length === 0){
       const { headerHeight, bodyHeight, footerHeight } = activePage
       setFrameHeight(headerHeight + bodyHeight + footerHeight)
     }
-  }, [app.pages])
+  }, [app.pages, app.movingElement, app.activeDrag])
+
+  useEffect(() => {
+    parseElements()
+  }, [app.movingElement, app.pages, app.selectedElement])
 
   const getCorrectElement = (elem, isSectionChild) => {
     const { position, style: elemStyle } = elem
@@ -44,7 +49,8 @@ export const IFrame = observer((props) => {
         width,
         height
       }
-    } 
+    }
+    const wl = ['section', 'header']
     const style = {
       ...elemPositionStyle,
       ...elemStyle
@@ -85,6 +91,12 @@ export const IFrame = observer((props) => {
         return <div />
     }
   }
+
+  useEffect(() => {
+    if(!blobUrl){
+      parseElements()
+    }
+  }, [])
 
   const parseElements = () => {
     const page = app.getActivePage()
@@ -146,11 +158,23 @@ export const IFrame = observer((props) => {
     const headString = ReactDOMServer.renderToStaticMarkup(head)
     const str = `<?xml version="1.0" encoding="UTF-8"?>\n<html xmlns="http://www.w3.org/1999/xhtml">\n` + headString + bodyString + '</html>'
     var blob = new Blob([str], { type: "application/xhtml+xml" });
-    return URL.createObjectURL(blob);
+    if(blobUrl){
+      URL.revokeObjectURL(blobUrl)
+    }
+    const url = URL.createObjectURL(blob)
+    setBlobUrl(url)
   }
 
   return (
-    <iframe style={{ width: '100%', zIndex: 0, height: frameHeight }} src={parseElements()} id="HTML-FRAME" />
+    blobUrl ? (
+      <iframe 
+        style={{ width: '100%', zIndex: 0, height: frameHeight, zIndex: -2 }} 
+        src={blobUrl}
+        id="HTML-FRAME" 
+      />
+    )
+    :
+    <div />
   )
 
 })

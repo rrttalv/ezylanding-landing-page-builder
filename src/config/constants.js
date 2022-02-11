@@ -212,8 +212,8 @@ const constants = {
         thumb: '/images/inputs/text-area.svg',
         style: {
           'border-radius': '4px',
-          width: '100px',
-          height: '30px',
+          width: '80%',
+          height: '100px',
           margin: '0 auto',
           display: 'block',
           position: 'absolute',

@@ -10,13 +10,11 @@ export const ComponentBorder = observer((props) => {
     delete copy.padding
     copy.width = "100%"
     setBorderStyle(copy)
-    if(!props.display){
-      setBorderStyle({ ...copy, opacity: '0' })
-    }
+    
   }, [props.style, props.display])
 
   return (
-    <div className='comp-border' style={borderStyle}>
+    <div className={`comp-border${props.display ? ' visible' : ''}`} style={borderStyle}>
       {props.children}
     </div>
   )

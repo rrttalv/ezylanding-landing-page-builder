@@ -16,12 +16,14 @@ class AppStore {
   dragSection = null
   childDragIndex = 0
   childDragSection = null
-  childDragParentId = null
+  currentSectionId = null
   activeDrag = null
   activePage = null
   selectedElement = null
+  selectedParentElement = null
   selectedElementGroup = null
-  activeSection = null
+  movingElement = false
+  activeGroup = null
   parentElements = ['section', 'header']
   pages = [
     {
@@ -48,6 +50,120 @@ class AppStore {
     this.selectedElementGroup = group
   }
 
+  setMovingElement(status, x, y){
+    this.mouseStartX = status ? x : 0
+    this.mouseStartY = status ? y : 0
+    this.movingElement = status
+    if(status){
+      let target = null
+      this.pages[0][this.selectedElementGroup].forEach(section => {
+        const child = this.findNestedChild(section.children, this.selectedElement)
+        if(child){
+          target = section.id
+        }
+      })
+      this.selectedParentElement = target
+    }else{
+      if(this.activePage && this.selectedElement && this.selectedParentElement){
+        const page = this.pages.find(({ id }) => id === this.activePage)
+        const { 
+          newSection, 
+          newParentElement, 
+          newGroup
+        } = this.checkIfElementMoved(page, x, y)
+        this.moveElementIfNeeded(newSection, newParentElement, newGroup, page, this.selectedElement)
+      }
+    }
+  }
+
+  moveElementIfNeeded(newSection, newParentElement, newGroup, page, elementId){
+    const elems = [
+      {
+        sections: page.header,
+        key: 'header'
+      },
+      {
+        sections: page['body'],
+        key: 'body'
+      },
+      {
+        sections: page['footer'],
+        key: 'footer'
+      }
+    ]
+    let newSectionIdx = null
+    let newParentIdx = null
+    let removedChild = false
+    elems.forEach(area => {
+      area.sections.forEach((section, sectionIdx) => {
+        if(section.id === newSection){
+          newSectionIdx = sectionIdx
+        }
+        section.children.forEach((parentElem, parentIdx) => {
+          const child = this.findNestedChild(parentElem.children, elementId)
+          if(parentElem.id !== newParentElement){
+            if(child){
+              const idx = parentElem.children.findIndex(({ id: cid }) => cid === elementId)
+              console.log(idx)
+              parentElem.children.splice(idx, 1)
+              removedChild = {...child}
+            }
+          }
+          if(parentElem.id === newParentElement){
+            newParentIdx = parentIdx
+          }
+        })
+      })
+    })
+    if(removedChild){
+      //!!!!!iMPORTANT
+      //NEED TO RECALCULATE THE SECTION OFFSET BASED ON X AND Y FOR THE REMOVED CHILD
+      //!!!!!iMPORTANT
+      page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
+    }
+  }
+
+  checkIfInside(x, y, targetX, targetY, targetWidth, targetHeight){
+    return targetX < x && targetX + targetWidth >= x && targetY < y && targetY + targetHeight >= y
+  }
+
+  checkIfElementMoved(page, x, y){
+    let newGroup = null
+    let newSection = null
+    let newParentElement = null
+    const elems = [
+      {
+        sections: page.header,
+        key: 'header'
+      },
+      {
+        sections: page['body'],
+        key: 'body'
+      },
+      {
+        sections: page['footer'],
+        key: 'footer'
+      }
+    ]
+    elems.forEach(elem => {
+      elem.sections.forEach(section => {
+        const { x: sectionX, y: sectionY, width: sectionW, height: sectionH } = document.querySelector(`[data-uuid="${section.id}"]`).getBoundingClientRect()
+        if(this.checkIfInside(x, y, sectionX, sectionY, sectionW, sectionH)){
+          newGroup = elem.key
+          newSection = section.id
+          section.children.forEach(element => {
+            const { x: elemX, y: elemY, width: elemW, height: elemH } = document.querySelector(`[data-uuid="${element.id}"]`).getBoundingClientRect()
+            if(this.checkIfInside(x, y, elemX, elemY, elemW, elemH)){
+              newParentElement = element.id
+            }
+          })
+        }
+      })
+    })
+    return { newSection, newParentElement, newGroup }
+    
+  }
+
   updateActivePageProp(propName, value){
     const idx = this.pages.findIndex(({ id: pageId }) => pageId === this.activePage)
     this.pages[idx][propName] = value
@@ -60,7 +176,7 @@ class AppStore {
 
   findNestedChild(children, id){
     let target = null
-    children.forEach(element => {
+    children.forEach((element, childIdx) => {
       if(!target){
         if(element.id !== id && element.children){
           target = this.findNestedChild(element.children, id)
@@ -73,7 +189,7 @@ class AppStore {
     return target
   }
 
-  moveElement(clientX, clientY){
+  moveElement(clientX, clientY, offsetX, offsetY){
     if(this.selectedElement && this.selectedElementGroup){
       const page = this.getActivePage()
       let target = null
@@ -83,17 +199,22 @@ class AppStore {
             target = element
           }
           if(element.id !== this.selectedElement && element.children && element.children.length){
-            target = this.searchNestedChildren(element.children, this.selectedElement)
+            target = this.findNestedChild(element.children, this.selectedElement)
           }
         }
       })
+      const dx = (clientX - this.mouseStartX)
+      const dy = (clientY - this.mouseStartY)
       //Only allow SHIFTING
       if(target.type === 'section'){
 
       }else{
-
+        this.checkChildComponentDragIndex(offsetX, offsetY)
+        target.position.xPos += dx
+        target.position.yPos += dy
+        this.mouseStartX = clientX
+        this.mouseStartY = clientY
       }
-      console.log(target)
     }
   }
 
@@ -215,7 +336,7 @@ class AppStore {
         const xMax = width + x
         const yMax = height + y
         if(x < clientX && xMax > clientX && y < clientY && yMax > clientY){
-          this.childDragParentId = section.id
+          this.currentSectionId = section.id
           this.childDragSection = area
         }
       }
@@ -274,6 +395,29 @@ class AppStore {
     return false
   }
 
+  getSectionTargetDiv(clientX, clientY, page, activeArea){
+    const domSection = document.querySelector(`[data-uuid="${this.currentSectionId}"] .comp-border`)
+    const section = page[activeArea].find(({ id }) => id === this.currentSectionId)
+    let targetDiv = null
+    let posMap = {}
+    if(domSection && section){
+      const ids = section.children.map(child => child.id)
+      domSection.childNodes.forEach((node, idx) => {
+        const { width: cW, height: cH, x: cX, y: cY } = node.getBoundingClientRect()
+        const xMax = cW + cX
+        const yMax = cH + cY
+        if(clientY > cY && clientY < yMax && clientX > cX && clientX < xMax){
+          targetDiv = node.getAttribute('data-uuid')
+          posMap.xPos = clientX - cX
+          posMap.yPos = clientY - cY
+          posMap.parentHeight = cH
+          posMap.parentWidth = cW
+        }
+      })
+    }
+    return { posMap, targetDiv }
+  }
+
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
@@ -315,60 +459,48 @@ class AppStore {
         this.dragSection = null
       }else{
         //Insert the component inside of a section
-        const domSection = document.querySelector(`[data-uuid="${this.childDragParentId}"] .comp-border`)
-        const section = page[activeArea].find(({ id }) => id === this.childDragParentId)
-        if(domSection && section){
-          const ids = section.children.map(child => child.id)
-          let targetDiv = null
-          let posMap = {}
-          domSection.childNodes.forEach((node, idx) => {
-            const { width: cW, height: cH, x: cX, y: cY } = node.getBoundingClientRect()
-            const xMax = cW + cX
-            const yMax = cH + cY
-            if(clientY > cY && clientY < yMax && clientX > cX && clientX < xMax){
-              targetDiv = node.getAttribute('data-uuid')
-              posMap.xPos = clientX - cX
-              posMap.yPos = clientY - cY
-              posMap.parentHeight = cH
-              posMap.parentWidth = cW
+        const { targetDiv, posMap } = this.getSectionTargetDiv(clientX, clientY, page, activeArea)
+        const domSection = document.querySelector(`[data-uuid="${this.currentSectionId}"] .comp-border`)
+        const section = page[activeArea].find(({ id }) => id === this.currentSectionId)
+        if(targetDiv){
+          //If there is a target div inside the section
+          const childIdx = section.children.findIndex(({ id: childId }) => childId === targetDiv)
+          if(comp.style.width && comp.style.height){
+            let compHeight = this.convertPixelsToNumber(comp.style.height)
+            let compWidth = this.convertPixelsToNumber(comp.style.width)
+            //Calculate the offset of the component width and height since the clientX and clientY will always be in the center of the component
+            if(compHeight){
+              posMap.yPos -= (compHeight / 2)
             }
-          })
-          if(targetDiv){
-            //If there is a target div inside the section
-            const childIdx = section.children.findIndex(({ id: childId }) => childId === targetDiv)
-            console.log(targetDiv, childIdx)
-            if(comp.style.width && comp.style.height){
-              let compHeight = this.convertPixelsToNumber(comp.style.height)
-              let compWidth = this.convertPixelsToNumber(comp.style.width)
-              //Calculate the offset of the component width and height since the clientX and clientY will always be in the center of the component
-              if(!compWidth){
-                let compWidth = this.convertPrecentToNumber(comp.style.width)
-                posMap.xPos -= ((posMap.parentWidth * compWidth) / 2)
-              }else{
-                posMap.xPos -= (compWidth / 2)
-              }
-              comp.xPos = posMap.xPos
-              comp.yPos = posMap.yPos
-              comp.position = {
-                ...comp.position,
-                xPos: posMap.xPos,
-                yPos: posMap.yPos
-              }
-              section.children[childIdx].children.push(comp)
-              //insert the component
+            if(!compWidth){
+              let compWidth = this.convertPrecentToNumber(comp.style.width)
+              posMap.xPos -= ((posMap.parentWidth * (compWidth / 100)) / 2)
+            }else{
+              posMap.xPos -= (compWidth / 2)
             }
-          }else{
-            //If there is not a target div, insert the component with position absolute inside the section element
+            comp.xPos = posMap.xPos
+            comp.yPos = posMap.yPos
+            comp.position = {
+              ...comp.position,
+              xPos: posMap.xPos,
+              yPos: posMap.yPos
+            }
+            section.children[childIdx].children.push(comp)
+            setTimeout(() => {
+              this.setSelectedElement(comp.id, activeArea)
+            }, 200)
           }
+        }else{
+          //If there is not a target div, insert the component with position absolute inside the section element
         }
       }
     }
   }
 
-  setActiveSection(section, e){
+  setActiveGroup(section, e){
     if(section){
       const { width, height, x, y } = e.target.getBoundingClientRect()
-      this.activeSection = {
+      this.activeGroup = {
         section,
         x,
         y,
@@ -376,7 +508,7 @@ class AppStore {
         height
       }
     }else{
-      this.activeSection = null
+      this.activeGroup = null
     }
   }
 

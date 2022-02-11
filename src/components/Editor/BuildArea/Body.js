@@ -15,21 +15,33 @@ export const Body = observer((props) => {
   const activePage = app.getActivePage()
 
   const selectComponent = (e, id) => {
-    e.preventDefault()
+    e.stopPropagation()
     app.setSelectedElement(id, props.area)
   }
 
   useEffect(() => {
     setTimeout(() => {
-      const frame = document.querySelector("iframe").contentWindow.document.querySelector(props.iframeSelector)
-      if(frame){
-        const { width, height } = frame.getBoundingClientRect()
-        if(activePage[props.heightPropName] !== height){
-          app.updateActivePageProp(props.heightPropName, height)
+      const f = document.querySelector('iframe')
+      if(f){
+        const frame = document.querySelector("iframe").contentWindow.document.querySelector(props.iframeSelector)
+        if(frame){
+          const { width, height } = frame.getBoundingClientRect()
+          if(activePage[props.heightPropName] !== height){
+            app.updateActivePageProp(props.heightPropName, height)
+          }
         }
       }
     }, 10)
   }, [app.pages, app.selectedElement])
+
+  const handlePointerEvent = (e, status, id) => {
+    if(!app.selectedElement !== id){
+      app.setSelectedElement(id, props.area)
+    }
+    const x = status ? e.clientX : 0
+    const y = status ? e.clientY : 0
+    app.setMovingElement(status, x, y)
+  }
 
   const getChildElemBorder = (elem, idx) => {
     const { position, style: elemStyle, id } = elem
@@ -47,16 +59,29 @@ export const Body = observer((props) => {
       ...elemPositionStyle,
       ...elemStyle
     }
-    if(app.selectedElement === id){
-      style.display = 'initial'
-    }else{
-      style.display = 'none'
+    if(elem.type !== 'div'){
+      if(app.selectedElement === id){
+        style.opacity = '1'
+      }else{
+        style.opacity = '0'
+      }
     }
     switch(elem.type){
       case 'div':
-        return <div style={{...style}} data-uuid={id} />
+        return <div 
+          className='section-wrapper' style={{...style}} 
+          data-uuid={id}
+        >
+          {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx)) : undefined}
+        </div>
       default:
-        return <div />
+        return <div 
+          className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
+          style={{...style}}
+          data-uuid={id} 
+          onClick={e => selectComponent(e, id)}
+          onPointerDown={e => handlePointerEvent(e, true, elem.id)}
+        />
     }
   }
 
@@ -64,7 +89,7 @@ export const Body = observer((props) => {
 
   return (
     <div 
-      onMouseMove={e => app.setActiveSection(props.area, e)}
+      onMouseMove={e => app.setActiveGroup(props.area, e)}
       className={`build-area_${props.area}`}
       style={{
         top: props.top,
@@ -76,6 +101,7 @@ export const Body = observer((props) => {
         activePage[props.area].map((elem, idx) => {
           const { style, children, id } = elem
           const isSelected = app.selectedElement === id
+          const childSelected = app.selectedParentElement === id
           return (
             <>
               {
@@ -88,7 +114,7 @@ export const Body = observer((props) => {
               <div 
                 onClick={e => selectComponent(e, id)}
                 data-uuid={elem.id}
-                className={`section-component ${isSelected ? ' active-component' : ''}`}
+                className={`section-component ${isSelected || childSelected ? ' active-component' : ''}`}
                 style={{
                   ...style,
                   flexDirection: 'column',
@@ -99,7 +125,7 @@ export const Body = observer((props) => {
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx)) : undefined}
                 </ComponentBorder>
                 {
-                  (app.activeDrag && id === app.childDragParentId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
+                  (app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
                 }
               </div>
               {

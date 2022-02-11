@@ -30,6 +30,9 @@ export const Editor = observer((props) => {
       app.handleItemDragMove(clientX - x, clientY - y, clientX, clientY)
       shouldCloseSidebar(e)
     }
+    if(app.selectedElement && app.movingElement){
+      app.moveElement(clientX, clientY)
+    }
   }
 
   const handleMouseUp = e => {
@@ -37,9 +40,11 @@ export const Editor = observer((props) => {
       app.insertComponent(e)
       app.setActiveDragItem(null)
     }
+    app.setMovingElement(false, e.clientX, e.clientY)
   }
 
   const handleItemDrop = e => {
+    console.log('here')
     e.preventDefault()
   }
 

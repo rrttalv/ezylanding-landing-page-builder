@@ -60,6 +60,24 @@
         }
       }
       .comp-border {
+        .component-wrapper.selected {
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 10;
+            top: -5px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            border-radius: 4px;
+            border: 1px solid rgba(62, 227, 197, 0.5);
+          }
+        }
+        .section-wrapper {
+          z-index: 2;
+        }
+      }
+      .comp-border.visible {
         &::after {
           content: '';
           position: absolute;
