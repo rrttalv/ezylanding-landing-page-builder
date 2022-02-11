@@ -56,10 +56,10 @@ class AppStore {
     this.movingElement = status
     if(status){
       let target = null
-      this.pages[0][this.selectedElementGroup].forEach(section => {
+      this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
         const child = this.findNestedChild(section.children, this.selectedElement)
         if(child){
-          target = section.id
+          target = child.id
         }
       })
       this.selectedParentElement = target
@@ -71,12 +71,14 @@ class AppStore {
           newParentElement, 
           newGroup
         } = this.checkIfElementMoved(page, x, y)
-        this.moveElementIfNeeded(newSection, newParentElement, newGroup, page, this.selectedElement)
+        this.moveElementIfNeeded(newSection, newParentElement, newGroup, page, this.selectedElement, x, y)
+        this.selectedParentElement = null
+        this.selectedElementGroup = null
       }
     }
   }
 
-  moveElementIfNeeded(newSection, newParentElement, newGroup, page, elementId){
+  moveElementIfNeeded(newSection, newParentElement, newGroup, page, elementId, x, y){
     const elems = [
       {
         sections: page.header,
@@ -119,7 +121,15 @@ class AppStore {
       //!!!!!iMPORTANT
       //NEED TO RECALCULATE THE SECTION OFFSET BASED ON X AND Y FOR THE REMOVED CHILD
       //!!!!!iMPORTANT
+      const parent = page[newGroup][newSectionIdx].children[newParentIdx]
+      const { id } = parent
+      const { x: parentX, y: parentY } = document.querySelector(`[data-uuid="${id}"]`).getBoundingClientRect()
+      removedChild.position.xPos = x - parentX
+      removedChild.position.yPos = y - parentY
+      removedChild.id = uuidv4()
+      this.unsetSelectedElement()
       page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
+      this.setSelectedElement(removedChild.id, newGroup)
     }
   }
 

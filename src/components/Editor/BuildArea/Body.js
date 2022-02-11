@@ -32,7 +32,7 @@ export const Body = observer((props) => {
         }
       }
     }, 10)
-  }, [app.pages, app.selectedElement])
+  }, [app.pages, app.selectedElement, app.movingElement])
 
   const handlePointerEvent = (e, status, id) => {
     if(!app.selectedElement !== id){
@@ -76,6 +76,7 @@ export const Body = observer((props) => {
         </div>
       default:
         return <div 
+          draggable="false"
           className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
           style={{...style}}
           data-uuid={id} 
@@ -89,7 +90,7 @@ export const Body = observer((props) => {
 
   return (
     <div 
-      onMouseMove={e => app.setActiveGroup(props.area, e)}
+      onPointerMove={e => app.setActiveGroup(props.area, e)}
       className={`build-area_${props.area}`}
       style={{
         top: props.top,

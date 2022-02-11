@@ -168,7 +168,7 @@ export const IFrame = observer((props) => {
   return (
     blobUrl ? (
       <iframe 
-        style={{ width: '100%', zIndex: 0, height: frameHeight, zIndex: -2 }} 
+        style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: frameHeight, zIndex: -2 }} 
         src={blobUrl}
         id="HTML-FRAME" 
       />

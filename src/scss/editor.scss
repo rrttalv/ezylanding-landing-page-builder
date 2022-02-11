@@ -61,7 +61,9 @@
       }
       .comp-border {
         .component-wrapper.selected {
+          cursor: pointer;
           &::after {
+            cursor: pointer;
             content: "";
             position: absolute;
             z-index: 10;

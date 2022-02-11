@@ -31,6 +31,7 @@ export const Editor = observer((props) => {
       shouldCloseSidebar(e)
     }
     if(app.selectedElement && app.movingElement){
+      e.preventDefault()
       app.moveElement(clientX, clientY)
     }
   }
@@ -40,26 +41,19 @@ export const Editor = observer((props) => {
       app.insertComponent(e)
       app.setActiveDragItem(null)
     }
-    app.setMovingElement(false, e.clientX, e.clientY)
-  }
-
-  const handleItemDrop = e => {
-    console.log('here')
-    e.preventDefault()
+    if(app.movingElement){
+      app.setMovingElement(false, e.clientX, e.clientY)
+    }
   }
 
   useEffect(() => {
-    window.addEventListener('drop', handleItemDrop)
     app.setActivePage()
-    return function cleanup() {
-      window.removeEventListener('drop', handleItemDrop)
-    }
   }, [])
 
   return (
     <div
-      onMouseMove={e => handleMouseMove(e)}
-      onMouseUp={e => handleMouseUp(e)}
+      onPointerMove={e => handleMouseMove(e)}
+      onPointerUp={e => handleMouseUp(e)}
       className='container-fluid editor'
     >
       <div className='editor_area'>
