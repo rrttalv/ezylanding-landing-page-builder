@@ -13,6 +13,12 @@ class HeaderStore {
 
   toggleMenu(){
     this.settingsOpen = !this.settingsOpen
+    this.settingsMenuContent = this.settingsMenuContent.map(item => {
+      return {
+        ...item,
+        open: false
+      }
+    })
   }
 
   toggleMenuItemChildren(target){
