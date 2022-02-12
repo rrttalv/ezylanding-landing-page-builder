@@ -31,6 +31,22 @@ class HeaderStore {
     })
   }
 
+  handleFrameworkChange(id){
+    const item = this.settingsMenuContent.find(({ id: mid }) => mid === 'frameworks')
+    if(item){
+      item.children.forEach(child => {
+        this.appStore.setActiveFramework(null)
+        child.selected = false
+      })
+      item.children.forEach(child => {
+        if(child.id === id){
+          this.appStore.setActiveFramework(id)
+          child.selected = true
+        }
+      })
+    }
+  }
+
   initMenuContent(){
     if(!this.settingsMenuContent){
       this.settingsMenuContent = [
@@ -43,7 +59,7 @@ class HeaderStore {
               title,
               id,
               selected: this.appStore.activeFramework && this.appStore.activeFramework.id === id,
-              onClick: this.appStore.setActiveFramework(id)
+              onClick: () => this.handleFrameworkChange(id)
             }
           }),
           open: false

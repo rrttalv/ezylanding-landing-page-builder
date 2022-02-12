@@ -29,7 +29,7 @@
       height: 12px;
       margin-left: 1px;
     }
-    &_menu {    
+    &_menu, &_sub-menu {
       z-index: 10;
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
@@ -38,6 +38,7 @@
       height: fit-content;
       position: absolute;
       &-item {
+        transition: all 0.2s;
         padding: 7.5px 20px;
         padding-left: 7.5px;
         position: relative;
@@ -50,13 +51,34 @@
           all: unset;
           font-size: 13px;
         }
+        &-title.selected {
+          font-weight: 500;
+        }
         svg {
           position: absolute;
-          right: 3px;
+          right: 5px;
           top: 15px;
           fill: #000;
           width: 12px;
           height: 12px;
+        }
+      }
+      &-item.selected {
+        background-color: #e6e7fe8a;
+      }
+    }
+    &_sub-menu {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      width: fit-content;
+      .header_settings_menu-item {
+        padding-right: 50px;
+      }
+      .header_settings_menu-item.active {
+        background-color: #e6e7fe8a;
+        button {
+          font-weight: 500;
         }
       }
     }
