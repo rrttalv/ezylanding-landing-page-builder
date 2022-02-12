@@ -1,11 +1,19 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ReactComponent as Caret } from '../../svg/caret-down.svg'
 import { ReactComponent as Check } from '../../svg/mint-check.svg'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export const Header = observer(() => {
 
   const [menuClass, setMenuClass] = useState('hidden')
+  
+  const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -17,6 +25,8 @@ export const Header = observer(() => {
     header.initMenuContent()
   }, [])
 
+  const prevOpen = usePrevious(header.settingsOpen)
+
   useEffect(() => {
     if(header.settingsOpen){
       setMenuClass('animating-open')
@@ -24,10 +34,12 @@ export const Header = observer(() => {
         setMenuClass('visible')
       }, 250)
     }else{
-      setMenuClass('animating-close')
-      setTimeout(() => {
-        setMenuClass('hidden')
-      }, 250)
+      if(prevOpen === true){
+        setMenuClass('animating-close')
+        setTimeout(() => {
+          setMenuClass('hidden')
+        }, 250)
+      }
     }
   }, [header.settingsOpen])
 

@@ -113,7 +113,6 @@ class AppStore {
           if(parentElem.id !== newParentElement){
             if(child){
               const idx = parentElem.children.findIndex(({ id: cid }) => cid === elementId)
-              console.log(idx)
               parentElem.children.splice(idx, 1)
               removedChild = {...child}
             }

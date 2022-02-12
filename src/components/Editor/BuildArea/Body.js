@@ -31,8 +31,8 @@ export const Body = observer((props) => {
           }
         }
       }
-    }, 10)
-  }, [app.pages, app.selectedElement, app.movingElement])
+    }, 5)
+  }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.movingElement, app.activeDrag, app.activeFramework])
 
   const handlePointerEvent = (e, status, id) => {
     if(!app.selectedElement !== id){
