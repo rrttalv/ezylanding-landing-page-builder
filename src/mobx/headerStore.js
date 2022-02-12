@@ -11,7 +11,7 @@ class HeaderStore {
   settingsOpen = false
   settingsMenuContent = null
 
-  toggleMenu(){
+  toggleSettingsMenu(){
     this.settingsOpen = !this.settingsOpen
     this.settingsMenuContent = this.settingsMenuContent.map(item => {
       return {
@@ -21,7 +21,12 @@ class HeaderStore {
     })
   }
 
-  toggleMenuItemChildren(target){
+  closeAllMenus(){
+    this.toggleMenu()
+    this.settingsOpen = false
+  }
+
+  toggleSettingsMenuItemChildren(target){
     this.settingsMenuContent = this.settingsMenuContent.map(item => {
       if(item.id === target){
         return {

@@ -32,11 +32,11 @@ export const IFrame = observer((props) => {
       const { headerHeight, bodyHeight, footerHeight } = activePage
       setFrameHeight(headerHeight + bodyHeight + footerHeight)
     }
-  }, [app.pages, app.movingElement, app.activeDrag])
+  }, [app.pages, app.movingElement, app.activeDrag, app.activeFramework])
 
   useEffect(() => {
     parseElements()
-  }, [app.movingElement, app.pages, app.selectedElement])
+  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework])
 
   const getCorrectElement = (elem, isSectionChild) => {
     const { position, style: elemStyle } = elem
@@ -152,6 +152,21 @@ export const IFrame = observer((props) => {
             position: relative;
           }
         `}</style>
+        {
+          app.activeFramework ? (
+            app.activeFramework.scripts.map((tag, idx) => {
+              const origin = window.location.origin
+              if(tag.type === 'style'){
+                return <link key={idx} rel="stylesheet" href={`${origin}${tag.path}`} />
+              }
+              if(tag.type === 'script'){
+                return <script key={idx} src={`${origin}${tag.path}`}></script>
+              }
+            })
+          )
+          :
+          ''
+        }
       </head>
     )
     const bodyString = ReactDOMServer.renderToStaticMarkup(container)

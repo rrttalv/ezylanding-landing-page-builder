@@ -61,7 +61,7 @@ export const Header = observer(() => {
       <div 
         key={idx} 
         className={`header_settings_menu-item${item.open ? ' selected' : ''}`}
-        onClick={() => header.toggleMenuItemChildren(item.id)}
+        onClick={() => header.toggleSettingsMenuItemChildren(item.id)}
       >
         <button 
           className={`header_settings_menu-item-title${item.open ? ' selected' : ''}`}
@@ -74,7 +74,7 @@ export const Header = observer(() => {
           item.open ? <Caret style={{ transform: `rotate(${item.open ? '-90deg' : '0'})` }} /> : undefined
         }
         {
-          item.open ? (
+          item.open && item.children ? (
             <div className='header_settings_sub-menu'>
               {
                 item.children.map((child, idx) => (
@@ -92,7 +92,7 @@ export const Header = observer(() => {
 
   return (
     <div className='header'>
-      <div className='header_settings' onClick={() => header.toggleMenu()}>
+      <div className='header_settings' onClick={() => header.toggleSettingsMenu()}>
         <span>Project settings</span> <Caret style={{ transform: `rotate(${header.settingsOpen ? '180deg' : '0'})` }} />
       </div>
       {
