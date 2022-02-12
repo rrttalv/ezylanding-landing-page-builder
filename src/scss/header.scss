@@ -1,8 +1,101 @@
 .header {
-  height: 60px;
+  height: 50px;
   width: 100%;
   display: block;
   background-color: #EEEEEE;
   border-bottom: 1px solid rgba(0,0,0,0.1);
   z-index: 2;
+  &_settings {
+    width: 105px;
+    height: 40px;
+    margin-top: 5px;
+    margin-left: -2px;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #8D92FA;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    span {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      margin-left: 5px;
+    }
+    svg {
+      fill: #fff;
+      width: 12px;
+      height: 12px;
+      margin-left: 1px;
+    }
+    &_menu {    
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 4px 4px;
+      display: block;
+      height: fit-content;
+      position: absolute;
+      &-item {
+        padding: 7.5px 20px;
+        padding-left: 7.5px;
+        position: relative;
+        border-bottom: 1px solid #EEEEEE;
+        &:hover {
+          cursor: pointer;
+          background-color: #e6e7fe8a;
+        }
+        &-title {
+          all: unset;
+          font-size: 13px;
+        }
+        svg {
+          position: absolute;
+          right: 3px;
+          top: 15px;
+          fill: #000;
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+
+.header_settings_menu.visible {
+  z-index: 10;
+}
+
+.header_settings_menu.hidden {
+  display: none;
+  z-index: 0;
+}
+
+.header_settings_menu.animating-open {
+  z-index: 10;
+  animation: openModal 0.2s ease-out forwards;
+}
+
+.header_settings_menu.animating-close {
+  animation: closeModal 0.2s ease-out forwards;
+  z-index: 10;
+}
+
+
+@keyframes openModal {
+  0% { transform: translateX(-100%); }
+  100% { 
+    transform: translateX(0);   
+    display: block;
+  }
+}
+
+@keyframes closeModal {
+  0% { transform: translateX(0); }
+  100% { 
+    transform: translateX(-100%);
+  }
 }

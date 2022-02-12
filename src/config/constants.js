@@ -262,4 +262,35 @@ const constants = {
 
 }
 
+export const scripts = [
+  {
+    title: 'Foundation 6',
+    id: 'foundation',
+    scripts: [
+      { path: '/frameworks/foundation/css/foundation.min.css', type: 'style' },
+      { path: '/frameworks/foundation/js/foundation.min.js', type: 'script' },
+      { path: '/frameworks/jquery/jquery-3.6.0.min.js', type: 'script' },
+      { path: '/frameworks/what-input/what-input.js', type: 'script' },
+    ]
+  },
+  {
+    title: 'Bootstrap 4.6',
+    id: 'bootstrap',
+    scripts: [
+      { path: '/frameworks/jquery/jquery-3.6.0.min.js', type: 'script' },
+      { path: '/frameworks/popperjs/popper.min.js', type: 'script' },
+      { path: '/frameworks/bootstrap/js/bootstrap.min.js', type: 'script' },
+      { path: '/frameworks/bootstrap/css/bootstrap.min.css', type: 'style' }
+      
+    ]
+  },
+  {
+    title: 'Bulma',
+    id: 'bulma',
+    scripts: [
+      { path: '/frameworks/bootstrap/css/bootstrap.min.css', type: 'style' }
+    ]
+  }
+]
+
 export default constants

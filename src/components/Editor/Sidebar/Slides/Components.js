@@ -25,7 +25,7 @@ export const Components = observer((props) => {
   const handleItemDragStart = (e, item) => {
     const { clientX, clientY } = e
     const { x, y } = document.querySelector('.editor').getBoundingClientRect()
-    app.setActiveDragItem(item, clientX + x, clientY - y, 'sidebarComponentDrag')
+    app.setActiveDragItem(item, clientX + x, clientY - y)
     e.preventDefault()
     return
   }

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
+import { scripts } from "../config/constants";
 
 class AppStore {
   constructor() {
@@ -8,10 +9,6 @@ class AppStore {
 
   mouseStartX = 0
   mouseStartY = 0
-  mouseEventList = {
-    sidebarComponentDrag: false,
-    elementDrag: false,
-  }
   dragIndex = 0
   dragSection = null
   childDragIndex = 0
@@ -25,6 +22,7 @@ class AppStore {
   movingElement = false
   activeGroup = null
   parentElements = ['section', 'header']
+  activeFramework = null
   pages = [
     {
       route: '/',
@@ -44,6 +42,15 @@ class AppStore {
       customCode: ''
     }
   ]
+
+  setActiveFramework(id){
+    const script = scripts.find(({ id: sid }) => sid === id)
+    if(script){
+      this.activeFramework = script
+    }else{
+      this.activeFramework = null
+    }
+  }
 
   setSelectedElement(id, group){
     this.selectedElement = id
@@ -522,7 +529,7 @@ class AppStore {
     }
   }
 
-  setActiveDragItem(item, x, y, type){
+  setActiveDragItem(item, x, y){
     if(item){
       const copy = {...item}
       let width = item.style.width
@@ -554,12 +561,10 @@ class AppStore {
       this.activeDrag = copy
       this.mouseStartX = x
       this.mouseStartY = y
-      this.toggleActiveMouseEvent(type, true)
     }else{
       this.activeDrag = null
       this.mouseStartX = 0
       this.mouseStartY = 0
-      this.toggleActiveMouseEvent(null, false)
     }
   }
 
