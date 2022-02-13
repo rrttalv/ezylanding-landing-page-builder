@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
 import { PartitionBorder } from './PartitionBorder'
+import { SlateEditor } from './ElementWrappers/SlateEditor'
 
 export const Body = observer((props) => {
   
@@ -22,9 +23,16 @@ export const Body = observer((props) => {
     app.setSelectedElement(id, props.area)
   }
 
-  const handleDoubleClick = (e, elem) => {
+  const handleDoubleClick = (e, elem, sectionId) => {
     e.stopPropagation()
     if(elem.type === 'text'){
+      let id = null
+      let section = null
+      if(app.activeTextEditor !== elem.id){
+        id = elem.id
+        section = sectionId
+      }
+      app.setActiveTextEditor(id, section)
       //show elem text editor
     }
   }
@@ -52,10 +60,15 @@ export const Body = observer((props) => {
     const y = status ? e.clientY : 0
     app.setMovingElement(status, x, y)
   }
+  
+  const getEditingTextElem = (elem, style) => {
+    return <SlateEditor elem={elem} style={style} area={props.area} />
+  }
 
-  const getChildElemBorder = (elem, idx) => {
+  const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
     let elemPositionStyle = {}
+    delete elemStyle.opacity
     if(elem.position){
       const { xPos, yPos, width, height } = elem.position
       elemPositionStyle = {
@@ -82,18 +95,24 @@ export const Body = observer((props) => {
     switch(elem.type){
       case 'div':
         return <div 
+          key={idx + sectionId}
           className='section-wrapper' style={{...style}} 
           data-uuid={id}
         >
-          {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx)) : undefined}
+          {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
         </div>
+      case 'text':
+        if(app.activeTextEditor === elem.id){
+          return getEditingTextElem(elem, {...style, opacity: elemStyle.opacity})
+        }
       default:
         return <div 
+          key={idx + sectionId}
           draggable="false"
           className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
           style={{...style}}
           data-uuid={id} 
-          onDoubleClick={e => handleDoubleClick(e, elem)}
+          onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
           onClick={e => selectComponent(e, id)}
           onPointerDown={e => handlePointerEvent(e, true, elem.id)}
         />
@@ -137,7 +156,7 @@ export const Body = observer((props) => {
                 }}
               >
                 <ComponentBorder style={style} display={isSelected}>
-                  {children ? children.map((child, idx) => getChildElemBorder(child, idx)) : undefined}
+                  {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
                   (app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined

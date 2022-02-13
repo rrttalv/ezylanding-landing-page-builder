@@ -36,10 +36,13 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework])
+  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework, app.activeTextEditor])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName } = elem
+    if(app.activeTextEditor === elem.id){
+      style.opacity = 0
+    }
     switch(tagName){
       case 'h1':
         return <h1 className={className} style={style}>{content}</h1>
@@ -47,6 +50,12 @@ export const IFrame = observer((props) => {
         return <h2 className={className} style={style}>{content}</h2>
       case 'h3':
         return <h3 className={className} style={style}>{content}</h3>
+      case 'h4':
+        return <h4 className={className} style={style}>{content}</h4>
+      case 'h5':
+        return <h5 className={className} style={style}>{content}</h5>
+      case 'h6':
+        return <h6 className={className} style={style}>{content}</h6>
       default:
         return <p className={className} style={style}>{content}</p>
     }

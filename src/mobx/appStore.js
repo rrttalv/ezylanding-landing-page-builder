@@ -14,6 +14,10 @@ class AppStore {
   childDragIndex = 0
   childDragSection = null
   currentSectionId = null
+  
+  activeTextEditor = null
+  activeElementMeta = {}
+
   activeDrag = null
   activePage = null
   selectedElement = null
@@ -49,6 +53,44 @@ class AppStore {
       this.activeFramework = script
     }else{
       this.activeFramework = null
+    }
+  }
+
+  changeElementProp(id, elementType, propName, propValue){
+    if(elementType === 'text'){
+      const { parentId } = this.activeElementMeta
+      const keys = propName.split('|')
+      const elements = this.pages[0][this.selectedElementGroup]
+      let textElem = null
+      elements.forEach(element => {
+        //Check if the text element is outside of the divs
+        if(element.id === parentId && element.children){
+          const res = this.findNestedChild(element.children, id)
+          if(res){
+            textElem = res
+          }
+        }
+        if(element.id !== parentId && element.children){
+          const res = this.findNestedChild(element.children, id)
+          if(res){
+            textElem = res
+          }
+        }
+      })
+      if(keys.length === 1 && textElem){
+        textElem[keys[0]] = propValue
+      }
+      const parentDomNode = document.querySelector(`[data-uuid="${parentId}"] [data-slate-node="text"]`)
+      if(parentDomNode && textElem){
+        setTimeout(() => {
+          const { width, height } = parentDomNode.getBoundingClientRect()
+          textElem.position = {
+            ...textElem.position,
+            width: width + 'px',
+            height: height + 'px'
+          }
+        }, 10)
+      }
     }
   }
 
@@ -434,6 +476,16 @@ class AppStore {
     return { posMap, targetDiv }
   }
 
+  //Id is text ID, parentID is the parent DIV that surrounds the text
+  setActiveTextEditor(id, parentId){
+    this.activeTextEditor = id
+    if(parentId){
+      this.activeElementMeta = {
+        parentId
+      }
+    }
+  }
+
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
@@ -503,7 +555,6 @@ class AppStore {
           }
           comp.xPos = posMap.xPos
           comp.yPos = posMap.yPos
-          console.log(posMap)
           comp.position = {
             ...comp.position,
             xPos: posMap.xPos,
