@@ -18,6 +18,14 @@ class AppStore {
   activeTextEditor = null
   activeElementMeta = {}
 
+  activeFonts = [
+    {
+      name: 'arial',
+      script: null,
+      id: 'arial'
+    }
+  ]
+
   activeDrag = null
   activePage = null
   selectedElement = null
@@ -57,37 +65,59 @@ class AppStore {
   }
 
   changeElementProp(id, elementType, propName, propValue){
-    if(elementType === 'text'){
+    if(elementType === 'text' || elementType === 'button'){
       const { parentId } = this.activeElementMeta
       const keys = propName.split('|')
       const elements = this.pages[0][this.selectedElementGroup]
-      let textElem = null
+      let targetElem = null
       elements.forEach(element => {
         //Check if the text element is outside of the divs
         if(element.id === parentId && element.children){
           const res = this.findNestedChild(element.children, id)
           if(res){
-            textElem = res
+            targetElem = res
           }
         }
         if(element.id !== parentId && element.children){
           const res = this.findNestedChild(element.children, id)
           if(res){
-            textElem = res
+            targetElem = res
           }
         }
       })
-      if(keys.length === 1 && textElem){
-        textElem[keys[0]] = propValue
+      if(keys.length === 1 && targetElem){
+        targetElem[keys[0]] = propValue
       }
       const parentDomNode = document.querySelector(`[data-uuid="${parentId}"] [data-slate-node="text"]`)
-      if(parentDomNode && textElem){
+      if(parentDomNode && targetElem){
         setTimeout(() => {
           const { width, height } = parentDomNode.getBoundingClientRect()
-          textElem.position = {
-            ...textElem.position,
-            width: width + 'px',
-            height: height + 'px'
+          if(elementType === 'text'){
+            targetElem.position = {
+              ...targetElem.position,
+              width: width + 'px',
+              height: height + 'px'
+            }
+          }
+          if(elementType === 'button'){
+            const { height: btnHeight } = targetElem.style
+            if(btnHeight){
+              let trueHeight = 0
+              if(btnHeight.includes('px')){
+                trueHeight = this.convertPixelsToNumber(btnHeight)
+              }
+              if(btnHeight.includes('%')){
+                const precentageHeight = this.convertPrecentToNumber(btnHeight)
+                const parent = document.querySelector(`[data-uuid="${parentId}"]`)
+                if(parent && parent.clientHeight){
+                  trueHeight = (parent.clientHeight * (precentageHeight / 100))
+                }
+              }
+              console.log(trueHeight, height)
+              if(height > trueHeight){
+                targetElem.style.height = height + 'px'
+              }
+            }
           }
         }, 10)
       }

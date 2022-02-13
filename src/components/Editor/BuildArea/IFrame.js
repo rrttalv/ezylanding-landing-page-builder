@@ -36,7 +36,7 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework, app.activeTextEditor])
+  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework, app.activeFonts, app.activeTextEditor])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName } = elem
@@ -105,7 +105,11 @@ export const IFrame = observer((props) => {
       case 'text':
         return getTextElement(elem, style)
       case 'button':
-        return <button style={style} className={elem.className}>{elem.content}</button>
+        const styleCopy = {...style}
+        if(app.activeTextEditor === elem.id){
+          styleCopy.opacity = '0.25'
+        }
+        return <button style={styleCopy} className={elem.className}>{elem.content}</button>
       case 'input':
         return <input type={elem.inputType} className={elem.className} style={style} />
       case 'img':
@@ -168,6 +172,9 @@ export const IFrame = observer((props) => {
           }
           body {
             ${pageStyle}
+            font-family: ${app.activeFonts.map(meta => {
+              return JSON.stringify(meta.name)
+            }).join(' ')};
             margin: 0;
             padding: 0;
             pointer-events: none;

@@ -37,6 +37,9 @@ export const Editor = observer((props) => {
   }
 
   const handleMouseUp = e => {
+    if(app.activeTextEditor){
+      return
+    }
     if(app.activeDrag){
       app.insertComponent(e)
       app.setActiveDragItem(null)

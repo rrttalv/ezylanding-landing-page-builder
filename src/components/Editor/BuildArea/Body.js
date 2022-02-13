@@ -15,7 +15,11 @@ export const Body = observer((props) => {
   const { store: { app, sidebar } } = getStore()
   const activePage = app.getActivePage()
 
-  const selectComponent = (e, id) => {
+  const selectComponent = (e, id, section = false) => {
+    console.log(e)
+    if(section && app.activeTextEditor){
+      app.setActiveTextEditor(null, null)
+    }
     if(e.detail === 2){
       return
     }
@@ -24,8 +28,11 @@ export const Body = observer((props) => {
   }
 
   const handleDoubleClick = (e, elem, sectionId) => {
+    console.log(elem.type)
     e.stopPropagation()
-    if(elem.type === 'text'){
+    e.preventDefault()
+    if(elem.type === 'text' || elem.type === 'button'){
+      console.log('here')
       let id = null
       let section = null
       if(app.activeTextEditor !== elem.id){
@@ -60,9 +67,39 @@ export const Body = observer((props) => {
     const y = status ? e.clientY : 0
     app.setMovingElement(status, x, y)
   }
-  
+
   const getEditingTextElem = (elem, style) => {
-    return <SlateEditor elem={elem} style={style} area={props.area} />
+    let copy = {...style}
+    const { type } = elem
+    if(type === 'text' && elem.tagName.includes('h') && !style.fontWeight){
+      copy.fontWeight = 600
+    }
+    if(!style.fontFamily){
+      copy.fontFamily = app.activeFonts[0].name
+    }
+    if(type === 'button'){
+      copy = {
+        ...copy,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+      if(copy.textAlign){
+        switch(copy.textAlign){
+          case 'left':
+            copy.justifyContent = 'flex-start'
+            break
+          case 'right':
+            copy.justifyContent = 'flex-end'
+            break
+          default:
+            break
+        }
+      }else{
+        copy.textAlign = 'center'
+      }
+    }
+    return <SlateEditor elem={elem} style={copy} area={props.area} />
   }
 
   const getChildElemBorder = (elem, idx, sectionId) => {
@@ -101,9 +138,15 @@ export const Body = observer((props) => {
         >
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
         </div>
+      case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          return getEditingTextElem(elem, {...style, opacity: elemStyle.opacity})
+          const styleCopy = {...style}
+          if(elem.type === 'button'){
+            styleCopy.background = elemStyle.background
+          }
+          console.log(styleCopy)
+          return getEditingTextElem(elem, {...styleCopy, opacity: elemStyle.opacity})
         }
       default:
         return <div 
@@ -146,7 +189,7 @@ export const Body = observer((props) => {
                 undefined
               }
               <div 
-                onClick={e => selectComponent(e, id)}
+                onClick={e => selectComponent(e, id, true)}
                 data-uuid={elem.id}
                 className={`section-component ${isSelected || childSelected ? ' active-component' : ''}`}
                 style={{

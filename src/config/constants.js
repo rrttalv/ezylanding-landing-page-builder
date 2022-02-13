@@ -202,6 +202,7 @@ const constants = {
         title: 'Text input',
         type: 'input',
         inputType: 'textarea',
+        className: 'form-control',
         labelData: {
           content: 'Text area label',
           style: {
@@ -220,7 +221,7 @@ const constants = {
         },
         thumb: '/images/inputs/text-area.svg',
         style: {
-          'border-radius': '4px',
+          'borderRadius': '4px',
           width: '80%',
           height: '100px',
           margin: '0 auto',
@@ -234,10 +235,11 @@ const constants = {
       {
         title: 'Rounded button',
         type: 'button',
+        className: 'btn',
         content: 'Click me!',
         thumb: '/images/inputs/regular-btn.svg',
         style: {
-          'border-radius': '4px',
+          'borderRadius': '4px',
           width: '100px',
           margin: '0 auto',
           display: 'block',
@@ -257,7 +259,7 @@ const constants = {
         content: 'Click me!',
         thumb: '/images/inputs/box-shadow-btn.svg',
         style: {
-          'border-radius': '4px',
+          'borderRadius': '4px',
           width: '100px',
           height: '50px',
           margin: '0 auto',

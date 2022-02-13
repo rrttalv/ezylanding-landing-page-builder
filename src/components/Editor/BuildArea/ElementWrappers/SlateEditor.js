@@ -37,19 +37,19 @@ export const SlateEditor = observer((props) => {
       return val.children.map(child => child.text).join('')
     }).join('\n')
     if(props.elem.content !== stringValue){
-      app.changeElementProp(props.elem.id, 'text', 'content', stringValue)
+      app.changeElementProp(props.elem.id, props.elem.type, 'content', stringValue)
     }
   }
 
   const handleClick = e => {
-    e.stopPropagation()
-    e.preventDefault()
     app.setSelectedElement(props.elem.id, props.area)
+    e.stopPropagation()
   }
 
   return (
     <div 
       style={{...props.style}}
+      onPointerDown={e => handleClick(e)}
       onClick={e => handleClick(e)}
       onDoubleClick={e => app.setActiveTextEditor(null, null)}
       className='text-editor-wrapper'
