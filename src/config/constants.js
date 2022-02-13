@@ -62,7 +62,9 @@ const constants = {
               width: '50%',
               height: '100%'
             },
-            children: []
+            children: [
+              
+            ]
           },
           {
             type: 'div',
@@ -200,6 +202,13 @@ const constants = {
         title: 'Text input',
         type: 'input',
         inputType: 'textarea',
+        labelData: {
+          content: 'Text area label',
+          style: {
+            marginBottom: '10px',
+            fontSize: '12px'
+          }
+        },
         displayStyle: {
           wrapper: {
             width: '100%',
@@ -230,11 +239,14 @@ const constants = {
         style: {
           'border-radius': '4px',
           width: '100px',
-          height: '50px',
           margin: '0 auto',
           display: 'block',
           position: 'absolute',
+          background: '#3E41DC',
+          color: '#fff',
+          height: '35px',
           top: 0,
+          fontSize: '14px',
           left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
         }
@@ -257,9 +269,91 @@ const constants = {
         }
       },
     ]
+  },
+  text: {
+    id: 'text',
+    title: 'Text',
+    elements: [
+      {
+        title: 'Semibold H1 Heading',
+        type: 'text',
+        tagName: 'h1',
+        content: 'H1 Heading',
+        thumb: '/images/text/Heading-1.svg',
+        displayStyle: {
+          wrapper: {
+            width: '100%',
+            height: '100px'
+          },
+          image: {
+            width: '250px'
+          }
+        },
+        style: {
+          width: '100%',
+          marginTop: '0',
+          marginBottom: '10px',
+          fontSize: '32px',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }
+      },
+      {
+        title: 'Semibold H2 Heading',
+        type: 'text',
+        tagName: 'h2',
+        content: 'H2 Heading',
+        thumb: '/images/text/Heading-2.svg',
+        displayStyle: {
+          wrapper: {
+            width: '100%',
+            height: '100px'
+          },
+          image: {
+            width: '187px'
+          }
+        },
+        style: {
+          width: '100%',
+          marginTop: '0',
+          marginBottom: '10px',
+          fontSize: '24px',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }
+      },
+      {
+        title: 'Semibold H3 Heading',
+        type: 'text',
+        tagName: 'h3',
+        content: 'H3 Heading',
+        thumb: '/images/text/Heading-3.svg',
+        displayStyle: {
+          wrapper: {
+            width: '100%',
+            height: '100px'
+          },
+          image: {
+            width: '144px'
+          }
+        },
+        style: {
+          width: '100%',
+          marginTop: '0',
+          marginBottom: '10px',
+          fontSize: '18.5px',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }
+      },
+    ]
   }
-  
-
 }
 
 export const scripts = [

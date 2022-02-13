@@ -481,31 +481,38 @@ class AppStore {
         if(targetDiv){
           //If there is a target div inside the section
           const childIdx = section.children.findIndex(({ id: childId }) => childId === targetDiv)
+          let compHeight = 0
+          let compWidth = 0
           if(comp.style.width && comp.style.height){
-            let compHeight = this.convertPixelsToNumber(comp.style.height)
-            let compWidth = this.convertPixelsToNumber(comp.style.width)
-            //Calculate the offset of the component width and height since the clientX and clientY will always be in the center of the component
-            if(compHeight){
-              posMap.yPos -= (compHeight / 2)
-            }
-            if(!compWidth){
-              let compWidth = this.convertPrecentToNumber(comp.style.width)
-              posMap.xPos -= ((posMap.parentWidth * (compWidth / 100)) / 2)
-            }else{
-              posMap.xPos -= (compWidth / 2)
-            }
-            comp.xPos = posMap.xPos
-            comp.yPos = posMap.yPos
-            comp.position = {
-              ...comp.position,
-              xPos: posMap.xPos,
-              yPos: posMap.yPos
-            }
-            section.children[childIdx].children.push(comp)
-            setTimeout(() => {
-              this.setSelectedElement(comp.id, activeArea)
-            }, 200)
+            compHeight = this.convertPixelsToNumber(comp.style.height)
+            compWidth = this.convertPixelsToNumber(comp.style.width)
+          }else{
+            const { clientHeight, clientWidth } = this.getItemSize(comp)
+            compHeight = clientHeight
+            compWidth = clientWidth
           }
+          //Calculate the offset of the component width and height since the clientX and clientY will always be in the center of the component
+          if(compHeight){
+            posMap.yPos -= (compHeight / 2)
+          }
+          if(!compWidth){
+            let compWidth = this.convertPrecentToNumber(comp.style.width)
+            posMap.xPos -= ((posMap.parentWidth * (compWidth / 100)) / 2)
+          }else{
+            posMap.xPos -= (compWidth / 2)
+          }
+          comp.xPos = posMap.xPos
+          comp.yPos = posMap.yPos
+          console.log(posMap)
+          comp.position = {
+            ...comp.position,
+            xPos: posMap.xPos,
+            yPos: posMap.yPos
+          }
+          section.children[childIdx].children.push(comp)
+          setTimeout(() => {
+            this.setSelectedElement(comp.id, activeArea)
+          }, 200)
         }else{
           //If there is not a target div, insert the component with position absolute inside the section element
         }
@@ -528,14 +535,34 @@ class AppStore {
     }
   }
 
+  getItemSize(item){
+    if(item && item.type === 'text'){
+      const { className, content, tagName, style } = item
+      const domNode = document.createElement(tagName)
+      domNode.textContent = content
+      Object.keys(style).map(tag => {
+        if(tag !== 'width' || tag !== 'height'){
+          domNode.style[tag] = style[tag]
+        }
+      })
+      domNode.style.opacity = '0'
+      domNode.style.zIndex = '-1000000'
+      domNode.style.width = 'fit-content'
+      document.body.appendChild(domNode)
+      const { clientWidth, clientHeight } = domNode
+      domNode.remove()
+      return { clientWidth, clientHeight }
+    }
+  }
+
   setActiveDragItem(item, x, y){
     if(item){
       const copy = {...item}
       let width = item.style.width
       let height = item.style.height
-      const pxWidth = this.convertPixelsToNumber(width)
+      let pxWidth = this.convertPixelsToNumber(width)
       const precentWidth = this.convertPrecentToNumber(width)
-      const pxHeight = this.convertPixelsToNumber(height)
+      let pxHeight = this.convertPixelsToNumber(height)
       let xOffset = 0
       let yOffset = 0
       if(precentWidth){
@@ -550,6 +577,15 @@ class AppStore {
       }
       if(pxHeight){
         yOffset = pxHeight / 2
+      }
+      if(!item.style.height || !item.style.width){
+        const { clientWidth, clientHeight } = this.getItemSize(item)
+        yOffset = clientHeight / 2
+        xOffset = clientWidth / 2
+        width = clientWidth
+        height = clientHeight
+        pxWidth = clientWidth
+        pxHeight = clientHeight
       }
       copy.position = {
         xPos: x - xOffset,

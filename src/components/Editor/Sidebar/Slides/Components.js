@@ -14,7 +14,7 @@ export const Components = observer((props) => {
 
   const { store: { sidebar, app } } = getStore()
 
-  const { sections, inputs } = constants
+  const { sections, inputs, text } = constants
 
   const getExpanded = () => {
     return (
@@ -97,6 +97,9 @@ export const Components = observer((props) => {
       }
       {
         getRows(inputs)
+      }
+      {
+        getRows(text)
       }
     </div>
   )

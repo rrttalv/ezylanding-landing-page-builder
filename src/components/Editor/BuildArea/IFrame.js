@@ -38,6 +38,20 @@ export const IFrame = observer((props) => {
     parseElements()
   }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework])
 
+  const getTextElement = (elem, style) => {
+    const { className, content, tagName } = elem
+    switch(tagName){
+      case 'h1':
+        return <h1 className={className} style={style}>{content}</h1>
+      case 'h2':
+        return <h2 className={className} style={style}>{content}</h2>
+      case 'h3':
+        return <h3 className={className} style={style}>{content}</h3>
+      default:
+        return <p className={className} style={style}>{content}</p>
+    }
+  }
+
   const getCorrectElement = (elem, isSectionChild) => {
     const { position, style: elemStyle } = elem
     let elemPositionStyle = {}
@@ -79,6 +93,8 @@ export const IFrame = observer((props) => {
         )
       case 'link':
         return <a href={`#`} className={elem.className} style={style}>{elem.content}</a>
+      case 'text':
+        return getTextElement(elem, style)
       case 'button':
         return <button style={style} className={elem.className}>{elem.content}</button>
       case 'input':
