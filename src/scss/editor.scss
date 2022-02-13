@@ -11,6 +11,19 @@
     overflow-y: hidden;
     width: 100%;
     background: #fff;
+    .text-editor-wrapper {
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: -5px;
+        left: -5px;
+        width: calc(100% + 10px);
+        height: calc(100% + 10px);
+        border-radius: 4px;
+        border: 1px solid rgba(62, 227, 197, 0.5);
+      }
+    }
     &_insert-preview {
       width: 25%;
       height: 25px;

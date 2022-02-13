@@ -294,6 +294,7 @@ const constants = {
           marginTop: '0',
           marginBottom: '10px',
           fontSize: '32px',
+          lineHeight: 'normal',
           display: 'block',
           position: 'absolute',
           top: 0,
