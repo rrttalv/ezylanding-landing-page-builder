@@ -17,6 +17,7 @@ class AppStore {
   elementLen = 0
   activeTextEditor = null
   activeElementMeta = {}
+  panPoint = null
 
   activeFonts = [
     {
@@ -64,6 +65,21 @@ class AppStore {
     }
   }
 
+  setPanPoint(direction, x, y){
+    this.panPoint = direction
+    if(!direction){
+      this.mouseStartX = 0
+      this.mouseStartY = 0
+    }else{
+      this.mouseStartX = x
+      this.mouseStartY = y
+    }
+  }
+
+  handlePan(e){
+    console.log(e)
+  }
+
   changeElementProp(id, elementType, propName, propValue){
     if(elementType === 'text' || elementType === 'button'){
       const { parentId } = this.activeElementMeta
@@ -95,8 +111,8 @@ class AppStore {
           if(elementType === 'text'){
             targetElem.position = {
               ...targetElem.position,
-              width: width + 'px',
-              height: height + 'px'
+              width: width,
+              height: height
             }
             this.updateInsideFrame(targetElem, 'width')
             this.updateInsideFrame(targetElem, 'height')
@@ -121,6 +137,9 @@ class AppStore {
                 this.updateInsideFrame(targetElem, 'height')
               }
             }
+          }
+          if(keys && keys[0] === 'content'){
+            this.updateInsideFrame(targetElem, 'content')
           }
         }, 10)
       }
@@ -150,7 +169,7 @@ class AppStore {
           el.style.width = `${position.width}px`
         }
         if(propName === 'height'){
-          el.style.width = `${position.height}px`
+          el.style.height = `${position.height}px`
         }
       }
     }
@@ -710,8 +729,8 @@ class AppStore {
       copy.position = {
         xPos: x - xOffset,
         yPos: y - yOffset,
-        width: width + 'px',
-        height: pxHeight + 'px'
+        width: width,
+        height: pxHeight
       }
       this.activeDrag = copy
       this.mouseStartX = x

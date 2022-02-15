@@ -11,6 +11,7 @@ export const IFrame = observer((props) => {
     return React.useContext(MobXProviderContext)
   }
 
+
   const getHeader = elem => {
     const { partitions, content, style } = elem
     return (
@@ -69,9 +70,7 @@ export const IFrame = observer((props) => {
       const { xPos, yPos, width, height } = elem.position
       elemPositionStyle = {
         position: 'absolute',
-        transform: `translate(${xPos}px, ${yPos}px)`,
-        width,
-        height
+        transform: `translate(${xPos}px, ${yPos}px)`
       }
     }
     const wl = ['section', 'header']

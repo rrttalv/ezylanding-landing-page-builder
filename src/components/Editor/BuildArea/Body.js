@@ -101,6 +101,26 @@ export const Body = observer((props) => {
     return <SlateEditor elem={elem} style={copy} area={props.area} />
   }
 
+  const getElemDimensions = (id) => {
+    const el = document.querySelector(`[data-uuid="${id}"]`)
+    let elWidth = 0
+    let elHeight = 0
+    if(el){
+      const { height, width } = el.getBoundingClientRect()
+      elWidth = width
+      elHeight = height
+    }
+    return { elWidth, elHeight }
+  }
+
+  const handlePanpointMouseEvent = (e, id, type, mouseUp = false) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setSelectedElement(id, props.area)
+    const { clientX, clientY } = e
+    app.setPanPoint(type, clientX, clientY)
+  }
+
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
     let elemPositionStyle = {}
@@ -128,6 +148,7 @@ export const Body = observer((props) => {
     delete style.background
     delete style.backgroundColor
     delete style.backgroundUrl
+    const pointHorizontalStyle = {}
     switch(elem.type){
       case 'div':
         return <div 
@@ -144,22 +165,44 @@ export const Body = observer((props) => {
           if(elem.type === 'button'){
             styleCopy.background = elemStyle.background
           }
-          console.log(styleCopy)
           return getEditingTextElem(elem, {...styleCopy, opacity: elemStyle.opacity})
         }
       default:
-        return <div 
-          key={idx + sectionId}
-          draggable="false"
-          className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
-          style={{...style}}
-          data-uuid={id} 
-          onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
-          onClick={e => selectComponent(e, id)}
-          onPointerDown={e => handlePointerEvent(e, true, elem.id)}
-        />
+        return (
+          <div 
+            key={idx + sectionId}
+            draggable="false"
+            className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
+            style={{...style}}
+            data-uuid={id} 
+            onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
+            onClick={e => selectComponent(e, id)}
+            onPointerDown={e => handlePointerEvent(e, true, elem.id)}
+          >
+            <div className='pan-point side left' 
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'left')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'left', true)} 
+            />
+            <div className='pan-point side right' 
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'right')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'right', true)} 
+            />
+            <div className='pan-point top horizontal'
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'top')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'top', true)} 
+            />
+            <div className='pan-point bottom horizontal'
+              onPointerDown={e => handlePanpointMouseEvent(e,  elem.id,'bottom')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'bottom', true)} 
+            />
+          </div>
+        )
     }
   }
+  
+  /*
+  
+   */
 
   const { dragIndex, dragSection, activeDrag, } = app
 
