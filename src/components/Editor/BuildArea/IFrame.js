@@ -15,6 +15,7 @@ export const IFrame = observer((props) => {
     const { partitions, content, style } = elem
     return (
       <header
+        data-uuid={elem.id}
         style={style}
       >
         {
@@ -32,32 +33,32 @@ export const IFrame = observer((props) => {
       const { headerHeight, bodyHeight, footerHeight } = activePage
       setFrameHeight(headerHeight + bodyHeight + footerHeight)
     }
-  }, [app.pages, app.movingElement, app.activeDrag, app.activeFramework])
+  }, [app.pages, app.movingElement, app.activeDrag])
 
   useEffect(() => {
     parseElements()
-  }, [app.movingElement, app.pages, app.selectedElement, app.activeFramework, app.activeFonts, app.activeTextEditor])
+  }, [app.elementLen])
 
   const getTextElement = (elem, style) => {
-    const { className, content, tagName } = elem
+    const { className, content, tagName, id } = elem
     if(app.activeTextEditor === elem.id){
       style.opacity = 0
     }
     switch(tagName){
       case 'h1':
-        return <h1 className={className} style={style}>{content}</h1>
+        return <h1 data-uuid={id} key={id} className={className} style={style}>{content}</h1>
       case 'h2':
-        return <h2 className={className} style={style}>{content}</h2>
+        return <h2 data-uuid={id} key={id} className={className} style={style}>{content}</h2>
       case 'h3':
-        return <h3 className={className} style={style}>{content}</h3>
+        return <h3 data-uuid={id} key={id}className={className} style={style}>{content}</h3>
       case 'h4':
-        return <h4 className={className} style={style}>{content}</h4>
+        return <h4 data-uuid={id} key={id}className={className} style={style}>{content}</h4>
       case 'h5':
-        return <h5 className={className} style={style}>{content}</h5>
+        return <h5 data-uuid={id} key={id}className={className} style={style}>{content}</h5>
       case 'h6':
-        return <h6 className={className} style={style}>{content}</h6>
+        return <h6 data-uuid={id} key={id}className={className} style={style}>{content}</h6>
       default:
-        return <p className={className} style={style}>{content}</p>
+        return <p data-uuid={id} key={id} className={className} style={style}>{content}</p>
     }
   }
 
@@ -84,6 +85,8 @@ export const IFrame = observer((props) => {
       case 'section':
         return (
             <div 
+              key={elem.id}
+              data-uuid={elem.id}
               className={elem.className} 
               style={elemStyle}
             >
@@ -94,14 +97,19 @@ export const IFrame = observer((props) => {
           )
       case 'div':
         return (
-          <div className={elem.className} style={elem.style}>
+          <div 
+            className={elem.className} 
+            style={elem.style}
+            data-uuid={elem.id}
+            key={elem.id}
+          >
             {
               elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined
             }
           </div>
         )
       case 'link':
-        return <a href={`#`} className={elem.className} style={style}>{elem.content}</a>
+        return <a key={elem.id} data-uuid={elem.id} href={`#`} className={elem.className} style={style}>{elem.content}</a>
       case 'text':
         return getTextElement(elem, style)
       case 'button':
@@ -109,15 +117,15 @@ export const IFrame = observer((props) => {
         if(app.activeTextEditor === elem.id){
           styleCopy.opacity = '0.25'
         }
-        return <button style={styleCopy} className={elem.className}>{elem.content}</button>
+        return <button key={elem.id} data-uuid={elem.id} style={styleCopy} className={elem.className}>{elem.content}</button>
       case 'input':
-        return <input type={elem.inputType} className={elem.className} style={style} />
+        return <input key={elem.id} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
       case 'img':
-        return <img style={style} className={elem.className} alt={elem.alt || ''} />
+        return <img key={elem.id} data-uuid={elem.id} style={style} className={elem.className} alt={elem.alt || ''} />
       case 'style':
-        return <style type="text/css">{elem.content}</style>
+        return <style key={elem.id} data-uuid={elem.id} type="text/css">{elem.content}</style>
       default:
-        return <div />
+        return <div key={elem.id} data-uuid={elem.id} />
     }
   }
 

@@ -16,7 +16,6 @@ export const Body = observer((props) => {
   const activePage = app.getActivePage()
 
   const selectComponent = (e, id, section = false) => {
-    console.log(e)
     if(section && app.activeTextEditor){
       app.setActiveTextEditor(null, null)
     }

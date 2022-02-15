@@ -14,7 +14,7 @@ class AppStore {
   childDragIndex = 0
   childDragSection = null
   currentSectionId = null
-  
+  elementLen = 0
   activeTextEditor = null
   activeElementMeta = {}
 
@@ -98,6 +98,8 @@ class AppStore {
               width: width + 'px',
               height: height + 'px'
             }
+            this.updateInsideFrame(targetElem, 'width')
+            this.updateInsideFrame(targetElem, 'height')
           }
           if(elementType === 'button'){
             const { height: btnHeight } = targetElem.style
@@ -113,9 +115,10 @@ class AppStore {
                   trueHeight = (parent.clientHeight * (precentageHeight / 100))
                 }
               }
-              console.log(trueHeight, height)
               if(height > trueHeight){
+                targetElem.position.height = height
                 targetElem.style.height = height + 'px'
+                this.updateInsideFrame(targetElem, 'height')
               }
             }
           }
@@ -129,16 +132,42 @@ class AppStore {
     this.selectedElementGroup = group
   }
 
+  updateInsideFrame(element, propName){
+    const { id } = element
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const doc = frame.contentWindow.document
+      const el = doc.querySelector(`[data-uuid="${id}"]`)
+      if(el){
+        const { position } = element
+        if(propName === 'position'){
+          el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+        }
+        if(propName === 'content'){
+          el.innerText = element.content
+        }
+        if(propName === 'width'){
+          el.style.width = `${position.width}px`
+        }
+        if(propName === 'height'){
+          el.style.width = `${position.height}px`
+        }
+      }
+    }
+  }
+
   setMovingElement(status, x, y){
     this.mouseStartX = status ? x : 0
     this.mouseStartY = status ? y : 0
     this.movingElement = status
     if(status){
+      let elem = null
       let target = null
       this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
         const child = this.findNestedChild(section.children, this.selectedElement)
         if(child){
           target = child.id
+          elem = child
         }
       })
       this.selectedParentElement = target
@@ -175,6 +204,7 @@ class AppStore {
     let newSectionIdx = null
     let newParentIdx = null
     let removedChild = false
+    let posData = {}
     elems.forEach(area => {
       area.sections.forEach((section, sectionIdx) => {
         if(section.id === newSection){
@@ -184,7 +214,11 @@ class AppStore {
           const child = this.findNestedChild(parentElem.children, elementId)
           if(parentElem.id !== newParentElement){
             if(child){
+              const { x: elX, y: elY, width: elW, height: elH } = document.querySelector(`[data-uuid="${child.id}"]`).getBoundingClientRect()
+              posData.xOffset = x - elX
+              posData.yOffset = y - elY
               const idx = parentElem.children.findIndex(({ id: cid }) => cid === elementId)
+              this.elementLen -= 1
               parentElem.children.splice(idx, 1)
               removedChild = {...child}
             }
@@ -202,12 +236,15 @@ class AppStore {
       const parent = page[newGroup][newSectionIdx].children[newParentIdx]
       const { id } = parent
       const { x: parentX, y: parentY } = document.querySelector(`[data-uuid="${id}"]`).getBoundingClientRect()
-      removedChild.position.xPos = x - parentX
-      removedChild.position.yPos = y - parentY
+      removedChild.position.xPos = x - parentX - posData.xOffset
+      removedChild.position.yPos = y - parentY - posData.yOffset
       removedChild.id = uuidv4()
       this.unsetSelectedElement()
       page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
       this.setSelectedElement(removedChild.id, newGroup)
+      setTimeout(() => {
+        this.elementLen += 1
+      }, 100)
     }
   }
 
@@ -302,6 +339,7 @@ class AppStore {
         target.position.yPos += dy
         this.mouseStartX = clientX
         this.mouseStartY = clientY
+        this.updateInsideFrame(target, 'position')
       }
     }
   }
@@ -598,6 +636,7 @@ class AppStore {
           //If there is not a target div, insert the component with position absolute inside the section element
         }
       }
+      this.elementLen += 1
     }
   }
 
