@@ -45,12 +45,12 @@ export const Components = observer((props) => {
     const copy = [...elem.elements]
     const list = copy.slice(0, 3)
     return (
-      <div className='component-slide_wrapper'>
+      <div className='component-slide_wrapper' key={elem.id}>
         <h6 className='component-slide_title'>{elem.title}</h6>
         <div className='component-slide_list'>
           <div className='component-slide_rows'>
             {
-              list.map(item => {
+              list.map((item, idx) => {
                 const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {}
                 const imgStyle = item.displayStyle ? item.displayStyle.image : {}
                 if(item.type === 'section'){
@@ -59,6 +59,7 @@ export const Components = observer((props) => {
                 }
                 return (
                   <div 
+                    key={item.type + idx}
                     className='component-preview'
                     draggable
                     style={{...displayStyle}}

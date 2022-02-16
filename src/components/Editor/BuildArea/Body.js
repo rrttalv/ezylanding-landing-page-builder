@@ -118,6 +118,10 @@ export const Body = observer((props) => {
     e.stopPropagation()
     app.setSelectedElement(id, props.area)
     const { clientX, clientY } = e
+    if(mouseUp){
+      app.setPanPoint(null, 0, 0)
+      return
+    }
     app.setPanPoint(type, clientX, clientY)
   }
 
@@ -135,8 +139,8 @@ export const Body = observer((props) => {
       }
     }
     const style = {
+      ...elemStyle,
       ...elemPositionStyle,
-      ...elemStyle
     }
     if(elem.type !== 'div'){
       if(app.selectedElement === id){
@@ -218,7 +222,7 @@ export const Body = observer((props) => {
     >
       {
         activePage[props.area].map((elem, idx) => {
-          const { style, children, id } = elem
+          const { style, children, id, type, position } = elem
           const isSelected = app.selectedElement === id
           const childSelected = app.selectedParentElement === id
           return (
@@ -240,7 +244,7 @@ export const Body = observer((props) => {
                   zIndex: 0
                 }}
               >
-                <ComponentBorder style={style} display={isSelected}>
+                <ComponentBorder style={style} position={type !== 'section' ? position : null} display={isSelected}>
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {

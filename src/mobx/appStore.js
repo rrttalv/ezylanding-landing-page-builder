@@ -77,7 +77,56 @@ class AppStore {
   }
 
   handlePan(e){
-    console.log(e)
+    if(!this.panPoint || !this.selectedElement || !this.selectedElementGroup){
+      return
+    }
+    const elements = this.pages[0][this.selectedElementGroup]
+    let target = null
+    elements.forEach(element => {
+      if(!target){
+        const res = this.findNestedChild(element.children, this.selectedElement)
+        if(res){
+          target = res
+        }
+      }
+    })
+    if(!target){
+      return
+    }
+    const { clientX, clientY } = e
+    const dx = clientX - this.mouseStartX
+    const dy = clientY - this.mouseStartY
+    if(this.panPoint === 'right'){
+      target.position.width += dx
+    }
+    if(this.panPoint === 'left'){
+      if(dx < 0){
+        target.position.width += Math.abs(dx)
+        target.position.xPos += dx
+        this.updateInsideFrame(target, 'xPos')
+      }
+      if(dx > 0){
+        target.position.width -= dx
+        target.position.xPos += dx
+        this.updateInsideFrame(target, 'xPos')
+      }
+    }
+    if(this.panPoint === 'bottom'){
+      target.position.height += dy
+    }
+    if(this.panPoint === 'top'){
+      if(dy < 0){
+        target.position.height += Math.abs(dy)
+        target.position.yPos += dy
+      }
+      if(dy > 0){
+        target.position.height -= Math.abs(dy)
+        target.position.yPos += dy
+      }
+    }
+    this.updateInsideFrame(target, 'size')
+    this.mouseStartX = clientX
+    this.mouseStartY = clientY
   }
 
   changeElementProp(id, elementType, propName, propValue){
@@ -161,15 +210,20 @@ class AppStore {
         const { position } = element
         if(propName === 'position'){
           el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+          element.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
         }
         if(propName === 'content'){
           el.innerText = element.content
         }
-        if(propName === 'width'){
+        const posProps = ['width', 'height', 'xPos', 'yPos', 'size']
+        if(posProps.includes(propName)){
           el.style.width = `${position.width}px`
-        }
-        if(propName === 'height'){
           el.style.height = `${position.height}px`
+          el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+          element.style.height = `${position.height}px`
+          element.style.width = `${position.width}px`
+          element.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+          console.log({...element.style})
         }
       }
     }
@@ -255,15 +309,18 @@ class AppStore {
       const parent = page[newGroup][newSectionIdx].children[newParentIdx]
       const { id } = parent
       const { x: parentX, y: parentY } = document.querySelector(`[data-uuid="${id}"]`).getBoundingClientRect()
-      removedChild.position.xPos = x - parentX - posData.xOffset
-      removedChild.position.yPos = y - parentY - posData.yOffset
+      const newX = x - parentX - posData.xOffset
+      const newY = y - parentY - posData.yOffset
+      removedChild.position.xPos = newX
+      removedChild.position.yPos = newY
+      removedChild.style.transform = `translate(${newX}px, ${newY}px)`
       removedChild.id = uuidv4()
       this.unsetSelectedElement()
       page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
       this.setSelectedElement(removedChild.id, newGroup)
       setTimeout(() => {
         this.elementLen += 1
-      }, 100)
+      }, 200)
     }
   }
 

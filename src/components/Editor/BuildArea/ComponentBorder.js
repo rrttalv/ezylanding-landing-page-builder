@@ -7,6 +7,12 @@ export const ComponentBorder = observer((props) => {
 
   useEffect(() => {
     const copy = {...props.style}
+    if(props.position){
+      const { width, height, xPos, yPos } = props.position
+      copy.width = width + 'px'
+      copy.height = height + 'px'
+      copy.transform = `translate(${xPos}px, ${yPos}px)`
+    }
     delete copy.padding
     copy.width = "100%"
     setBorderStyle(copy)
