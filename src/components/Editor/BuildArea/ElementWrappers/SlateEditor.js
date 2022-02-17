@@ -26,7 +26,7 @@ export const SlateEditor = observer((props) => {
   useEffect(() => {
     ReactEditor.focus(editor)
     Transforms.select(editor, Editor.end(editor, []));
-    app.setSelectedElement(props.elem.id, props.area)
+    app.setSelectedElement(props.elem.id, props.parentId, props.area)
   }, [])
 
   const { store: { app } } = getStore()
@@ -42,7 +42,7 @@ export const SlateEditor = observer((props) => {
   }
 
   const handleClick = e => {
-    app.setSelectedElement(props.elem.id, props.area)
+    app.setSelectedElement(props.elem.id, props.parentId, props.area)
     e.stopPropagation()
   }
 

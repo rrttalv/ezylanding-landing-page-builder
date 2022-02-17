@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
 import { PartitionBorder } from './PartitionBorder'
+import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
 import { SlateEditor } from './ElementWrappers/SlateEditor'
+import { CSSTab } from './CSSTab'
 
 export const Body = observer((props) => {
   
@@ -15,7 +17,7 @@ export const Body = observer((props) => {
   const { store: { app, sidebar } } = getStore()
   const activePage = app.getActivePage()
 
-  const selectComponent = (e, id, section = false) => {
+  const selectComponent = (e, id, sectionId, section = false) => {
     if(section && app.activeTextEditor){
       app.setActiveTextEditor(null, null)
     }
@@ -23,7 +25,7 @@ export const Body = observer((props) => {
       return
     }
     e.stopPropagation()
-    app.setSelectedElement(id, props.area)
+    app.setSelectedElement(id, props.area, sectionId)
   }
 
   const handleDoubleClick = (e, elem, sectionId) => {
@@ -58,16 +60,16 @@ export const Body = observer((props) => {
       }
   }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.movingElement, app.activeDrag, app.activeFramework])
 
-  const handlePointerEvent = (e, status, id) => {
+  const handlePointerEvent = (e, status, id, parentId) => {
     if(!app.selectedElement !== id){
-      app.setSelectedElement(id, props.area)
+      app.setSelectedElement(id, props.area, parentId)
     }
     const x = status ? e.clientX : 0
     const y = status ? e.clientY : 0
     app.setMovingElement(status, x, y)
   }
 
-  const getEditingTextElem = (elem, style) => {
+  const getEditingTextElem = (elem, parentId, style) => {
     let copy = {...style}
     const { type } = elem
     if(type === 'text' && elem.tagName.includes('h') && !style.fontWeight){
@@ -98,7 +100,7 @@ export const Body = observer((props) => {
         copy.textAlign = 'center'
       }
     }
-    return <SlateEditor elem={elem} style={copy} area={props.area} />
+    return <SlateEditor elem={elem} parentId={parentId} style={copy} area={props.area} />
   }
 
   const getElemDimensions = (id) => {
@@ -113,16 +115,22 @@ export const Body = observer((props) => {
     return { elWidth, elHeight }
   }
 
-  const handlePanpointMouseEvent = (e, id, type, mouseUp = false) => {
+  const handlePanpointMouseEvent = (e, id, sectionId, type, mouseUp = false) => {
     e.preventDefault()
     e.stopPropagation()
-    app.setSelectedElement(id, props.area)
+    app.setSelectedElement(id, props.area, sectionId)
     const { clientX, clientY } = e
     if(mouseUp){
-      app.setPanPoint(null, 0, 0)
+      app.setPanPoint(null, 0, 0, null)
       return
     }
     app.setPanPoint(type, clientX, clientY)
+  }
+
+  const toggleCSSTab = (e, id, sectionId, isSection = false) => {
+    e.stopPropagation()
+    e.preventDefault()
+    app.toggleCSSTab(id, props.area)
   }
 
   const getChildElemBorder = (elem, idx, sectionId) => {
@@ -139,8 +147,8 @@ export const Body = observer((props) => {
       }
     }
     const style = {
-      ...elemStyle,
       ...elemPositionStyle,
+      ...elemStyle,
     }
     if(elem.type !== 'div'){
       if(app.selectedElement === id){
@@ -153,6 +161,7 @@ export const Body = observer((props) => {
     delete style.backgroundColor
     delete style.backgroundUrl
     const pointHorizontalStyle = {}
+    console.log(app.editingCSS, elem.cssOpen)
     switch(elem.type){
       case 'div':
         return <div 
@@ -169,7 +178,7 @@ export const Body = observer((props) => {
           if(elem.type === 'button'){
             styleCopy.background = elemStyle.background
           }
-          return getEditingTextElem(elem, {...styleCopy, opacity: elemStyle.opacity})
+          return getEditingTextElem(elem, sectionId, {...styleCopy, opacity: elemStyle.opacity})
         }
       default:
         return (
@@ -180,33 +189,52 @@ export const Body = observer((props) => {
             style={{...style}}
             data-uuid={id} 
             onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
-            onClick={e => selectComponent(e, id)}
-            onPointerDown={e => handlePointerEvent(e, true, elem.id)}
+            onClick={e => selectComponent(e, id, sectionId)}
+            onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
           >
             <div className='pan-point side left' 
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'left')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'left', true)} 
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left', true)} 
             />
             <div className='pan-point side right' 
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'right')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'right', true)} 
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right', true)} 
             />
             <div className='pan-point top horizontal'
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, 'top')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'top', true)} 
+              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top', true)} 
             />
             <div className='pan-point bottom horizontal'
-              onPointerDown={e => handlePanpointMouseEvent(e,  elem.id,'bottom')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, 'bottom', true)} 
+              onPointerDown={e => handlePanpointMouseEvent(e,  elem.id, sectionId, 'bottom')} 
+              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'bottom', true)} 
             />
+            {
+              app.selectedElement === id ? (
+                <div className='prop-menu'>
+                  <div 
+                    className='prop-menu__css'
+                    onClick={e => toggleCSSTab(e, id, sectionId)}
+                  >
+                    <CSSIcon />
+                  </div>
+                  <div className='prop-menu__lock'>
+                  </div>
+                </div>
+              )
+              :
+              undefined
+            }
+            {
+              app.editingCSS && elem.cssOpen ? (
+                <CSSTab style={{...style}} className={elem.className} />
+              )
+              :
+              undefined
+            }
           </div>
         )
     }
   }
-  
-  /*
-  
-   */
 
   const { dragIndex, dragSection, activeDrag, } = app
 
@@ -224,7 +252,11 @@ export const Body = observer((props) => {
         activePage[props.area].map((elem, idx) => {
           const { style, children, id, type, position } = elem
           const isSelected = app.selectedElement === id
-          const childSelected = app.selectedParentElement === id
+          let childSelected = app.selectedParentElement === id
+          if(app.selectedParentElement && !childSelected){
+            const subElem = elem.children.find(({ id }) => id === app.selectedParentElement)
+            childSelected = !!subElem
+          }
           return (
             <>
               {
@@ -235,7 +267,7 @@ export const Body = observer((props) => {
                 undefined
               }
               <div 
-                onClick={e => selectComponent(e, id, true)}
+                onClick={e => selectComponent(e, id, null, true)}
                 data-uuid={elem.id}
                 className={`section-component ${isSelected || childSelected ? ' active-component' : ''}`}
                 style={{
@@ -249,6 +281,21 @@ export const Body = observer((props) => {
                 </ComponentBorder>
                 {
                   (app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
+                }
+                {
+                  isSelected ? (
+                    <div className='prop-menu section-prop-menu'>
+                      <div 
+                        className='prop-menu__css'
+                        onClick={e => toggleCSSTab(e, id, null, true)}
+                      >
+                      </div>
+                      <div className='prop-menu__lock'>
+                      </div>
+                    </div>
+                  )
+                  :
+                  undefined
                 }
               </div>
               {

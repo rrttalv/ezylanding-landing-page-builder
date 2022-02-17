@@ -59,6 +59,27 @@
     }
     &_body, &_header, &_footer {
       position: absolute;
+      .css-tab {
+        position: absolute;
+        left: calc(100% + 8px);
+        top: -20px;
+      }
+      .prop-menu {
+        position: absolute;
+        top: -40px;
+        &__css {
+          padding: 2.5px;
+          margin-top: 10px;
+          margin-left: -5px;
+          svg {
+            width: 25px;
+            height: 25px;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
       .comp {
         position: absolute;
       }
@@ -74,13 +95,15 @@
         }
       }
       .comp-border {
+        .component-wrapper {
+          z-index: 1000;
+        }
         .component-wrapper.selected {
           cursor: pointer;
           &::after {
             cursor: pointer;
             content: "";
             position: absolute;
-            z-index: 10;
             top: -5px;
             left: -5px;
             width: calc(100% + 10px);
@@ -89,6 +112,7 @@
             border: 1px solid rgba(62, 227, 197, 0.5);
           }
           .pan-point {
+            z-index: 10;
             position: absolute;
             background: transparent;
           }

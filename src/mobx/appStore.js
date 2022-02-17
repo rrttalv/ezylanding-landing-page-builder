@@ -33,6 +33,7 @@ class AppStore {
   selectedParentElement = null
   selectedElementGroup = null
   movingElement = false
+  editingCSS = false
   activeGroup = null
   parentElements = ['section', 'header']
   activeFramework = null
@@ -76,17 +77,67 @@ class AppStore {
     }
   }
 
+  childPrecentageToPx(child, parent){
+    const { position, style } = child
+    let pxWidth = child.style.width || child.position.width
+    let pxHeight = child.style.height || child.position.height
+    const parentElem = document.querySelector(`[data-uuid="${parent.id}"]`)
+    if(!parentElem){
+      return {
+        pxWidth,
+        pxHeight,
+      }
+    }
+    if(typeof(pxWidth) === 'string' && pxWidth && pxWidth.includes('%')){
+      if(parentElem){
+        const { width: parentWidth } = parentElem.getBoundingClientRect()
+        const precentage = Number(pxWidth.replace('%', '')) / 100
+        pxWidth = parentWidth * precentage
+      }
+    }
+    if(typeof(pxHeight) === 'string' && pxHeight && pxHeight.includes('%')){
+      if(parentElem){
+        const { height: parentHeight } = parentElem.getBoundingClientRect()
+        const precentage = Number(pxHeight.replace('%', '')) / 100
+        pxHeight = parentHeight * precentage
+      }
+    }
+    return {
+      pxWidth, pxHeight
+    }
+  }
+
+  findElement(id, area){
+    if(area){
+      const elements = this.pages[0][area]
+      let target = null
+      elements.forEach(element => {
+        if(!target){
+          const found = this.findNestedChild(element.children, this.selectedElement)
+          if(found){
+            target = found
+          }
+        }
+      })
+      return target
+    }else{
+      return null
+    }
+  }
+
   handlePan(e){
     if(!this.panPoint || !this.selectedElement || !this.selectedElementGroup){
       return
     }
     const elements = this.pages[0][this.selectedElementGroup]
     let target = null
+    let parent = null
     elements.forEach(element => {
       if(!target){
-        const res = this.findNestedChild(element.children, this.selectedElement)
-        if(res){
-          target = res
+        const { target: found } = this.findNestedChild(element.children, this.selectedElement, element)
+        if(found.target && found.target){
+          parent = found.parent
+          target = found.target
         }
       }
     })
@@ -96,6 +147,16 @@ class AppStore {
     const { clientX, clientY } = e
     const dx = clientX - this.mouseStartX
     const dy = clientY - this.mouseStartY
+    const pxWidth = target.position.width
+    const pxHeight = target.position.height
+    if(target.style.width && target.style.width.includes('%')){
+      const { pxWidth: w } = this.childPrecentageToPx(target, parent)
+      target.position.width = w
+    }
+    if(target.style.height && target.style.height.includes('%')){
+      const { pxHeight: h } = this.childPrecentageToPx(target, parent)
+      target.position.height = h
+    }
     if(this.panPoint === 'right'){
       target.position.width += dx
     }
@@ -195,8 +256,9 @@ class AppStore {
     }
   }
 
-  setSelectedElement(id, group){
+  setSelectedElement(id, group, parentId = null){
     this.selectedElement = id
+    this.selectedParentElement = parentId
     this.selectedElementGroup = group
   }
 
@@ -237,12 +299,15 @@ class AppStore {
       let elem = null
       let target = null
       this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
-        const child = this.findNestedChild(section.children, this.selectedElement)
-        if(child){
-          target = child.id
-          elem = child
+        if(!target){
+          const child = this.findNestedChild(section.children, this.selectedElement)
+          if(child){
+            target = child.id
+            elem = child
+          }
         }
       })
+      console.log(target)
       this.selectedParentElement = target
     }else{
       if(this.activePage && this.selectedElement && this.selectedParentElement){
@@ -277,9 +342,16 @@ class AppStore {
     let newSectionIdx = null
     let newParentIdx = null
     let removedChild = false
+    let sectionChild = false
     let posData = {}
+    if(!newGroup || !newParentElement || !newSection){
+      return
+    }
     elems.forEach(area => {
       area.sections.forEach((section, sectionIdx) => {
+        if(section.id === elementId){
+          removedChild = section
+        }
         if(section.id === newSection){
           newSectionIdx = sectionIdx
         }
@@ -306,21 +378,28 @@ class AppStore {
       //!!!!!iMPORTANT
       //NEED TO RECALCULATE THE SECTION OFFSET BASED ON X AND Y FOR THE REMOVED CHILD
       //!!!!!iMPORTANT
-      const parent = page[newGroup][newSectionIdx].children[newParentIdx]
-      const { id } = parent
-      const { x: parentX, y: parentY } = document.querySelector(`[data-uuid="${id}"]`).getBoundingClientRect()
-      const newX = x - parentX - posData.xOffset
-      const newY = y - parentY - posData.yOffset
-      removedChild.position.xPos = newX
-      removedChild.position.yPos = newY
-      removedChild.style.transform = `translate(${newX}px, ${newY}px)`
-      removedChild.id = uuidv4()
-      this.unsetSelectedElement()
-      page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
-      this.setSelectedElement(removedChild.id, newGroup)
-      setTimeout(() => {
-        this.elementLen += 1
-      }, 200)
+      let parent
+      if(newParentElement && newSection){
+        parent = page[newGroup][newSectionIdx].children[newParentIdx]
+      }
+      if(parent){
+        const { id } = parent
+        const { x: parentX, y: parentY } = document.querySelector(`[data-uuid="${id}"]`).getBoundingClientRect()
+        const newX = x - parentX - posData.xOffset
+        const newY = y - parentY - posData.yOffset
+        removedChild.position.xPos = newX
+        removedChild.position.yPos = newY
+        removedChild.style.transform = `translate(${newX}px, ${newY}px)`
+        removedChild.id = uuidv4()
+        this.unsetSelectedElement()
+        if(newParentElement && newSection){
+          page[newGroup][newSectionIdx].children[newParentIdx].children.push(removedChild)
+        }
+        this.setSelectedElement(removedChild.id, id, newGroup)
+        setTimeout(() => {
+          this.elementLen += 1
+        }, 200)
+      }
     }
   }
 
@@ -352,12 +431,14 @@ class AppStore {
         if(this.checkIfInside(x, y, sectionX, sectionY, sectionW, sectionH)){
           newGroup = elem.key
           newSection = section.id
-          section.children.forEach(element => {
-            const { x: elemX, y: elemY, width: elemW, height: elemH } = document.querySelector(`[data-uuid="${element.id}"]`).getBoundingClientRect()
-            if(this.checkIfInside(x, y, elemX, elemY, elemW, elemH)){
-              newParentElement = element.id
-            }
-          })
+          if(section.children.length){
+            section.children.forEach(element => {
+              const { x: elemX, y: elemY, width: elemW, height: elemH } = document.querySelector(`[data-uuid="${element.id}"]`).getBoundingClientRect()
+              if(this.checkIfInside(x, y, elemX, elemY, elemW, elemH)){
+                newParentElement = element.id
+              }
+            })
+          }
         }
       })
     })
@@ -372,22 +453,34 @@ class AppStore {
 
   unsetSelectedElement(){
     this.selectedElement = null
+    this.selectedParentElement = null 
     this.selectedElementGroup = null
   }
 
-  findNestedChild(children, id){
+  findNestedChild(children, id, parentElem = null){
     let target = null
+    let parent = null
+    if(!children){
+      return null
+    }
     children.forEach((element, childIdx) => {
       if(!target){
         if(element.id !== id && element.children){
-          target = this.findNestedChild(element.children, id)
+          target = this.findNestedChild(element.children, id, parentElem ? element : null)
         }
         if(element.id === id){
           target = element
+          if(parentElem){
+            parent = parentElem
+          }
         }
       }
     })
-    return target
+    if(parentElem){
+      return { target, parent }
+    }else{
+      return target
+    }
   }
 
   moveElement(clientX, clientY, offsetX, offsetY){
@@ -630,6 +723,16 @@ class AppStore {
     }
   }
 
+  toggleCSSTab(id, area){
+    const target = this.findElement(id, area)
+    console.log(target)
+    if(target){
+      const newVal = !target.cssOpen
+      this.editingCSS = newVal
+      target.cssOpen = newVal
+    }
+  }
+
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
@@ -652,6 +755,9 @@ class AppStore {
       const page = this.getActivePage()
       const comp = {
         ...this.activeDrag,
+        cssOpen: false,
+        locked: false,
+        classNameOpen: false,
         id: uuidv4()
       }
       if(comp.children && comp.children.length){
@@ -666,7 +772,7 @@ class AppStore {
         comp.position.xPos -= editorX
         comp.position.yPos -= editorY
         page[activeArea].splice(this.dragIndex, 0, comp)
-        this.setSelectedElement(comp.id, activeArea)
+        this.setSelectedElement(comp.id, null, activeArea)
         this.dragIndex = 0
         this.dragSection = null
       }else{
@@ -706,7 +812,7 @@ class AppStore {
           }
           section.children[childIdx].children.push(comp)
           setTimeout(() => {
-            this.setSelectedElement(comp.id, activeArea)
+            this.setSelectedElement(comp.id, this.currentSectionId, activeArea)
           }, 200)
         }else{
           //If there is not a target div, insert the component with position absolute inside the section element

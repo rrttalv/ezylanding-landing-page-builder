@@ -57,6 +57,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-6',
+            absoluteChildren: true,
             style: {
               position: 'relative',
               width: '50%',
@@ -69,6 +70,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-6',
+            absoluteChildren: true,
             style: {
               position: 'relative',
               width: '50%',
@@ -97,6 +99,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            absoluteChildren: true,
             style: {
               position: 'relative',
               width: '33.3%',
@@ -107,6 +110,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            absoluteChildren: true,
             style: {
               position: 'relative',
               width: '33.3%',
@@ -117,6 +121,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            absoluteChildren: true,
             style: {
               position: 'relative',
               width: '33.3%',
@@ -152,6 +157,7 @@ const constants = {
         type: 'section',
         partitions: 2,
         thumb: '',
+        absoluteChildren: true,
         style: {
           display: 'flex',
           'flex-direction': 'row',
@@ -167,6 +173,7 @@ const constants = {
         type: 'section',
         partitions: 3,
         thumb: '',
+        absoluteChildren: true,
         style: {
           display: 'flex',
           'flex-direction': 'row',
@@ -182,6 +189,7 @@ const constants = {
         type: 'section',
         partitions: 4,
         thumb: '',
+        absoluteChildren: true,
         style: {
           display: 'flex',
           'flex-direction': 'row',
