@@ -2,6 +2,42 @@ import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
 
+const defaultShiftProps = {
+  parentElement: null,
+  parentPos: {
+    xMin: 0,
+    xMax: 0,
+    yMin: 0,
+    yMax: 0
+  },
+  targetElement: null,
+  targetElementPos: {
+    xMin: 0,
+    xMax: 0,
+    yMin: 0,
+    yMax: 0,
+  },
+  prevSibling: null,
+  prevSiblingPos: {
+    xMin: 0,
+    yMin: 0,
+    yMax: 0,
+    xMax: 0
+  },
+  nextSibling: null,
+  nextSiblingPos: {
+    xMin: 0,
+    yMin: 0,
+    xMax: 0,
+    yMax: 0
+  }
+}
+
+const initShiftBox = {
+  display: false,
+  targetElement: null
+}
+
 class AppStore {
   constructor() {
     makeAutoObservable(this)
@@ -9,6 +45,10 @@ class AppStore {
 
   mouseStartX = 0
   mouseStartY = 0
+
+  variableMouseX = 0
+  variableMouseY = 0
+
   dragIndex = 0
   dragSection = null
   childDragIndex = 0
@@ -16,6 +56,22 @@ class AppStore {
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
+
+  bottomShiftBox = {
+    display: false,
+    targetElement: null,
+  }
+
+  topShiftBox = {
+    display: false,
+    targetElement: null
+  }
+
+  absoluteDisabled = []
+
+  shiftingElement = null
+  shiftProps = defaultShiftProps
+
   activeElementMeta = {}
   panPoint = null
 
@@ -190,6 +246,31 @@ class AppStore {
     this.mouseStartY = clientY
   }
 
+  setNestedChildrenProp(children, propName, propValue){
+    children.forEach(child => {
+      child[propName] = propValue
+      if(child.children && child.children.length){
+        this.setNestedChildrenProp(child.children, propName, propValue)
+      }
+    })
+  }
+
+  toggleAbsolutePositioning(area, sectionId){
+    const section = this.pages[0][area].find(({ id }) => id === sectionId)
+    section.children.forEach(child => {
+      const newValue = !child.absoluteChildren
+      child.absoluteChildren = newValue
+      if(child.children.length){
+        this.setNestedChildrenProp(child.children, 'absolutePosition', newValue)
+      }
+    })
+    if(this.absoluteDisabled.includes(sectionId)){
+      this.absoluteDisabled = this.absoluteDisabled.filter(id => id !== sectionId)
+    }else{
+      this.absoluteDisabled.push(sectionId)
+    }
+  }
+
   changeElementProp(id, elementType, propName, propValue){
     if(elementType === 'text' || elementType === 'button'){
       const { parentId } = this.activeElementMeta
@@ -270,7 +351,7 @@ class AppStore {
       const el = doc.querySelector(`[data-uuid="${id}"]`)
       if(el){
         const { position } = element
-        if(propName === 'position'){
+        if(propName === 'position' && element.absolutePosition){
           el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
           element.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
         }
@@ -281,11 +362,12 @@ class AppStore {
         if(posProps.includes(propName)){
           el.style.width = `${position.width}px`
           el.style.height = `${position.height}px`
-          el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
           element.style.height = `${position.height}px`
           element.style.width = `${position.width}px`
-          element.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
-          console.log({...element.style})
+          if(element.absolutePosition){
+            element.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+            el.style.transform = `translate(${position.xPos}px, ${position.yPos}px)`
+          }
         }
       }
     }
@@ -294,22 +376,99 @@ class AppStore {
   setMovingElement(status, x, y){
     this.mouseStartX = status ? x : 0
     this.mouseStartY = status ? y : 0
+    this.variableMouseX = status ? x : 0
+    this.variableMouseY = status ? y : 0
     this.movingElement = status
-    if(status){
-      let elem = null
-      let target = null
-      this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
-        if(!target){
-          const child = this.findNestedChild(section.children, this.selectedElement)
-          if(child){
-            target = child.id
-            elem = child
-          }
+    let target = null
+    let elem = null
+    this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
+      if(!target){
+        const child = this.findNestedChild(section.children, this.selectedElement)
+        if(child){
+          target = child.id
+          elem = child
         }
-      })
-      console.log(target)
-      this.selectedParentElement = target
+      }
+    })
+    if(status){
+      if(elem && !elem.absolutePosition){
+        let siblings = null
+        this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
+          if(!siblings){
+            const elems = this.findNestedSiblings(section.children, this.selectedElement, section)
+            if(elems.target){
+              siblings = elems
+              const { width: tW, height: tH, x: tX, y: tY } = document.querySelector(`[data-uuid="${elems.target.id}"]`).getBoundingClientRect()
+              let props = {
+                targetElement: elems.target.id,
+                targetElementPos: {
+                  xMin: tX,
+                  xMax: tX + tH,
+                  yMin: tY,
+                  yMax: tY + tH,
+                  height: tH,
+                  width: tW
+                }
+              }
+              if(elems.prevSibling){
+                const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.prevSibling.id}"]`).getBoundingClientRect()
+                props = {
+                  ...props,
+                  prevSibling: elems.prevSibling.id,
+                  prevSiblingPos: {
+                    xMin: x,
+                    xMax: x + width,
+                    yMin: y,
+                    yMax: y + height
+                  }
+                }
+              }
+              if(elems.nextSibling){
+                const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.nextSibling.id}"]`).getBoundingClientRect()
+                props = {
+                  ...props,
+                  nextSibling: elems.nextSibling.id,
+                  nextSiblingPos: {
+                    xMin: x,
+                    xMax: x + width,
+                    yMin: y,
+                    yMax: y + height
+                  }
+                }
+              }
+              const { width: pW, height: pH, x: pX, y: pY } = document.querySelector(`[data-uuid="${elems.parent.id}"]`).getBoundingClientRect()
+              if(elems.parent){
+                props = {
+                  ...props,
+                  parentElement: elems.parent.id,
+                  parentPos: {
+                    xMin: pX,
+                    xMax: pX + pW,
+                    yMin: pY,
+                    yMax: pY + pH
+                  }
+                }
+              }
+              elems.target.shiftPosition = {
+                xPos: tX - pX,
+                yPos: tY - pY
+              }
+              this.shiftProps = props
+            }
+          }
+        })
+        this.shiftingElement = true
+      }
     }else{
+      if(this.shiftingElement){
+        this.shiftElementIfNeeded()
+        this.shiftingElement = false
+        elem.shiftPosition = null
+        this.shiftProps = defaultShiftProps
+        this.bottomShiftBox = initShiftBox
+        this.topShiftBox = initShiftBox
+        return
+      }
       if(this.activePage && this.selectedElement && this.selectedParentElement){
         const page = this.pages.find(({ id }) => id === this.activePage)
         const { 
@@ -318,10 +477,14 @@ class AppStore {
           newGroup
         } = this.checkIfElementMoved(page, x, y)
         this.moveElementIfNeeded(newSection, newParentElement, newGroup, page, this.selectedElement, x, y)
-        this.selectedParentElement = null
-        this.selectedElementGroup = null
+        this.selectedParentElement = newSection
+        this.selectedElementGroup = newGroup
       }
     }
+  }
+
+  shiftElementIfNeeded(){
+    return
   }
 
   moveElementIfNeeded(newSection, newParentElement, newGroup, page, elementId, x, y){
@@ -380,6 +543,7 @@ class AppStore {
       //!!!!!iMPORTANT
       let parent
       if(newParentElement && newSection){
+        this.selectedParentElement = newSection
         parent = page[newGroup][newSectionIdx].children[newParentIdx]
       }
       if(parent){
@@ -483,6 +647,45 @@ class AppStore {
     }
   }
 
+  findNestedSiblings(children, id, parentElement){
+    let elems = {}
+    if(!children){
+      return null
+    }
+    children.forEach((element, childIdx) => {
+      if(!elems.target){
+        if(element.id !== id && element.children){
+          elems = {...this.findNestedSiblings(element.children, id, element)}
+        }
+        if(element.id === id){
+          let prevSibling = null
+          let nextSibling = null
+          if(childIdx > 0){
+            prevSibling = children[childIdx - 1]
+          }
+          if(childIdx + 1 <= children.length - 1){
+            nextSibling = children[childIdx + 1]
+          }
+          elems = {
+            target: element,
+            prevSibling,
+            nextSibling,
+            parent: parentElement
+          }
+        }
+      }
+    })
+    return elems
+  }
+
+  shiftElement(){
+    return
+  }
+
+  recalculateShiftProps(){
+    return
+  }
+
   moveElement(clientX, clientY, offsetX, offsetY){
     if(this.selectedElement && this.selectedElementGroup){
       const page = this.getActivePage()
@@ -499,16 +702,55 @@ class AppStore {
       })
       const dx = (clientX - this.mouseStartX)
       const dy = (clientY - this.mouseStartY)
+      
       //Only allow SHIFTING
       if(target.type === 'section'){
 
       }else{
-        this.checkChildComponentDragIndex(offsetX, offsetY)
-        target.position.xPos += dx
-        target.position.yPos += dy
-        this.mouseStartX = clientX
-        this.mouseStartY = clientY
-        this.updateInsideFrame(target, 'position')
+        if(this.shiftingElement && target && !target.absolutePosition){
+          target.shiftPosition.xPos += dx
+          target.shiftPosition.yPos += dy
+          const yDiff = (clientY - this.variableMouseY)
+          if(yDiff > 0){
+            if(this.shiftProps.nextSibling){
+              const { yMax, yMin } = this.shiftProps.nextSiblingPos
+              console.log(yMax, yMin, clientY, this.shiftProps)
+              if(yMax < yDiff){
+                //shift the element
+                this.shiftElement(target.id, this.shiftProps.nextSibling)
+                this.variableMouseY = clientY
+                this.variableMouseX = clientX
+                this.bottomShiftBox = initShiftBox
+              }
+              if(yMin < clientY && yMax > clientY){
+                //Display a box where the element should go
+                console.log(this.shiftProps.nextSibling)
+                this.bottomShiftBox = {
+                  display: true,
+                  targetElement: this.shiftProps.nextSibling
+                }
+              }
+            }else{
+              //Expand the height of the parent element and add marginTop to the target element
+            }
+          }
+          if(yDiff < 0){
+            if(this.shiftProps.prevSibling){
+
+            }else{
+              //Expand the height of the parent element and add marginBottom to the target element
+            }
+          }
+          this.mouseStartX = clientX
+          this.mouseStartY = clientY
+        }else{
+          this.checkChildComponentDragIndex(offsetX, offsetY)
+          target.position.xPos += dx
+          target.position.yPos += dy
+          this.mouseStartX = clientX
+          this.mouseStartY = clientY
+          this.updateInsideFrame(target, 'position')
+        }
       }
     }
   }

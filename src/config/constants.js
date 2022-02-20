@@ -211,6 +211,7 @@ const constants = {
         type: 'input',
         inputType: 'textarea',
         className: 'form-control',
+        absolutePosition: true,
         labelData: {
           content: 'Text area label',
           style: {
@@ -246,6 +247,7 @@ const constants = {
         className: 'btn',
         content: 'Click me!',
         thumb: '/images/inputs/regular-btn.svg',
+        absolutePosition: true,
         style: {
           'borderRadius': '4px',
           width: '100px',
@@ -266,6 +268,7 @@ const constants = {
         type: 'button',
         content: 'Click me!',
         thumb: '/images/inputs/box-shadow-btn.svg',
+        absolutePosition: true,
         style: {
           'borderRadius': '4px',
           width: '100px',
@@ -290,6 +293,7 @@ const constants = {
         tagName: 'h1',
         content: 'H1 Heading',
         thumb: '/images/text/Heading-1.svg',
+        absolutePosition: true,
         displayStyle: {
           wrapper: {
             width: '100%',
@@ -317,6 +321,7 @@ const constants = {
         tagName: 'h2',
         content: 'H2 Heading',
         thumb: '/images/text/Heading-2.svg',
+        absolutePosition: true,
         displayStyle: {
           wrapper: {
             width: '100%',
@@ -343,6 +348,7 @@ const constants = {
         tagName: 'h3',
         content: 'H3 Heading',
         thumb: '/images/text/Heading-3.svg',
+        absolutePosition: true,
         displayStyle: {
           wrapper: {
             width: '100%',

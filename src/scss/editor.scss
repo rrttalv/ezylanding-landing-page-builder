@@ -25,6 +25,25 @@
         border: 1px solid #8d92fa8a;
       }
     }
+    .section-options {
+      position: absolute;
+      top: 5px;
+      width: 200px;
+      height: 50px;
+      left: -30px;
+      display: flex;
+      flex-direction: column;
+      &_btn {
+        margin-top: 10px;
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
     &_insert-preview {
       width: 25%;
       height: 25px;
@@ -97,6 +116,20 @@
       .comp-border {
         .component-wrapper {
           z-index: 1000;
+        }
+        .shift-box {
+          position: absolute;
+          background-color: #8d92fa8a;
+          height: 20px;
+          width: 100%;
+          z-index: -1;
+          border-radius: 5px;
+        }
+        .shift-box.top {
+          top: -22px;
+        }
+        .shift-box.bottom {
+          bottom: -22px;
         }
         .component-wrapper.selected {
           cursor: pointer;

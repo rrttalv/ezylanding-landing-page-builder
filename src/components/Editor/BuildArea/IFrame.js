@@ -38,7 +38,7 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.elementLen])
+  }, [app.elementLen, app.absoluteDisabled.length])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName, id } = elem
@@ -77,6 +77,11 @@ export const IFrame = observer((props) => {
     const style = {
       ...elemPositionStyle,
       ...elemStyle
+    }
+    const divWl = [...wl, 'div']
+    if(!divWl.includes(elem.type) && !elem.absolutePosition){
+      style.position = 'relative'
+      delete style.transform
     }
     switch(elem.type){
       case 'header':

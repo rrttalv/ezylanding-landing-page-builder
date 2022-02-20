@@ -3,6 +3,7 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
 import { PartitionBorder } from './PartitionBorder'
 import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
+import { ReactComponent as ColumnIcon } from '../../../svg/column.svg'
 import { SlateEditor } from './ElementWrappers/SlateEditor'
 import { CSSTab } from './CSSTab'
 
@@ -156,12 +157,22 @@ export const Body = observer((props) => {
       }else{
         style.opacity = '0'
       }
+      if(!elem.absolutePosition){
+        if(app.shiftingElement && app.shiftProps.targetElement === id){
+          const { shiftPosition } = elem
+          style.transform = `translate(${shiftPosition.xPos}px, ${shiftPosition.yPos}px)`
+        }else{
+          style.position = 'relative'
+          delete style.transform
+        }
+      }
     }
     delete style.background
     delete style.backgroundColor
     delete style.backgroundUrl
     const pointHorizontalStyle = {}
-    console.log(app.editingCSS, elem.cssOpen)
+    const { bottomShiftBox, topShiftBox, shiftProps } = app
+    console.log(shiftProps.targetElementPos.height)
     switch(elem.type){
       case 'div':
         return <div 
@@ -184,49 +195,69 @@ export const Body = observer((props) => {
         return (
           <div 
             key={idx + sectionId}
-            draggable="false"
-            className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
-            style={{...style}}
-            data-uuid={id} 
-            onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
-            onClick={e => selectComponent(e, id, sectionId)}
-            onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
+            style={{
+              position: 'relative'
+            }}
           >
-            <div className='pan-point side left' 
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left', true)} 
-            />
-            <div className='pan-point side right' 
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right', true)} 
-            />
-            <div className='pan-point top horizontal'
-              onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top', true)} 
-            />
-            <div className='pan-point bottom horizontal'
-              onPointerDown={e => handlePanpointMouseEvent(e,  elem.id, sectionId, 'bottom')} 
-              onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'bottom', true)} 
-            />
+            <div 
+              draggable="false"
+              className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
+              style={{...style}}
+              data-uuid={id} 
+              onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
+              onClick={e => selectComponent(e, id, sectionId)}
+              onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
+            >
+              <div className='pan-point side left' 
+                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left')} 
+                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left', true)} 
+              />
+              <div className='pan-point side right' 
+                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right')} 
+                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right', true)} 
+              />
+              <div className='pan-point top horizontal'
+                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top')} 
+                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top', true)} 
+              />
+              <div className='pan-point bottom horizontal'
+                onPointerDown={e => handlePanpointMouseEvent(e,  elem.id, sectionId, 'bottom')} 
+                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'bottom', true)} 
+              />
+              {
+                app.selectedElement === id ? (
+                  <div className='prop-menu'>
+                    <div 
+                      className='prop-menu__css'
+                      onClick={e => toggleCSSTab(e, id, sectionId)}
+                    >
+                      <CSSIcon />
+                    </div>
+                    <div className='prop-menu__lock'>
+                    </div>
+                  </div>
+                )
+                :
+                undefined
+              }
+              {
+                app.editingCSS && elem.cssOpen ? (
+                  <CSSTab style={{...style}} className={elem.className} />
+                )
+                :
+                undefined
+              }
+            </div>
             {
-              app.selectedElement === id ? (
-                <div className='prop-menu'>
-                  <div 
-                    className='prop-menu__css'
-                    onClick={e => toggleCSSTab(e, id, sectionId)}
-                  >
-                    <CSSIcon />
-                  </div>
-                  <div className='prop-menu__lock'>
-                  </div>
-                </div>
+              app.shiftingElement && topShiftBox.display && id === topShiftBox.targetElement ? (
+                <div className='shift-box top' style={{ top: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
               )
               :
               undefined
             }
             {
-              app.editingCSS && elem.cssOpen ? (
-                <CSSTab style={{...style}} className={elem.className} />
+              app.shiftingElement && bottomShiftBox.display && id === bottomShiftBox.targetElement ? (
+                <div className='shift-box bottom' style={{ bottom: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
               )
               :
               undefined
@@ -236,6 +267,10 @@ export const Body = observer((props) => {
     }
   }
 
+  const handleAbsoluteClick = (sectionId) => {
+    app.toggleAbsolutePositioning(props.area, sectionId)
+  }
+  
   const { dragIndex, dragSection, activeDrag, } = app
 
   return (
@@ -276,11 +311,19 @@ export const Body = observer((props) => {
                   zIndex: 0
                 }}
               >
-                <ComponentBorder style={style} position={type !== 'section' ? position : null} display={isSelected}>
+                <div className='section-options'>
+                  <div className='section-options_btn'>
+                    <ColumnIcon onClick={() => handleAbsoluteClick(id)} />
+                  </div>
+                  <div className='section-options_btn'>
+                    <CSSIcon />
+                  </div>
+                </div>
+                <ComponentBorder style={style} position={type !== 'section' ? position : null} display={isSelected || childSelected}>
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
-                  (app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || isSelected ? (<PartitionBorder {...elem} />) : undefined
+                  ((app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || childSelected) || isSelected ? (<PartitionBorder {...elem} />) : undefined
                 }
                 {
                   isSelected ? (
