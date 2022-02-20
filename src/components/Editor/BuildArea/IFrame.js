@@ -66,23 +66,11 @@ export const IFrame = observer((props) => {
   const getCorrectElement = (elem, isSectionChild) => {
     const { position, style: elemStyle } = elem
     let elemPositionStyle = {}
-    if(elem.position){
-      const { xPos, yPos, width, height } = elem.position
-      elemPositionStyle = {
-        position: 'absolute',
-        transform: `translate(${xPos}px, ${yPos}px)`
-      }
-    }
     const wl = ['section', 'header']
     const style = {
-      ...elemPositionStyle,
       ...elemStyle
     }
     const divWl = [...wl, 'div']
-    if(!divWl.includes(elem.type) && !elem.absolutePosition){
-      style.position = 'relative'
-      delete style.transform
-    }
     switch(elem.type){
       case 'header':
         return getHeader(elem)

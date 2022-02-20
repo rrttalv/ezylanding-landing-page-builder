@@ -26,19 +26,9 @@ export const Editor = observer((props) => {
   const handleMouseMove = e => {
     const { clientX, clientY } = e
     const { x, y } = document.querySelector('.editor').getBoundingClientRect()
-    if(app.panPoint){
-      e.preventDefault()
-      e.stopPropagation()
-      app.handlePan(e)
-      return
-    }
     if(app.activeDrag){
       app.handleItemDragMove(clientX - x, clientY - y, clientX, clientY)
       shouldCloseSidebar(e)
-    }
-    if(app.selectedElement && app.movingElement){
-      e.preventDefault()
-      app.moveElement(clientX, clientY)
     }
   }
 
@@ -46,13 +36,9 @@ export const Editor = observer((props) => {
     if(app.activeTextEditor){
       return
     }
-    app.setPanPoint(null, 0, 0)
     if(app.activeDrag){
       app.insertComponent(e)
       app.setActiveDragItem(null)
-    }
-    if(app.movingElement){
-      app.setMovingElement(false, e.clientX, e.clientY)
     }
   }
 

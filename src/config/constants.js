@@ -49,7 +49,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -90,7 +89,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -147,7 +145,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -163,7 +160,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -179,7 +175,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -195,7 +190,6 @@ const constants = {
           'flex-direction': 'row',
           width: '80%',
           margin: '0 auto',
-          padding: '3rem 0',
           position: 'relative',
           height: '300px'
         },
@@ -235,7 +229,6 @@ const constants = {
           height: '100px',
           margin: '0 auto',
           display: 'block',
-          position: 'absolute',
           top: 0,
           left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
@@ -253,7 +246,6 @@ const constants = {
           width: '100px',
           margin: '0 auto',
           display: 'block',
-          position: 'absolute',
           background: '#3E41DC',
           color: '#fff',
           height: '35px',
@@ -275,7 +267,6 @@ const constants = {
           height: '50px',
           margin: '0 auto',
           display: 'block',
-          position: 'absolute',
           top: 0,
           left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
@@ -310,7 +301,6 @@ const constants = {
           fontSize: '32px',
           lineHeight: 'normal',
           display: 'block',
-          position: 'absolute',
           top: 0,
           left: 0
         }
@@ -337,7 +327,6 @@ const constants = {
           marginBottom: '10px',
           fontSize: '24px',
           display: 'block',
-          position: 'absolute',
           top: 0,
           left: 0
         }
@@ -364,7 +353,6 @@ const constants = {
           marginBottom: '10px',
           fontSize: '18.5px',
           display: 'block',
-          position: 'absolute',
           top: 0,
           left: 0
         }

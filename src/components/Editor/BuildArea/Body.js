@@ -63,9 +63,6 @@ export const Body = observer((props) => {
     if(!app.selectedElement !== id){
       app.setSelectedElement(id, props.area, parentId)
     }
-    const x = status ? e.clientX : 0
-    const y = status ? e.clientY : 0
-    app.setMovingElement(status, x, y)
   }
 
   const getEditingTextElem = (elem, parentId, style) => {
@@ -114,18 +111,6 @@ export const Body = observer((props) => {
     return { elWidth, elHeight }
   }
 
-  const handlePanpointMouseEvent = (e, id, sectionId, type, mouseUp = false) => {
-    e.preventDefault()
-    e.stopPropagation()
-    app.setSelectedElement(id, props.area, sectionId)
-    const { clientX, clientY } = e
-    if(mouseUp){
-      app.setPanPoint(null, 0, 0, null)
-      return
-    }
-    app.setPanPoint(type, clientX, clientY)
-  }
-
   const toggleCSSTab = (e, id, sectionId, isSection = false) => {
     e.stopPropagation()
     e.preventDefault()
@@ -134,43 +119,15 @@ export const Body = observer((props) => {
 
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
-    let elemPositionStyle = {}
-    delete elemStyle.opacity
-    if(elem.position){
-      const { xPos, yPos, width, height } = elem.position
-      elemPositionStyle = {
-        position: 'absolute',
-        transform: `translate(${xPos}px, ${yPos}px)`,
-        width,
-        height
-      }
-    }
     const style = {
-      ...elemPositionStyle,
       ...elemStyle,
     }
-    let shouldDisplayBorder = false
-    if(elem.type !== 'div'){
-      if(app.selectedElement === id){
-        shouldDisplayBorder = true
-      }else{
-        shouldDisplayBorder = false
-      }
-      if(!elem.absolutePosition){
-        if(app.shiftingElement && app.shiftProps.targetElement === id){
-          const { shiftPosition } = elem
-          style.transform = `translate(${shiftPosition.xPos}px, ${shiftPosition.yPos}px)`
-        }else{
-          style.position = 'relative'
-          delete style.transform
-        }
-      }
+    if(!style.height){
+      style.height = '100%'
     }
     delete style.background
     delete style.backgroundColor
     delete style.backgroundUrl
-    const pointHorizontalStyle = {}
-    const { bottomShiftBox, topShiftBox, shiftProps } = app
     switch(elem.type){
       case 'div':
         return <div 
@@ -195,28 +152,12 @@ export const Body = observer((props) => {
             <div 
               draggable="false"
               className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
-              style={{...style, border: shouldDisplayBorder ? style.border : 'none'}}
+              style={{...style, position: 'relative'}}
               data-uuid={id} 
               onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
               onClick={e => selectComponent(e, id, sectionId)}
               onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
             >
-              <div className='pan-point side left' 
-                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left')} 
-                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'left', true)} 
-              />
-              <div className='pan-point side right' 
-                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right')} 
-                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'right', true)} 
-              />
-              <div className='pan-point top horizontal'
-                onPointerDown={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top')} 
-                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'top', true)} 
-              />
-              <div className='pan-point bottom horizontal'
-                onPointerDown={e => handlePanpointMouseEvent(e,  elem.id, sectionId, 'bottom')} 
-                onPointerUp={e => handlePanpointMouseEvent(e, elem.id, sectionId, 'bottom', true)} 
-              />
               {
                 app.selectedElement === id ? (
                   <div className='prop-menu'>
@@ -240,28 +181,10 @@ export const Body = observer((props) => {
                 :
                 undefined
               }
-              {
-                app.shiftingElement && topShiftBox.display && id === topShiftBox.targetElement ? (
-                  <div className='shift-box top' style={{ top: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
-                )
-                :
-                undefined
-              }
-              {
-                app.shiftingElement && bottomShiftBox.display && id === bottomShiftBox.targetElement ? (
-                  <div className='shift-box bottom' style={{ bottom: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)`, opacity: 1 }} />
-                )
-                :
-                undefined
-              }
             </div>
           </React.Fragment>
         )
     }
-  }
-
-  const handleAbsoluteClick = (sectionId) => {
-    app.toggleAbsolutePositioning(props.area, sectionId)
   }
   
   const { dragIndex, dragSection, activeDrag, } = app
@@ -305,9 +228,6 @@ export const Body = observer((props) => {
                 }}
               >
                 <div className='section-options'>
-                  <div className='section-options_btn'>
-                    <ColumnIcon onClick={() => handleAbsoluteClick(id)} />
-                  </div>
                   <div className='section-options_btn'>
                     <CSSIcon />
                   </div>
