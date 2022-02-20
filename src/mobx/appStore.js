@@ -449,6 +449,7 @@ class AppStore {
                   }
                 }
               }
+              console.log(tY - pY)
               elems.target.shiftPosition = {
                 xPos: tX - pX,
                 yPos: tY - pY
@@ -658,18 +659,26 @@ class AppStore {
           elems = {...this.findNestedSiblings(element.children, id, element)}
         }
         if(element.id === id){
+          const targetIdx = childIdx
           let prevSibling = null
+          let prevSiblingIndex = null
           let nextSibling = null
+          let nextSiblingIndex = null
           if(childIdx > 0){
             prevSibling = children[childIdx - 1]
+            prevSiblingIndex = childIdx - 1
           }
           if(childIdx + 1 <= children.length - 1){
             nextSibling = children[childIdx + 1]
+            nextSiblingIndex = childIdx + 1
           }
           elems = {
             target: element,
+            targetIdx,
             prevSibling,
             nextSibling,
+            nextSiblingIndex,
+            prevSiblingIndex,
             parent: parentElement
           }
         }
@@ -678,8 +687,25 @@ class AppStore {
     return elems
   }
 
-  shiftElement(){
-    return
+  shiftElement(targetElementId, nextSiblingId){
+    const elements = page[this.selectedElementGroup]
+    let elems = {}
+    console.log('here')
+    elements.forEach(element => {
+      if(!element.children){
+        return
+      }
+      if(!elems.target){
+        elems = {...this.findNestedSiblings(element.children, nextSiblingId, element)}
+        if(elems.target){
+          if(elems.nextSibling){
+            console.log(elems.parent)
+          }else{
+            //set nextsibling to null and add marginTop to target, increase parent height if needed
+          }
+        }
+      }
+    })
   }
 
   recalculateShiftProps(){
@@ -714,8 +740,7 @@ class AppStore {
           if(yDiff > 0){
             if(this.shiftProps.nextSibling){
               const { yMax, yMin } = this.shiftProps.nextSiblingPos
-              console.log(yMax, yMin, clientY, this.shiftProps)
-              if(yMax < yDiff){
+              if(yMax < clientY){
                 //shift the element
                 this.shiftElement(target.id, this.shiftProps.nextSibling)
                 this.variableMouseY = clientY
@@ -724,7 +749,6 @@ class AppStore {
               }
               if(yMin < clientY && yMax > clientY){
                 //Display a box where the element should go
-                console.log(this.shiftProps.nextSibling)
                 this.bottomShiftBox = {
                   display: true,
                   targetElement: this.shiftProps.nextSibling

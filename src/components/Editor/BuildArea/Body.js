@@ -30,11 +30,9 @@ export const Body = observer((props) => {
   }
 
   const handleDoubleClick = (e, elem, sectionId) => {
-    console.log(elem.type)
     e.stopPropagation()
     e.preventDefault()
     if(elem.type === 'text' || elem.type === 'button'){
-      console.log('here')
       let id = null
       let section = null
       if(app.activeTextEditor !== elem.id){
@@ -151,11 +149,12 @@ export const Body = observer((props) => {
       ...elemPositionStyle,
       ...elemStyle,
     }
+    let shouldDisplayBorder = false
     if(elem.type !== 'div'){
       if(app.selectedElement === id){
-        style.opacity = '1'
+        shouldDisplayBorder = true
       }else{
-        style.opacity = '0'
+        shouldDisplayBorder = false
       }
       if(!elem.absolutePosition){
         if(app.shiftingElement && app.shiftProps.targetElement === id){
@@ -172,7 +171,6 @@ export const Body = observer((props) => {
     delete style.backgroundUrl
     const pointHorizontalStyle = {}
     const { bottomShiftBox, topShiftBox, shiftProps } = app
-    console.log(shiftProps.targetElementPos.height)
     switch(elem.type){
       case 'div':
         return <div 
@@ -193,16 +191,11 @@ export const Body = observer((props) => {
         }
       default:
         return (
-          <div 
-            key={idx + sectionId}
-            style={{
-              position: 'relative'
-            }}
-          >
+          <React.Fragment key={idx + sectionId}>
             <div 
               draggable="false"
               className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
-              style={{...style}}
+              style={{...style, border: shouldDisplayBorder ? style.border : 'none'}}
               data-uuid={id} 
               onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
               onClick={e => selectComponent(e, id, sectionId)}
@@ -247,22 +240,22 @@ export const Body = observer((props) => {
                 :
                 undefined
               }
+              {
+                app.shiftingElement && topShiftBox.display && id === topShiftBox.targetElement ? (
+                  <div className='shift-box top' style={{ top: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
+                )
+                :
+                undefined
+              }
+              {
+                app.shiftingElement && bottomShiftBox.display && id === bottomShiftBox.targetElement ? (
+                  <div className='shift-box bottom' style={{ bottom: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)`, opacity: 1 }} />
+                )
+                :
+                undefined
+              }
             </div>
-            {
-              app.shiftingElement && topShiftBox.display && id === topShiftBox.targetElement ? (
-                <div className='shift-box top' style={{ top: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
-              )
-              :
-              undefined
-            }
-            {
-              app.shiftingElement && bottomShiftBox.display && id === bottomShiftBox.targetElement ? (
-                <div className='shift-box bottom' style={{ bottom: `calc(${-1 * (shiftProps.targetElementPos.height + 30)}px)` }} />
-              )
-              :
-              undefined
-            }
-          </div>
+          </React.Fragment>
         )
     }
   }
