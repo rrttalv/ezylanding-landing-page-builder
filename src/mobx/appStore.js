@@ -392,72 +392,7 @@ class AppStore {
     })
     if(status){
       if(elem && !elem.absolutePosition){
-        let siblings = null
-        this.pages[0][this.selectedElementGroup].forEach((section, idx) => {
-          if(!siblings){
-            const elems = this.findNestedSiblings(section.children, this.selectedElement, section)
-            if(elems.target){
-              siblings = elems
-              const { width: tW, height: tH, x: tX, y: tY } = document.querySelector(`[data-uuid="${elems.target.id}"]`).getBoundingClientRect()
-              let props = {
-                targetElement: elems.target.id,
-                targetElementPos: {
-                  xMin: tX,
-                  xMax: tX + tH,
-                  yMin: tY,
-                  yMax: tY + tH,
-                  height: tH,
-                  width: tW
-                }
-              }
-              if(elems.prevSibling){
-                const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.prevSibling.id}"]`).getBoundingClientRect()
-                props = {
-                  ...props,
-                  prevSibling: elems.prevSibling.id,
-                  prevSiblingPos: {
-                    xMin: x,
-                    xMax: x + width,
-                    yMin: y,
-                    yMax: y + height
-                  }
-                }
-              }
-              if(elems.nextSibling){
-                const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.nextSibling.id}"]`).getBoundingClientRect()
-                props = {
-                  ...props,
-                  nextSibling: elems.nextSibling.id,
-                  nextSiblingPos: {
-                    xMin: x,
-                    xMax: x + width,
-                    yMin: y,
-                    yMax: y + height
-                  }
-                }
-              }
-              const { width: pW, height: pH, x: pX, y: pY } = document.querySelector(`[data-uuid="${elems.parent.id}"]`).getBoundingClientRect()
-              if(elems.parent){
-                props = {
-                  ...props,
-                  parentElement: elems.parent.id,
-                  parentPos: {
-                    xMin: pX,
-                    xMax: pX + pW,
-                    yMin: pY,
-                    yMax: pY + pH
-                  }
-                }
-              }
-              console.log(tY - pY)
-              elems.target.shiftPosition = {
-                xPos: tX - pX,
-                yPos: tY - pY
-              }
-              this.shiftProps = props
-            }
-          }
-        })
+        this.recalculateShiftProps(0)
         this.shiftingElement = true
       }
     }else{
@@ -687,29 +622,138 @@ class AppStore {
     return elems
   }
 
-  shiftElement(targetElementId, nextSiblingId){
+  shiftInsideIframe(targetElement, newSibling, parentElement, shiftDown = true, moveX, moveY){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const doc = frame.contentWindow.document
+      if(shiftDown){
+        if(newSibling){
+          //remove the target element in the dom and insert it before the new sibling element
+          const domElem = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
+          if(domElem){
+            domElem.remove()
+            const sibling = doc.querySelector(`[data-uuid="${newSibling.id}"]`)
+            const parent = sibling.parentElement
+            parent.insertBefore(domElem, sibling)
+          }
+        }else{
+          //Apply new margin style to the element and height style to it's parent element
+          const domElem = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
+          domElem.style.marginTop = targetElement.style.marginTop
+          if(domElem){
+            const parent = domElem.parentElement
+            const editorParent = document.querySelector(`[data-uuid="${parentElement.id}"]`)
+            const editorTarget = document.querySelector(`[data-uuid="${targetElement.id}"]`)
+            const parentRect = editorParent.getBoundingClientRect()
+            const targetRect = editorTarget.getBoundingClientRect()
+            if(targetRect.y - 5 > parentRect.y){
+            }
+          }
+        }
+      }
+    }
+  }
+
+  shiftElement(page, targetElementId, siblingId, shiftDown = true, moveX = 0, moveY = 0){
     const elements = page[this.selectedElementGroup]
     let elems = {}
-    console.log('here')
     elements.forEach(element => {
       if(!element.children){
         return
       }
       if(!elems.target){
-        elems = {...this.findNestedSiblings(element.children, nextSiblingId, element)}
+        if(shiftDown)
+        elems = {...this.findNestedSiblings(element.children, siblingId, element)}
+        const shiftingElementIdx = elems.parent.children.findIndex(({ id }) => id === targetElementId)
         if(elems.target){
           if(elems.nextSibling){
-            console.log(elems.parent)
+            if(shiftingElementIdx > -1){
+              const targetCopy = {...elems.parent.children[shiftingElementIdx]}
+              elems.parent.children.splice(shiftingElementIdx, 1)
+              const newElems = this.findNestedSiblings(element.children, siblingId, element)
+              const { targetIdx, nextSibling, nextSiblingIndex } = newElems
+              elems.parent.children.splice(nextSiblingIndex, 0, targetCopy)
+              //Need a function to shift the elements inside the iframe
+              this.shiftInsideIframe(targetCopy, nextSibling, newElems.parent, true)
+            }
           }else{
             //set nextsibling to null and add marginTop to target, increase parent height if needed
+            if(shiftingElementIdx){
+              const target = elems.parent.children[shiftingElementIdx]
+              this.shiftInsideIframe(target, null, elems.parent, true, moveX, moveY)
+            }
           }
         }
-      }
+      } 
     })
   }
 
-  recalculateShiftProps(){
-    return
+  recalculateShiftProps(pageNo = 0){
+    let siblings = null
+    this.pages[pageNo][this.selectedElementGroup].forEach((section, idx) => {
+      if(!siblings){
+        const elems = this.findNestedSiblings(section.children, this.selectedElement, section)
+        if(elems.target){
+          siblings = elems
+          const { width: tW, height: tH, x: tX, y: tY } = document.querySelector(`[data-uuid="${elems.target.id}"]`).getBoundingClientRect()
+          let props = {
+            targetElement: elems.target.id,
+            targetElementPos: {
+              xMin: tX,
+              xMax: tX + tH,
+              yMin: tY,
+              yMax: tY + tH,
+              height: tH,
+              width: tW
+            }
+          }
+          if(elems.prevSibling){
+            const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.prevSibling.id}"]`).getBoundingClientRect()
+            props = {
+              ...props,
+              prevSibling: elems.prevSibling.id,
+              prevSiblingPos: {
+                xMin: x,
+                xMax: x + width,
+                yMin: y,
+                yMax: y + height
+              }
+            }
+          }
+          if(elems.nextSibling){
+            const { width, height, x, y } = document.querySelector(`[data-uuid="${elems.nextSibling.id}"]`).getBoundingClientRect()
+            props = {
+              ...props,
+              nextSibling: elems.nextSibling.id,
+              nextSiblingPos: {
+                xMin: x,
+                xMax: x + width,
+                yMin: y,
+                yMax: y + height
+              }
+            }
+          }
+          const { width: pW, height: pH, x: pX, y: pY } = document.querySelector(`[data-uuid="${elems.parent.id}"]`).getBoundingClientRect()
+          if(elems.parent){
+            props = {
+              ...props,
+              parentElement: elems.parent.id,
+              parentPos: {
+                xMin: pX,
+                xMax: pX + pW,
+                yMin: pY,
+                yMax: pY + pH
+              }
+            }
+          }
+          elems.target.shiftPosition = {
+            xPos: tX - pX,
+            yPos: tY - pY
+          }
+          this.shiftProps = props
+        }
+      }
+    })
   }
 
   moveElement(clientX, clientY, offsetX, offsetY){
@@ -742,10 +786,11 @@ class AppStore {
               const { yMax, yMin } = this.shiftProps.nextSiblingPos
               if(yMax < clientY){
                 //shift the element
-                this.shiftElement(target.id, this.shiftProps.nextSibling)
+                this.shiftElement(page, target.id, this.shiftProps.nextSibling)
                 this.variableMouseY = clientY
                 this.variableMouseX = clientX
                 this.bottomShiftBox = initShiftBox
+                this.recalculateShiftProps(0)
               }
               if(yMin < clientY && yMax > clientY){
                 //Display a box where the element should go
@@ -756,6 +801,7 @@ class AppStore {
               }
             }else{
               //Expand the height of the parent element and add marginTop to the target element
+              this.shiftElement(0, )
             }
           }
           if(yDiff < 0){
