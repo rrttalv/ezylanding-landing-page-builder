@@ -46,7 +46,7 @@ const constants = {
         thumb: '/images/sections/flex-row-2.svg',
         style: {
           display: 'flex',
-          'flex-direction': 'row',
+          flexDirection: 'row',
           width: '80%',
           margin: '0 auto',
           position: 'relative',
@@ -67,27 +67,35 @@ const constants = {
                 className: 'wrapper',
                 style: {
                   width: '100%',
-                  height: 'fit-content'
+                  height: 'fit-content',
+                  padding: '10px',
+                  marginTop: '25px'
                 },
                 children: [
                   {
                     type: 'text',
                     tagName: 'h2',
-                    content: 'My cool content here',
-                    displayStyle: {
-                      wrapper: {
-                        width: '100%',
-                        height: '100px'
-                      },
-                      image: {
-                        width: '187px'
-                      }
-                    },
+                    content: 'This is where you write your text!',
                     style: {
                       width: '100%',
                       marginTop: '0',
                       marginBottom: '10px',
                       fontSize: '24px',
+                      display: 'block',
+                      top: 0,
+                      left: 0
+                    }
+                  },
+                  {
+                    type: 'text',
+                    tagName: 'p',
+                    content: 'Write something cool here!',
+                    style: {
+                      width: '100%',
+                      marginTop: '25px',
+                      marginBottom: '10px',
+                      paddingTop: '30px',
+                      fontSize: '14px',
                       display: 'block',
                       top: 0,
                       left: 0
@@ -100,31 +108,9 @@ const constants = {
                 className: 'wrapper',
                 style: {
                   width: '100%',
-                  height: 'fit-content'
-                },
-                children: [
-                  {
-                    type: 'text',
-                    tagName: 'h2',
-                    content: 'Semibold H2 Heading',
-                    style: {
-                      width: '100%',
-                      marginTop: '0',
-                      marginBottom: '10px',
-                      fontSize: '24px',
-                      display: 'block',
-                      top: 0,
-                      left: 0
-                    }
-                  }
-                ]
-              },
-              {
-                type: 'div',
-                className: 'wrapper',
-                style: {
-                  width: '100%',
-                  height: 'fit-content'
+                  height: 'fit-content',
+                  display: 'flex',
+                  justifyContent: 'flex-end'
                 },
                 children: [
                   {
@@ -136,7 +122,7 @@ const constants = {
                     style: {
                       'borderRadius': '4px',
                       width: '100px',
-                      margin: '0 auto',
+                      marginTop: '10px',
                       display: 'block',
                       background: '#3E41DC',
                       color: '#fff',
@@ -159,7 +145,40 @@ const constants = {
               width: '50%',
               height: '100%'
             },
-            children: []
+            children: [
+              {
+                type: 'div',
+                className: 'wrapper',
+                style: {
+                  width: '100%',
+                  height: 'fit-content',
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                },
+                children: [
+                  {
+                    title: 'Rounded button',
+                    type: 'button',
+                    className: 'btn',
+                    content: 'Click me!',
+                    thumb: '/images/inputs/regular-btn.svg',
+                    style: {
+                      'borderRadius': '4px',
+                      width: '100px',
+                      marginTop: '10px',
+                      display: 'block',
+                      background: '#3E41DC',
+                      color: '#fff',
+                      height: '35px',
+                      top: 0,
+                      fontSize: '14px',
+                      left: 0,
+                      border: '1px solid rgba(0,0,0,0.175)'
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       },

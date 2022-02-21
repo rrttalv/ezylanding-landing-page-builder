@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
+import { getFlexKeys } from "../utils";
 
 const initSectionProps = {
   insertBefore: null,
@@ -377,11 +378,45 @@ class AppStore {
     return margins
   }
 
+  getPaddingOffset(frameWindow, elem){
+    const margins = {
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingTop: 0,
+      paddingBottom: 0
+    }
+    const keys = [
+      'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'
+    ]
+    const computedStyle = frameWindow.getComputedStyle(elem)
+    keys.forEach(key => {
+      const value = computedStyle[key]
+      const num = Number(value.replace('px', ''))
+      margins[key] = num
+    })
+    return margins
+  }
+
+  getFlexProps(frameWindow, elem){
+    const flexProps = {}
+    const computedStyle = frameWindow.getComputedStyle(elem)
+    if(computedStyle.display.includes('flex') || computedStyle.alignSelf){
+      flexProps.display = computedStyle.display
+      const keys = getFlexKeys()
+      keys.forEach(key => {
+        flexProps[key] = computedStyle[key]
+      })
+    }
+    return flexProps
+  }
+
   calculateComponentSize(component){
     const frame = document.querySelector('iframe')
     let width = 0
     let height = 0
     let margin = 0
+    let padding = 0
+    let flexProps = {}
     if(frame){
       const win = frame.contentWindow
       const doc = frame.contentWindow.document
@@ -390,23 +425,28 @@ class AppStore {
         const { x: offsetX, y: offsetY } = document.querySelector('.build-area_body').getBoundingClientRect()
         const { width: w, height: h, x, y } = el.getBoundingClientRect()
         const { marginLeft, marginRight, marginBottom, marginTop } = this.getMarginOffset(win, el)
+        const { paddingLeft, paddingRight, paddingTop, paddingBottom } = this.getPaddingOffset(win, el)
+        flexProps = this.getFlexProps(win, el)
         width = w
         height = h
         margin = `${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px`
+        padding = `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`
       }
     }
     return {
-      width, height, margin
+      width, height, margin, padding, flexProps
     }
   }
 
   recalculateSizes(children){
     children.forEach(child => {
-      const { width, height, margin } = this.calculateComponentSize(child)
+      const { width, height, margin, padding, flexProps } = this.calculateComponentSize(child)
       child.position = {
         width,
         height,
-        margin
+        margin,
+        padding,
+        flexProps
       }
       if(child.children && child.children.length){
         this.recalculateSizes(child.children)

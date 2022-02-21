@@ -126,7 +126,9 @@ export const Body = observer((props) => {
       style = {
         width: position.width,
         height: position.height,
-        margin: position.margin
+        margin: position.margin,
+        padding: position.padding,
+        ...position.flexProps
       }
       if(elem.type === 'div'){
         delete style.height
@@ -147,7 +149,7 @@ export const Body = observer((props) => {
         if(app.activeTextEditor === elem.id){
           if(elem.type === 'button'){
           }
-          return <div />
+          return getEditingTextElem(elem, sectionId, elemStyle)
         }
       default:
         return (
@@ -161,36 +163,33 @@ export const Body = observer((props) => {
             onClick={e => selectComponent(e, id, sectionId)}
             onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
           >
+          {
+            app.selectedElement === id ? (
+              <div className='prop-menu'>
+                <div 
+                  className='prop-menu__css'
+                  onClick={e => toggleCSSTab(e, id, sectionId)}
+                >
+                  <CSSIcon />
+                </div>
+                <div className='prop-menu__lock'>
+                </div>
+              </div>
+            )
+            :
+            undefined
+          }
+          {
+            app.editingCSS && elem.cssOpen ? (
+              <CSSTab style={{...elemStyle}} className={elem.className} />
+            )
+            :
+            undefined
+          }
           </div>
         )
     }
   }
-
-  /*
-    {
-      app.selectedElement === id ? (
-        <div className='prop-menu'>
-          <div 
-            className='prop-menu__css'
-            onClick={e => toggleCSSTab(e, id, sectionId)}
-          >
-            <CSSIcon />
-          </div>
-          <div className='prop-menu__lock'>
-          </div>
-        </div>
-      )
-      :
-      undefined
-    }
-    {
-      app.editingCSS && elem.cssOpen ? (
-        <CSSTab style={{...style}} className={elem.className} />
-      )
-      :
-      undefined
-    }
-  */
   
   const { dragIndex, dragSection, activeDrag, } = app
 
@@ -235,7 +234,7 @@ export const Body = observer((props) => {
                     <CSSIcon />
                   </div>
                 </div>
-                <ComponentBorder display={isSelected || childSelected}>
+                <ComponentBorder display={isSelected || childSelected} style={{...elem.style}}>
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
