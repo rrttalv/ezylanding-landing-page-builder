@@ -6,6 +6,7 @@ import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
 import { ReactComponent as ColumnIcon } from '../../../svg/column.svg'
 import { SlateEditor } from './ElementWrappers/SlateEditor'
 import { CSSTab } from './CSSTab'
+import { ElementIndicator } from './ComponentTools/ElementIndicator'
 
 export const Body = observer((props) => {
   
@@ -142,16 +143,33 @@ export const Body = observer((props) => {
         delete style.height
       }
     }
-    const elemClass = app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper' 
+    const isSelected = app.selectedElement === id
+    const elemClass = isSelected ? 'component-wrapper selected' : 'component-wrapper'
+    const divClass = isSelected ? 'section-wrapper selected' : 'section-wrapper'
     switch(elem.type){
       case 'div':
         return <div 
           key={idx + sectionId}
-          className='section-wrapper' 
+          className={divClass}
+          onClick={e => selectComponent(e, id, sectionId)}
           style={{...style}} 
           data-uuid={id}
         >
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
+          {
+            isSelected ? (
+              <div className='element-tools'>
+                <div className='element-tools_toolbar'>
+                  <ElementIndicator 
+                    elementTag={elem.type}
+                    elementClass={elem.className}
+                  />
+                </div>
+              </div>
+            )
+            :
+            undefined
+          }
         </div>
       case 'img':
         return (
@@ -165,8 +183,6 @@ export const Body = observer((props) => {
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          if(elem.type === 'button'){
-          }
           return getEditingTextElem(elem, sectionId, elemStyle)
         }
       default:
@@ -178,10 +194,9 @@ export const Body = observer((props) => {
             data-uuid={id} 
             onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
             onClick={e => selectComponent(e, id, sectionId)}
-            onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
           >
           {
-            app.selectedElement === id ? (
+            isSelected ? (
               <div className='prop-menu'>
                 <div 
                   className='prop-menu__css'

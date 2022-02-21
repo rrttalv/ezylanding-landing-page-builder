@@ -75,7 +75,7 @@
         position: absolute;
       }
     }
-    &_body, &_header, &_footer {
+    &_body {
       position: absolute;
       .css-tab {
         z-index: 100;
@@ -189,6 +189,20 @@
         .section-wrapper {
           z-index: 2;
         }
+        .section-wrapper.selected {
+          position: relative;
+          &::after {
+            cursor: pointer;
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            border-radius: 4px;
+            border: 1px solid rgba(62, 227, 197, 0.5);
+          }
+        }
       }
       .comp-border.visible {
         &::after {
@@ -218,5 +232,28 @@
   }
   .floating-element {
     z-index: 3;
+  }
+
+  .element-tools {
+    &_toolbar {
+      position: absolute;
+      top: 0;
+      left: calc(100% + 10px);
+      .element-indicator {
+        span {
+          display: block;
+          font-size: 12px;
+          padding: 2.5px;
+          padding-bottom: 0;
+          white-space: nowrap;
+        }
+        &_tag {
+          margin-bottom: 0px;
+        }
+        &_class {
+          padding-top: 0;
+        }
+      }
+    }
   }
 }
