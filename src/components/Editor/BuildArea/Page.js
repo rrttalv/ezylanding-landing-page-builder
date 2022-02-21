@@ -33,8 +33,7 @@ export const Page = observer((props) => {
 
   useEffect(() => {
     const activePage = app.getActivePage()
-    if(iframe && activePage && activePage.body.length === 0){
-      console.log('here')
+    if(iframe && activePage && activePage.elements.length === 0){
       setStyle({
         width: iframe.clientWidth + 'px',
         height: iframe.clientHeight + 'px'
@@ -46,10 +45,11 @@ export const Page = observer((props) => {
     const activePage = app.getActivePage()
     if(activePage){
       setTimeout(() => {
-        const { headerHeight, bodyHeight, footerHeight } = activePage
+        const { elementsHeight } = activePage
+        console.log(elementsHeight)
         setSeparators({
-          header: headerHeight,
-          footer: headerHeight + bodyHeight
+          header: 0,
+          footer: elementsHeight
         })
       }, 10)
     }
@@ -57,7 +57,7 @@ export const Page = observer((props) => {
 
   const { width } = style
   const activePage = app.getActivePage()
-  const { headerHeight, bodyHeight, footerHeight } = activePage
+  const { elementsHeight } = activePage
 
   return (
     <div 
@@ -65,19 +65,12 @@ export const Page = observer((props) => {
       style={style}
     >
       <Body 
-        height={headerHeight} 
-        heightPropName={'headerHeight'} 
-        area={'header'} 
-        top={0} 
-        iframeSelector={'#PAGE-HEADER'}
-      />
-      <Body 
-        height={bodyHeight} 
-        heightPropName={'bodyHeight'} 
-        top={headerHeight} 
+        height={elementsHeight} 
+        heightPropName={'elementsHeight'} 
         area={'body'} 
         iframeSelector={'#PAGE-BODY'}
       />
+
       <div 
         className='build-area_page_separator' 
         style={{

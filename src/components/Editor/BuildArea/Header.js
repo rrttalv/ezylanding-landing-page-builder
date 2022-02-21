@@ -15,7 +15,6 @@ export const Header = observer((props) => {
 
   return (
     <div 
-      onPointerMove={e => app.setActiveGroup('header', e)}
       className='build-area_header'
       style={{
         top: props.top,

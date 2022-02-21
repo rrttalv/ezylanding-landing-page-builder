@@ -45,22 +45,16 @@ class AppStore {
   activePage = null
   selectedElement = null
   selectedParentElement = null
-  selectedElementGroup = null
   movingElement = false
   editingCSS = false
-  activeGroup = null
   parentElements = ['section', 'header']
   activeFramework = null
   pages = [
     {
       route: '/',
       id: uuidv4(),
-      header: [],
-      body: [],
-      footer: [],
-      headerHeight: 60,
-      bodyHeight: 500,
-      footerHeight: 100,
+      elements: [],
+      elementsHeight: 500,
       style: {
         background: '#ffffff',
       },
@@ -80,22 +74,18 @@ class AppStore {
     }
   }
 
-  findElement(id, area){
-    if(area){
-      const elements = this.pages[0][area]
-      let target = null
-      elements.forEach(element => {
-        if(!target){
-          const found = this.findNestedChild(element.children, this.selectedElement)
-          if(found){
-            target = found
-          }
+  findElement(id){
+    const elements = this.pages[0].elements
+    let target = null
+    elements.forEach(element => {
+      if(!target){
+        const found = this.findNestedChild(element.children, this.selectedElement)
+        if(found){
+          target = found
         }
-      })
-      return target
-    }else{
-      return null
-    }
+      }
+    })
+    return target
   }
 
   
@@ -113,7 +103,7 @@ class AppStore {
     if(elementType === 'text' || elementType === 'button'){
       const { parentId } = this.activeElementMeta
       const keys = propName.split('|')
-      const elements = this.pages[0][this.selectedElementGroup]
+      const elements = this.pages[0].elements
       let targetElem = null
       elements.forEach(element => {
         //Check if the text element is outside of the divs
@@ -169,10 +159,9 @@ class AppStore {
     }
   }
 
-  setSelectedElement(id, group, parentId = null){
+  setSelectedElement(id, parentId){
     this.selectedElement = id
     this.selectedParentElement = parentId
-    this.selectedElementGroup = group
   }
 
   updateInsideFrame(element, propName){
@@ -191,8 +180,7 @@ class AppStore {
 
   unsetSelectedElement(){
     this.selectedElement = null
-    this.selectedParentElement = null 
-    this.selectedElementGroup = null
+    this.selectedParentElement = null
   }
 
   findNestedChild(children, id, parentElem = null){
@@ -272,36 +260,8 @@ class AppStore {
     }
   }
 
-  getActiveDragArea(clientX, clientY){
-    const areas = [
-      {
-        section: 'header',
-        selector: '.build-area_header',
-      },
-      {
-        section: 'body',
-        selector: '.build-area_body'
-      }
-    ]
-    let activeArea = null
-    areas.forEach(area => {
-      const domArea = document.querySelector(area.selector)
-      if(domArea){
-        const { x, y, width, height } = domArea.getBoundingClientRect()
-        if(clientX > x && clientX < x + width && clientY > y && clientY < y + height){
-          activeArea = area.section
-        }
-      }
-    })
-    return activeArea
-  }
-
   checkDragIndex(clientX, clientY){
-    const area = this.getActiveDragArea(clientX, clientY)
-    const elements = this.pages[0][area]
-    if(!area){
-      return
-    }
+    const elements = this.pages[0].elements
     elements.forEach((section, idx) => {
       const elem = document.querySelector(`[data-uuid="${section.id}"]`)
       const nextIndex = idx + 1
@@ -313,16 +273,13 @@ class AppStore {
         const yBottomBound = y + height + 60
         if(clientY > yTopBound && clientY < yMidBound){
           this.dragIndex = idx
-          this.dragSection = area
         }
         if(clientY > yMidBound && clientY < yBottomBound){
           this.dragIndex = idx + 1
-          this.dragSection = area
         }
       }
     })
     if(elements.length === 0){
-      this.dragSection = area
       this.dragIndex = 0
       return
     }
@@ -378,29 +335,6 @@ class AppStore {
     return false
   }
 
-  getSectionTargetDiv(clientX, clientY, page, activeArea){
-    const domSection = document.querySelector(`[data-uuid="${this.currentSectionId}"] .comp-border`)
-    const section = page[activeArea].find(({ id }) => id === this.currentSectionId)
-    let targetDiv = null
-    let posMap = {}
-    if(domSection && section){
-      const ids = section.children.map(child => child.id)
-      domSection.childNodes.forEach((node, idx) => {
-        const { width: cW, height: cH, x: cX, y: cY } = node.getBoundingClientRect()
-        const xMax = cW + cX
-        const yMax = cH + cY
-        if(clientY > cY && clientY < yMax && clientX > cX && clientX < xMax){
-          targetDiv = node.getAttribute('data-uuid')
-          posMap.xPos = clientX - cX
-          posMap.yPos = clientY - cY
-          posMap.parentHeight = cH
-          posMap.parentWidth = cW
-        }
-      })
-    }
-    return { posMap, targetDiv }
-  }
-
   //Id is text ID, parentID is the parent DIV that surrounds the text
   setActiveTextEditor(id, parentId){
     this.activeTextEditor = id
@@ -411,9 +345,8 @@ class AppStore {
     }
   }
 
-  toggleCSSTab(id, area){
-    const target = this.findElement(id, area)
-    console.log(target)
+  toggleCSSTab(id){
+    const target = this.findElement(id)
     if(target){
       const newVal = !target.cssOpen
       this.editingCSS = newVal
@@ -428,17 +361,7 @@ class AppStore {
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
-      const areas = [
-        {
-          section: 'header',
-          selector: '.build-area_header',
-        },
-        {
-          section: 'body',
-          selector: '.build-area_body'
-        }
-      ]
-      const activeArea = this.getActiveDragArea(clientX, clientY)
+      const activeArea = this.pages[0].elements
       const editor = document.querySelector('.editor')
       if(!activeArea || !editor){
         return
@@ -464,29 +387,14 @@ class AppStore {
       if(this.parentElements.includes(this.activeDrag.type)){
         comp.position.xPos -= editorX
         comp.position.yPos -= editorY
-        page[activeArea].splice(this.dragIndex, 0, comp)
-        this.setSelectedElement(comp.id, null, activeArea)
+        page.elements.splice(this.dragIndex, 0, comp)
+        this.setSelectedElement(comp.id, null)
         this.dragIndex = 0
         this.dragSection = null
       }else{
         
       }
       this.elementLen += 1
-    }
-  }
-
-  setActiveGroup(section, e){
-    if(section){
-      const { width, height, x, y } = e.target.getBoundingClientRect()
-      this.activeGroup = {
-        section,
-        x,
-        y,
-        width,
-        height
-      }
-    }else{
-      this.activeGroup = null
     }
   }
 

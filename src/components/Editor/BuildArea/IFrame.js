@@ -30,9 +30,9 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     const activePage = app.getActivePage()
-    if(activePage && activePage.body.length === 0){
-      const { headerHeight, bodyHeight, footerHeight } = activePage
-      setFrameHeight(headerHeight + bodyHeight + footerHeight)
+    if(activePage && activePage.elements.length === 0){
+      const {  elementsHeight } = activePage
+      setFrameHeight(elementsHeight)
     }
   }, [app.pages, app.movingElement, app.activeDrag])
 
@@ -134,26 +134,15 @@ export const IFrame = observer((props) => {
       pageStyle += `${key}:${page.style[key]};`
     })
     const { 
-      body, 
-      header, 
-      footer,
-      headerHeight,
-      bodyHeight,
-      footerHeight
+      elements,
+      elementsHeight
     } = page
     const container = (
       <body>
         <div id="EMBED-CONTAINER">
           <div id="PAGE-CONTAINER">
-            <div id="PAGE-HEADER" className='PAGE-HEADER' style={{ width: '100%', height: page.header.length === 0 ? headerHeight + 'px' : 'fit-content' }}>
-              {
-                header.map(headerElem => {
-                  return getCorrectElement(headerElem)
-                })
-              }
-            </div>
-            <div id="PAGE-BODY" className='PAGE-BODY' style={{ width: '100%', height: page.body.length === 0 ? bodyHeight + 'px' : 'fit-content' }}>
-              {body.map(elem => getCorrectElement(elem))}
+            <div id="PAGE-BODY" className='PAGE-BODY' style={{ width: '100%', height: page.elements.length === 0 ? elementsHeight + 'px' : 'fit-content' }}>
+              {elements.map(elem => getCorrectElement(elem))}
             </div>
           </div>
         </div>

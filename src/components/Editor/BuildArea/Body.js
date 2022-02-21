@@ -26,7 +26,7 @@ export const Body = observer((props) => {
       return
     }
     e.stopPropagation()
-    app.setSelectedElement(id, props.area, sectionId)
+    app.setSelectedElement(id, sectionId)
   }
 
   const handleDoubleClick = (e, elem, sectionId) => {
@@ -61,7 +61,7 @@ export const Body = observer((props) => {
 
   const handlePointerEvent = (e, status, id, parentId) => {
     if(!app.selectedElement !== id){
-      app.setSelectedElement(id, props.area, parentId)
+      app.setSelectedElement(id, parentId)
     }
   }
 
@@ -114,7 +114,7 @@ export const Body = observer((props) => {
   const toggleCSSTab = (e, id, sectionId, isSection = false) => {
     e.stopPropagation()
     e.preventDefault()
-    app.toggleCSSTab(id, props.area)
+    app.toggleCSSTab(id)
   }
 
   const getChildElemBorder = (elem, idx, sectionId) => {
@@ -191,8 +191,7 @@ export const Body = observer((props) => {
 
   return (
     <div 
-      onPointerMove={e => app.setActiveGroup(props.area, e)}
-      className={`build-area_${props.area}`}
+      className={`build-area_body`}
       style={{
         top: props.top,
         height: props.height,
@@ -200,7 +199,7 @@ export const Body = observer((props) => {
       }}
     >
       {
-        activePage[props.area].map((elem, idx) => {
+        activePage.elements.map((elem, idx) => {
           const { style, children, id, type, position } = elem
           const isSelected = app.selectedElement === id
           let childSelected = app.selectedParentElement === id
@@ -211,7 +210,7 @@ export const Body = observer((props) => {
           return (
             <>
               {
-                idx === dragIndex && activeDrag && dragSection === props.area ? (
+                idx === dragIndex && activeDrag ? (
                   <div className='build-area_insert-preview insert-above' />
                 )
                 :
@@ -236,7 +235,7 @@ export const Body = observer((props) => {
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
-                  ((app.activeDrag && id === app.currentSectionId && app.childDragSection === props.area) || childSelected) || isSelected ? (<PartitionBorder {...elem} />) : undefined
+                  ((app.activeDrag && id === app.currentSectionId) || childSelected) || isSelected ? (<PartitionBorder {...elem} />) : undefined
                 }
                 {
                   isSelected ? (
@@ -255,7 +254,7 @@ export const Body = observer((props) => {
                 }
               </div>
               {
-                activePage[props.area].length - 1 === idx && idx + 1 === dragIndex && activeDrag && dragSection === props.area ? (
+                activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag ? (
                   <div className='build-area_insert-preview insert-below' />
                 )
                 :
