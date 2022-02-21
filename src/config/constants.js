@@ -62,7 +62,93 @@ const constants = {
               height: '100%'
             },
             children: [
-              
+              {
+                type: 'div',
+                className: 'wrapper',
+                style: {
+                  width: '100%',
+                  height: 'fit-content'
+                },
+                children: [
+                  {
+                    type: 'text',
+                    tagName: 'h2',
+                    content: 'My cool content here',
+                    displayStyle: {
+                      wrapper: {
+                        width: '100%',
+                        height: '100px'
+                      },
+                      image: {
+                        width: '187px'
+                      }
+                    },
+                    style: {
+                      width: '100%',
+                      marginTop: '0',
+                      marginBottom: '10px',
+                      fontSize: '24px',
+                      display: 'block',
+                      top: 0,
+                      left: 0
+                    }
+                  }
+                ]
+              },
+              {
+                type: 'div',
+                className: 'wrapper',
+                style: {
+                  width: '100%',
+                  height: 'fit-content'
+                },
+                children: [
+                  {
+                    type: 'text',
+                    tagName: 'h2',
+                    content: 'Semibold H2 Heading',
+                    style: {
+                      width: '100%',
+                      marginTop: '0',
+                      marginBottom: '10px',
+                      fontSize: '24px',
+                      display: 'block',
+                      top: 0,
+                      left: 0
+                    }
+                  }
+                ]
+              },
+              {
+                type: 'div',
+                className: 'wrapper',
+                style: {
+                  width: '100%',
+                  height: 'fit-content'
+                },
+                children: [
+                  {
+                    title: 'Rounded button',
+                    type: 'button',
+                    className: 'btn',
+                    content: 'Click me!',
+                    thumb: '/images/inputs/regular-btn.svg',
+                    style: {
+                      'borderRadius': '4px',
+                      width: '100px',
+                      margin: '0 auto',
+                      display: 'block',
+                      background: '#3E41DC',
+                      color: '#fff',
+                      height: '35px',
+                      top: 0,
+                      fontSize: '14px',
+                      left: 0,
+                      border: '1px solid rgba(0,0,0,0.175)'
+                    }
+                  }
+                ]
+              }
             ]
           },
           {
@@ -226,8 +312,6 @@ const constants = {
         }
       },
       {
-        type: 'div',
-
         title: 'Rounded button',
         type: 'button',
         className: 'btn',

@@ -357,6 +357,73 @@ class AppStore {
   changeStylePropInFrame(elementId, propName, propValue){
 
   }
+  
+  getMarginOffset(frameWindow, elem){
+    const margins = {
+      marginLeft: 0,
+      marginRight: 0,
+      marginTop: 0,
+      marginBottom: 0
+    }
+    const keys = [
+      'marginLeft', 'marginRight', 'marginTop', 'marginBottom'
+    ]
+    const computedStyle = frameWindow.getComputedStyle(elem)
+    keys.forEach(key => {
+      const value = computedStyle[key]
+      const num = Number(value.replace('px', ''))
+      margins[key] = num
+    })
+    return margins
+  }
+
+  calculateComponentSize(component){
+    const frame = document.querySelector('iframe')
+    let width = 0
+    let height = 0
+    let margin = 0
+    if(frame){
+      const win = frame.contentWindow
+      const doc = frame.contentWindow.document
+      const el = doc.querySelector(`[data-uuid="${component.id}"]`)
+      if(el){
+        const { x: offsetX, y: offsetY } = document.querySelector('.build-area_body').getBoundingClientRect()
+        const { width: w, height: h, x, y } = el.getBoundingClientRect()
+        const { marginLeft, marginRight, marginBottom, marginTop } = this.getMarginOffset(win, el)
+        width = w
+        height = h
+        margin = `${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px`
+      }
+    }
+    return {
+      width, height, margin
+    }
+  }
+
+  recalculateSizes(children){
+    children.forEach(child => {
+      const { width, height, margin } = this.calculateComponentSize(child)
+      child.position = {
+        width,
+        height,
+        margin
+      }
+      if(child.children && child.children.length){
+        this.recalculateSizes(child.children)
+      }
+    })
+  }
+
+  assignChildIds(children){
+    children.forEach(child => {
+      if(!child.id){
+        child.id = uuidv4()
+      }
+      if(child.children && child.children.length){
+        this.assignChildIds(child.children)
+      }
+    })
+  }
 
   insertComponent(e){
     if(this.activeDrag){
@@ -376,12 +443,7 @@ class AppStore {
         id: uuidv4()
       }
       if(comp.children && comp.children.length){
-        comp.children = comp.children.map(child => {
-          return {
-            ...child,
-            id: uuidv4()
-          }
-        })
+        this.assignChildIds(comp.children)
       }
       //If the parent element is a section
       if(this.parentElements.includes(this.activeDrag.type)){
@@ -395,6 +457,9 @@ class AppStore {
         
       }
       this.elementLen += 1
+      setTimeout(() => {
+        this.recalculateSizes(this.pages[0].elements)
+      }, 500)
     }
   }
 

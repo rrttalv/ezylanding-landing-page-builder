@@ -19,6 +19,7 @@ export const Body = observer((props) => {
   const activePage = app.getActivePage()
 
   const selectComponent = (e, id, sectionId, section = false) => {
+    console.log(id, sectionId)
     if(section && app.activeTextEditor){
       app.setActiveTextEditor(null, null)
     }
@@ -26,6 +27,7 @@ export const Body = observer((props) => {
       return
     }
     e.stopPropagation()
+    e.preventDefault()
     app.setSelectedElement(id, sectionId)
   }
 
@@ -119,20 +121,23 @@ export const Body = observer((props) => {
 
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
-    const style = {
-      ...elemStyle,
+    let style = {}
+    if(position){
+      style = {
+        width: position.width,
+        height: position.height,
+        margin: position.margin
+      }
+      if(elem.type === 'div'){
+        delete style.height
+      }
     }
-    if(!style.height){
-      style.height = '100%'
-    }
-    delete style.background
-    delete style.backgroundColor
-    delete style.backgroundUrl
     switch(elem.type){
       case 'div':
         return <div 
           key={idx + sectionId}
-          className='section-wrapper' style={{...style}} 
+          className='section-wrapper' 
+          style={{...style}} 
           data-uuid={id}
         >
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
@@ -140,52 +145,52 @@ export const Body = observer((props) => {
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          const styleCopy = {...style}
           if(elem.type === 'button'){
-            styleCopy.background = elemStyle.background
           }
-          return getEditingTextElem(elem, sectionId, {...styleCopy, opacity: elemStyle.opacity})
+          return <div />
         }
       default:
         return (
-          <React.Fragment key={idx + sectionId}>
-            <div 
-              draggable="false"
-              className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
-              style={{...style, position: 'relative'}}
-              data-uuid={id} 
-              onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
-              onClick={e => selectComponent(e, id, sectionId)}
-              onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
-            >
-              {
-                app.selectedElement === id ? (
-                  <div className='prop-menu'>
-                    <div 
-                      className='prop-menu__css'
-                      onClick={e => toggleCSSTab(e, id, sectionId)}
-                    >
-                      <CSSIcon />
-                    </div>
-                    <div className='prop-menu__lock'>
-                    </div>
-                  </div>
-                )
-                :
-                undefined
-              }
-              {
-                app.editingCSS && elem.cssOpen ? (
-                  <CSSTab style={{...style}} className={elem.className} />
-                )
-                :
-                undefined
-              }
-            </div>
-          </React.Fragment>
+          <div 
+            draggable="false"
+            key={idx + sectionId}
+            className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
+            style={{...style}}
+            data-uuid={id} 
+            onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
+            onClick={e => selectComponent(e, id, sectionId)}
+            onPointerDown={e => handlePointerEvent(e, true, elem.id, sectionId)}
+          >
+          </div>
         )
     }
   }
+
+  /*
+    {
+      app.selectedElement === id ? (
+        <div className='prop-menu'>
+          <div 
+            className='prop-menu__css'
+            onClick={e => toggleCSSTab(e, id, sectionId)}
+          >
+            <CSSIcon />
+          </div>
+          <div className='prop-menu__lock'>
+          </div>
+        </div>
+      )
+      :
+      undefined
+    }
+    {
+      app.editingCSS && elem.cssOpen ? (
+        <CSSTab style={{...style}} className={elem.className} />
+      )
+      :
+      undefined
+    }
+  */
   
   const { dragIndex, dragSection, activeDrag, } = app
 
@@ -222,7 +227,6 @@ export const Body = observer((props) => {
                 className={`section-component ${isSelected || childSelected ? ' active-component' : ''}`}
                 style={{
                   ...style,
-                  flexDirection: 'column',
                   zIndex: 0
                 }}
               >
@@ -231,7 +235,7 @@ export const Body = observer((props) => {
                     <CSSIcon />
                   </div>
                 </div>
-                <ComponentBorder style={style} position={type !== 'section' ? position : null} display={isSelected || childSelected}>
+                <ComponentBorder display={isSelected || childSelected}>
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
