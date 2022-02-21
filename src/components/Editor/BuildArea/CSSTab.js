@@ -26,14 +26,21 @@ export const CSSTab = observer((props) => {
       let xPos = {
         left: (x - offsetX) + width + 10,
       }
+      let yPos = {
+        top: (y - offsetY) - height
+      }
       if(document.body.clientWidth < xPos.left + 450){
         xPos = {
           left: x - 450 - offsetX - width + 10
         }
       }
+      console.log(yPos.top, offsetY)
+      if(yPos.top <= 0){
+        yPos.top = 25
+      }
       setPositionStyle({
         ...xPos,
-        top: (y - offsetY) - height,
+        ...yPos,
         display: 'initial'
       })
     }

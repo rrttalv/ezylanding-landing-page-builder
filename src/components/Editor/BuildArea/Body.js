@@ -64,7 +64,7 @@ export const Body = observer((props) => {
             }
         }, 10)
       }
-  }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.activeDrag, app.activeFramework])
+  }, [app.pages.elements, app.sizeCalcChange, app.pages, app.selectedElement, app.activeDrag, app.activeFramework])
 
   const handlePointerEvent = (e, status, id, parentId) => {
     if(app.editingCSS){

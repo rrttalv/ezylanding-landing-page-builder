@@ -53,7 +53,7 @@ export const Page = observer((props) => {
         })
       }, 10)
     }
-  }, [app.pages, app.selectedElement, iframe])
+  }, [app.pages.elements, app.sizeCalcChange, app.selectedElement, iframe])
 
   const { width } = style
   const activePage = app.getActivePage()

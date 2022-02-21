@@ -38,6 +38,9 @@ class AppStore {
   selectedElement = null
   selectedParentElement = null
 
+  //Just a bool value to make the body view update once there has been a change in the components
+  sizeCalcChange = false
+
   //Editing CSS is a bool value
   editingCSS = false
   //CSS Element is an object which contains the current element the user is editing
@@ -312,6 +315,7 @@ class AppStore {
     //this means the text editor is closed so all the heights of elements should be recalibrated
     if(!id){
       this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
     }
   }
 
@@ -324,20 +328,23 @@ class AppStore {
       if(el){
         const computedStyle = win.getComputedStyle(el)
         Object.keys(cssMap).forEach(key => {
-          if(computedStyle[key]){
+          if(computedStyle.hasOwnProperty(key)){
             el.style[key] = cssMap[key]
+            const camelKey = camelCase(key)
+            component.style[camelKey] = cssMap[key]
           }
         })
         Object.keys(el.style).forEach(styleKey => {
           if(!isNaN(Number(styleKey))){
             const key = el.style[styleKey]
-            const value = el.style[key]
-            const camelKey = camelCase(key)
-            component.style[camelKey] = value
+            if(!cssMap[key]){
+              el.style[key] = ''
+            }
           }
         })
       }
       this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
     }
   }
 
@@ -455,6 +462,28 @@ class AppStore {
     }
   }
 
+  setElementInitStyle(children){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      children.forEach(child => {
+        const doc = frame.contentWindow.document
+        const el = doc.querySelector(`[data-uuid="${child.id}"]`)
+        if(el){
+          Object.keys(el.style).forEach(styleKey => {
+            if(!isNaN(Number(styleKey))){
+              const key = el.style[styleKey]
+              const camelKey = camelCase(key)
+              child.style[camelKey] = el.style[key]
+            }
+          })
+        }
+        if(child.children && child.children.length){
+          this.setElementInitStyle(child.children)
+        }
+      })
+    }
+  }
+
   recalculateSizes(children){
     children.forEach(child => {
       const { width, height, margin, padding, flexProps } = this.calculateComponentSize(child)
@@ -492,6 +521,9 @@ class AppStore {
       }
       const { x: editorX, y: editorY } = editor.getBoundingClientRect()
       const page = this.getActivePage()
+      if(this.activeDrag.type === 'section'){
+        this.activeDrag.style.height = 'fit-content'
+      }
       const comp = {
         ...this.activeDrag,
         cssOpen: false,
@@ -515,6 +547,8 @@ class AppStore {
       this.elementLen += 1
       setTimeout(() => {
         this.recalculateSizes(this.pages[0].elements)
+        this.setElementInitStyle(this.pages[0].elements)
+        this.sizeCalcChange = !this.sizeCalcChange
       }, 500)
     }
   }
