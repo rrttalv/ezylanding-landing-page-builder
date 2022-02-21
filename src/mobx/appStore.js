@@ -19,14 +19,10 @@ class AppStore {
   mouseStartY = 0
 
   dragIndex = 0
-  dragSection = null
-  childDragIndex = 0
-  childDragSection = null
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
 
-  absoluteDisabled = []
 
   activeFonts = [
     {
@@ -36,17 +32,10 @@ class AppStore {
     }
   ]
 
-  dragSectionProps = {
-    insertBefore: null,
-    insertAfter: null,
-    sectionId: null
-  }
-
   activeDrag = null
   activePage = null
   selectedElement = null
   selectedParentElement = null
-  movingElement = false
   editingCSS = false
   parentElements = ['section', 'header']
   activeFramework = null
@@ -105,57 +94,20 @@ class AppStore {
       const { parentId } = this.activeElementMeta
       const keys = propName.split('|')
       const elements = this.pages[0].elements
-      let targetElem = null
+      let target = null
       elements.forEach(element => {
-        //Check if the text element is outside of the divs
-        if(element.id === parentId && element.children){
-          const res = this.findNestedChild(element.children, id)
-          if(res){
-            targetElem = res
+        if(!target){
+          if(element.id === id){
+            target = element
           }
-        }
-        if(element.id !== parentId && element.children){
-          const res = this.findNestedChild(element.children, id)
-          if(res){
-            targetElem = res
+          if(element.id !== id && element.children){
+            target = this.findNestedChild(element.children, id)
           }
         }
       })
-      if(keys.length === 1 && targetElem){
-        targetElem[keys[0]] = propValue
-      }
-      const parentDomNode = document.querySelector(`[data-uuid="${parentId}"] [data-slate-node="text"]`)
-      if(parentDomNode && targetElem){
-        setTimeout(() => {
-          const { width, height } = parentDomNode.getBoundingClientRect()
-          if(elementType === 'text'){
-            this.updateInsideFrame(targetElem, 'width')
-            this.updateInsideFrame(targetElem, 'height')
-          }
-          if(elementType === 'button'){
-            const { height: btnHeight } = targetElem.style
-            if(btnHeight){
-              let trueHeight = 0
-              if(btnHeight.includes('px')){
-                trueHeight = this.convertPixelsToNumber(btnHeight)
-              }
-              if(btnHeight.includes('%')){
-                const precentageHeight = this.convertPrecentToNumber(btnHeight)
-                const parent = document.querySelector(`[data-uuid="${parentId}"]`)
-                if(parent && parent.clientHeight){
-                  trueHeight = (parent.clientHeight * (precentageHeight / 100))
-                }
-              }
-              if(height > trueHeight){
-                targetElem.style.height = height + 'px'
-                this.updateInsideFrame(targetElem, 'height')
-              }
-            }
-          }
-          if(keys && keys[0] === 'content'){
-            this.updateInsideFrame(targetElem, 'content')
-          }
-        }, 10)
+      if(keys.length === 1 && target){
+        target[keys[0]] = propValue
+        this.updateInsideFrame(target, 'innerText', propValue)
       }
     }
   }
@@ -165,12 +117,19 @@ class AppStore {
     this.selectedParentElement = parentId
   }
 
-  updateInsideFrame(element, propName){
+  updateInsideFrame(element, propName, propValue, style = false){
     const { id } = element
     const frame = document.querySelector('iframe')
     if(frame){
       const doc = frame.contentWindow.document
-      const el = doc.querySelector(`[data-uuid="${id}"]`) 
+      const el = doc.querySelector(`[data-uuid="${id}"]`)
+      if(el){
+        if(style){
+          //update element style
+        }else{
+          el[propName] = propValue
+        }
+      }
     }
   }
 
@@ -344,6 +303,10 @@ class AppStore {
         parentId
       }
     }
+    //this means the text editor is closed so all the heights of elements should be recalibrated
+    if(!id){
+      this.recalculateSizes(this.pages[0].elements)
+    }
   }
 
   toggleCSSTab(id){
@@ -492,7 +455,6 @@ class AppStore {
         page.elements.splice(this.dragIndex, 0, comp)
         this.setSelectedElement(comp.id, null)
         this.dragIndex = 0
-        this.dragSection = null
       }else{
         
       }

@@ -34,11 +34,11 @@ export const IFrame = observer((props) => {
       const {  elementsHeight } = activePage
       setFrameHeight(elementsHeight)
     }
-  }, [app.pages, app.movingElement, app.activeDrag])
+  }, [app.pages, app.activeDrag])
 
   useEffect(() => {
     parseElements()
-  }, [app.elementLen, app.absoluteDisabled.length])
+  }, [app.elementLen])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName, id } = elem
@@ -113,7 +113,7 @@ export const IFrame = observer((props) => {
       case 'input':
         return <input key={elem.id} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
       case 'img':
-        return <img key={elem.id} data-uuid={elem.id} style={style} className={elem.className} alt={elem.alt || ''} />
+        return <img key={elem.id} data-uuid={elem.id} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
       case 'style':
         return <style key={elem.id} data-uuid={elem.id} type="text/css">{elem.content}</style>
       default:

@@ -59,7 +59,7 @@ export const Body = observer((props) => {
             }
         }, 10)
       }
-  }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.movingElement, app.activeDrag, app.activeFramework])
+  }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.activeDrag, app.activeFramework])
 
   const handlePointerEvent = (e, status, id, parentId) => {
     if(!app.selectedElement !== id){
@@ -134,6 +134,7 @@ export const Body = observer((props) => {
         delete style.height
       }
     }
+    const elemClass = app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper' 
     switch(elem.type){
       case 'div':
         return <div 
@@ -144,6 +145,15 @@ export const Body = observer((props) => {
         >
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
         </div>
+      case 'img':
+        return (
+          <img
+            style={{...style}}
+            className={elemClass}
+            src={elem.src}
+            key={idx + sectionId}
+          />
+        )
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
@@ -154,9 +164,8 @@ export const Body = observer((props) => {
       default:
         return (
           <div 
-            draggable="false"
             key={idx + sectionId}
-            className={app.selectedElement === id ? 'component-wrapper selected' : 'component-wrapper'} 
+            className={elemClass} 
             style={{...style}}
             data-uuid={id} 
             onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
@@ -191,7 +200,7 @@ export const Body = observer((props) => {
     }
   }
   
-  const { dragIndex, dragSection, activeDrag, } = app
+  const { dragIndex, activeDrag, } = app
 
   return (
     <div 
@@ -206,11 +215,6 @@ export const Body = observer((props) => {
         activePage.elements.map((elem, idx) => {
           const { style, children, id, type, position } = elem
           const isSelected = app.selectedElement === id
-          let childSelected = app.selectedParentElement === id
-          if(app.selectedParentElement && !childSelected){
-            const subElem = elem.children.find(({ id }) => id === app.selectedParentElement)
-            childSelected = !!subElem
-          }
           return (
             <>
               {
@@ -223,7 +227,7 @@ export const Body = observer((props) => {
               <div 
                 onClick={e => selectComponent(e, id, null, true)}
                 data-uuid={elem.id}
-                className={`section-component ${isSelected || childSelected ? ' active-component' : ''}`}
+                className={`section-component ${isSelected ? ' active-component' : ''}`}
                 style={{
                   ...style,
                   zIndex: 0
@@ -234,11 +238,11 @@ export const Body = observer((props) => {
                     <CSSIcon />
                   </div>
                 </div>
-                <ComponentBorder display={isSelected || childSelected} style={{...elem.style}}>
+                <ComponentBorder display={isSelected} style={{...elem.style}}>
                   {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
                 </ComponentBorder>
                 {
-                  ((app.activeDrag && id === app.currentSectionId) || childSelected) || isSelected ? (<PartitionBorder {...elem} />) : undefined
+                  isSelected ? <PartitionBorder {...elem} /> : undefined
                 }
                 {
                   isSelected ? (
