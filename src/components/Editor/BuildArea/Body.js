@@ -19,7 +19,9 @@ export const Body = observer((props) => {
   const activePage = app.getActivePage()
 
   const selectComponent = (e, id, sectionId, section = false) => {
-    console.log(id, sectionId)
+    if(app.editingCSS){
+      return
+    }
     if(section && app.activeTextEditor){
       app.setActiveTextEditor(null, null)
     }
@@ -32,6 +34,9 @@ export const Body = observer((props) => {
   }
 
   const handleDoubleClick = (e, elem, sectionId) => {
+    if(app.editingCSS){
+      return
+    }
     e.stopPropagation()
     e.preventDefault()
     if(elem.type === 'text' || elem.type === 'button'){
@@ -62,6 +67,9 @@ export const Body = observer((props) => {
   }, [app.pages.body, app.pages.header, app.pages.footer, app.pages, app.selectedElement, app.activeDrag, app.activeFramework])
 
   const handlePointerEvent = (e, status, id, parentId) => {
+    if(app.editingCSS){
+      return
+    }
     if(!app.selectedElement !== id){
       app.setSelectedElement(id, parentId)
     }
@@ -188,13 +196,6 @@ export const Body = observer((props) => {
             :
             undefined
           }
-          {
-            app.editingCSS && elem.cssOpen ? (
-              <CSSTab style={{...elemStyle}} className={elem.className} />
-            )
-            :
-            undefined
-          }
           </div>
         )
     }
@@ -270,6 +271,17 @@ export const Body = observer((props) => {
             </>
           )
         })
+      }
+      {
+        app.editingCSS && app.cssElement ? (
+          <CSSTab 
+            id={app.cssElement.id}
+            style={{...app.cssElement.style}}
+            className={app.cssElement.className} 
+          />
+        )
+        :
+        undefined
       }
     </div>
   )

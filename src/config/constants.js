@@ -75,6 +75,7 @@ const constants = {
                   {
                     type: 'text',
                     tagName: 'h2',
+                    className: 'h2',
                     content: 'This is where you write your text!',
                     style: {
                       width: '100%',
@@ -89,6 +90,7 @@ const constants = {
                   {
                     type: 'text',
                     tagName: 'p',
+                    className: 'paragraph',
                     content: 'Write something cool here!',
                     style: {
                       width: '100%',
@@ -153,6 +155,7 @@ const constants = {
                   width: '100%',
                   height: 'fit-content',
                   display: 'flex',
+                  marginTop: '50px',
                   justifyContent: 'flex-end'
                 },
                 children: [

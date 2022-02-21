@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
+import { camelCase, replace, trim } from "lodash";
 import { getFlexKeys } from "../utils";
 
 const initSectionProps = {
@@ -36,7 +37,12 @@ class AppStore {
   activePage = null
   selectedElement = null
   selectedParentElement = null
+
+  //Editing CSS is a bool value
   editingCSS = false
+  //CSS Element is an object which contains the current element the user is editing
+  cssElement = null
+
   parentElements = ['section', 'header']
   activeFramework = null
   pages = [
@@ -309,11 +315,59 @@ class AppStore {
     }
   }
 
+  updateIframeAndComponentCSS(component, cssMap){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const win = frame.contentWindow
+      const doc = frame.contentWindow.document
+      const el = doc.querySelector(`[data-uuid="${component.id}"]`)
+      if(el){
+        const computedStyle = win.getComputedStyle(el)
+        Object.keys(cssMap).forEach(key => {
+          if(computedStyle[key]){
+            el.style[key] = cssMap[key]
+          }
+        })
+        Object.keys(el.style).forEach(styleKey => {
+          if(!isNaN(Number(styleKey))){
+            const key = el.style[styleKey]
+            const value = el.style[key]
+            const camelKey = camelCase(key)
+            component.style[camelKey] = value
+          }
+        })
+      }
+      this.recalculateSizes(this.pages[0].elements)
+    }
+  }
+
+  changeElementCSSValue(newValue){
+    //const multi = new RegExp(/((?:^\s*)([\w#.@*,:\-.:>,*\s]+)\s*{(?:[\s]*)((?:[A-Za-z\- \s]+[:]\s*['"0-9\w .,\/()\-!%]+;?)*)*\s*}(?:\s*))/, 'gi')
+    //const cssString = `.${this.cssElement.className} { \n ${newValue} \n}`
+    //console.log(cssString)
+    //const isValid = multi.test(cssString)
+    //console.log(isValid)
+    const arrValues = newValue.split(';')
+    const cssMap = {}
+    const elemCSSValues = {}
+    arrValues.forEach(cssValue => {
+      const [k, v] = cssValue.split(':')
+      if(!k || !v){
+        return
+      }
+      const key = k.trim()
+      const value = replace(v.trim(), '\n', '')
+      cssMap[key] = value
+    })
+    this.updateIframeAndComponentCSS(this.cssElement, cssMap)
+  }
+
   toggleCSSTab(id){
     const target = this.findElement(id)
     if(target){
       const newVal = !target.cssOpen
       this.editingCSS = newVal
+      this.cssElement = target
       target.cssOpen = newVal
     }
   }

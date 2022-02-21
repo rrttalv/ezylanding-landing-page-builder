@@ -6,25 +6,75 @@ import { camelToDash } from '../../../utils';
 
 export const CSSTab = observer((props) => {
 
-  const handleChange = (newValue) => {
-    console.log(newValue)
+  const [value, setValue] = useState('')
+
+  const [positionStyle, setPositionStyle] = useState({ left: 0, top: 0, display: 'none' })
+
+  
+  const getStore = () => {
+    return React.useContext(MobXProviderContext)
   }
 
-  const getStringStyle = () => {
-    let str = '.' + props.className + ' { \n'
+  const { store: { app } } = getStore()
+
+  useEffect(() => {
+    const element = document.querySelector(`[data-uuid="${props.id}"]`)
+    const editor = document.querySelector('.build-area_page')
+    if(element && editor){
+      const { x, y, width, height } = element.getBoundingClientRect()
+      const { x: offsetX, y: offsetY } = editor.getBoundingClientRect()
+      let xPos = {
+        left: (x - offsetX) + width + 10,
+      }
+      if(document.body.clientWidth < xPos.left + 450){
+        xPos = {
+          left: x - 450 - offsetX - width + 10
+        }
+      }
+      setPositionStyle({
+        ...xPos,
+        top: (y - offsetY) - height,
+        display: 'initial'
+      })
+    }
+    setStringStyle()
+  }, [])
+
+  useEffect(() => {
+    checkIfShouldMove()
+  }, [value])
+
+  const checkIfShouldMove = () => {
+  }
+
+  const handleChange = (newValue) => {
+    setValue(newValue)
+    app.changeElementCSSValue(newValue)
+  }
+
+  const handleClick = e => {
+    e.prevetDefault()
+    e.stopPropagation()
+  }
+
+  const setStringStyle = () => {
+    let str = ''
     const copy = {...props.style}
     Object.keys(copy).forEach(key => {
       const strKey = camelToDash(key)
       str += '  ' + strKey.replace('"', '') + ': ' + copy[key] + ';\n'
     })
-    str += '}'
-    return str
+    setValue(str)
   }
 
   return (
-    <div className='css-tab'>
+    <div 
+      className='css-tab'
+      style={positionStyle}
+    >
       <CodeEditorEditable
-        value={getStringStyle()}
+        onClick={e => handleClick(e)}
+        value={value}
         tabSize={2}
         setValue={handleChange}
         width='500px'
