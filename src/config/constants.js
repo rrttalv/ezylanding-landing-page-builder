@@ -83,8 +83,6 @@ const constants = {
                       marginBottom: '10px',
                       fontSize: '24px',
                       display: 'block',
-                      top: 0,
-                      left: 0
                     }
                   },
                   {
@@ -99,8 +97,6 @@ const constants = {
                       paddingTop: '30px',
                       fontSize: '14px',
                       display: 'block',
-                      top: 0,
-                      left: 0
                     }
                   }
                 ]
@@ -112,7 +108,7 @@ const constants = {
                   width: '100%',
                   height: 'fit-content',
                   display: 'flex',
-                  justifyContent: 'flex-end'
+                  justifyContent: 'flex-start'
                 },
                 children: [
                   {
@@ -129,9 +125,7 @@ const constants = {
                       background: '#3E41DC',
                       color: '#fff',
                       height: '35px',
-                      top: 0,
                       fontSize: '14px',
-                      left: 0,
                       border: '1px solid rgba(0,0,0,0.175)'
                     }
                   }
@@ -173,9 +167,7 @@ const constants = {
                       background: '#3E41DC',
                       color: '#fff',
                       height: '35px',
-                      top: 0,
                       fontSize: '14px',
-                      left: 0,
                       border: '1px solid rgba(0,0,0,0.175)'
                     }
                   }
@@ -328,8 +320,6 @@ const constants = {
           height: '100px',
           margin: '0 auto',
           display: 'block',
-          top: 0,
-          left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
         }
       },
@@ -347,9 +337,7 @@ const constants = {
           background: '#3E41DC',
           color: '#fff',
           height: '35px',
-          top: 0,
           fontSize: '14px',
-          left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
         }
       },
@@ -364,8 +352,6 @@ const constants = {
           height: '50px',
           margin: '0 auto',
           display: 'block',
-          top: 0,
-          left: 0,
           border: '1px solid rgba(0,0,0,0.175)'
         }
       },
@@ -397,8 +383,6 @@ const constants = {
           fontSize: '32px',
           lineHeight: 'normal',
           display: 'block',
-          top: 0,
-          left: 0
         }
       },
       {
@@ -422,8 +406,6 @@ const constants = {
           marginBottom: '10px',
           fontSize: '24px',
           display: 'block',
-          top: 0,
-          left: 0
         }
       },
       {
@@ -447,8 +429,6 @@ const constants = {
           marginBottom: '10px',
           fontSize: '18.5px',
           display: 'block',
-          top: 0,
-          left: 0
         }
       },
     ]

@@ -38,6 +38,9 @@ class AppStore {
   selectedElement = null
   selectedParentElement = null
 
+  //The component id that is currently being targeted by the mouse and the activeDrag element will be appened to
+  dragTarget = null
+
   //Just a bool value to make the body view update once there has been a change in the components
   sizeCalcChange = false
 
@@ -85,16 +88,17 @@ class AppStore {
     let target = null
     elements.forEach(element => {
       if(!target){
-        const found = this.findNestedChild(element.children, this.selectedElement)
+        const found = this.findNestedChild(element.children, id)
         if(found){
           target = found
+        }
+        if(element.id === id){
+          target = element
         }
       }
     })
     return target
   }
-
-  
 
   setNestedChildrenProp(children, propName, propValue){
     children.forEach(child => {
@@ -185,8 +189,6 @@ class AppStore {
     }
   }
 
-
-
   setActivePage(id){
     if(!id){
       this.activePage = this.pages[0].id
@@ -236,6 +238,8 @@ class AppStore {
     }
   }
 
+  
+
   checkDragIndex(clientX, clientY){
     const elements = this.pages[0].elements
     elements.forEach((section, idx) => {
@@ -279,6 +283,29 @@ class AppStore {
     this.mouseStartY = clientY
     if(this.parentElements.includes(this.activeDrag.type)){
       this.checkDragIndex(rawX, rawY)
+    }
+    if(!this.parentElements.includes(this.activeDrag.type)){
+      const elems = document.elementsFromPoint(rawX, rawY)
+      let target = null
+      elems.forEach((element, idx) => {
+        if(!target){
+          const isStrClass = typeof(element.className) === 'string'
+          if(!isStrClass){
+            return
+          }
+          const isSelf = element.className === 'floating-element'
+          if(isSelf){
+            return
+          }
+          if(idx === 0 || idx === 1){
+            const id = element.getAttribute('data-uuid')
+            if(id){
+              target = id
+            }
+          }
+        }
+      })
+      this.dragTarget = target
     }
   }
 
@@ -406,10 +433,6 @@ class AppStore {
     this.cssEditorPosition.y += dy
     this.mouseStartX = x
     this.mouseStartY = y
-  }
-
-  changeStylePropInFrame(elementId, propName, propValue){
-
   }
   
   getMarginOffset(frameWindow, elem){
@@ -540,6 +563,88 @@ class AppStore {
     })
   }
 
+  findDragTargetInsertIndex(id, clientX, clientY){
+    const element = this.findElement(id)
+    let insertIndex = null
+    if(element){
+      if(!element.children){
+        element.children = []
+        insertIndex = 0
+        return { insertIndex, element }
+      }
+      if(element.children && element.children.length === 1){
+        //Just check if the clientX and clientY is before or after the element
+        const [child] = element.children
+        const domChild = document.querySelector(`[data-uuid="${child.id}"]`)
+        if(domChild){
+          const { x, y, width, height } = domChild.getBoundingClientRect()
+          const xMax = x + width
+          const yMax = y + height
+          if(clientX < x){
+            insertIndex = 0
+          }
+          if(insertIndex === null){
+            if(clientY < y){
+              insertIndex = 0
+            }
+          }
+          if(insertIndex === null){
+            if(xMax < clientX){
+              insertIndex = 1
+            }
+          }
+          if(insertIndex === null){
+            if(yMax < clientY){
+              insertIndex = 1
+            }
+          }
+        }
+        return { insertIndex, element }
+      }
+      if(element.children && element.children.length > 1){
+        let prevX = 0
+        let prevY = 0
+        let prevXMax = 0
+        let prevYMax = 0
+        element.children.forEach((child, idx) => {
+          if(insertIndex === null){
+            const domChild = document.querySelector(`[data-uuid="${child.id}"]`)
+            if(domChild){
+              const { x, y, width, height } = domChild.getBoundingClientRect()
+              const xMax = x + width
+              const yMax = y + height
+              if(idx === 0){
+                if(clientX < x || clientY < y){
+                  insertIndex = 0
+                }
+                prevX = x
+                prevXMax = xMax
+                prevY = y
+                prevYMax = yMax
+              }else{
+                //This means that the element is between the two elements horizontally
+                const betweenX = prevXMax < clientX && x > clientX
+                const betweenY = prevYMax < clientY && y > clientY
+                if(betweenX || betweenY){
+                  insertIndex = idx
+                }
+              }
+              //If the last child is looped and there is no result, the insert index will be the current index + 1
+              if(element.children.length - 1 === idx && insertIndex === null){
+                insertIndex = idx + 1
+              }
+            }
+          }
+        })
+      }
+    }
+    return { insertIndex, element }
+  }
+
+  insertIFrameElement(){
+    return
+  }
+
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
@@ -552,6 +657,20 @@ class AppStore {
       const page = this.getActivePage()
       if(this.activeDrag.type === 'section'){
         this.activeDrag.style.height = 'fit-content'
+      }
+      let targetElement = null
+      let spliceIndex = null
+      if(this.dragTarget){
+        //Find the targetelement to append to
+        const { insertIndex, element: toInsertInto } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
+        if(toInsertInto){
+          if(insertIndex){
+            spliceIndex = insertIndex
+          }else{
+            spliceIndex = toInsertInto.children.length - 1
+          }
+        }
+        this.dragTarget = null
       }
       const comp = {
         ...this.activeDrag,
@@ -570,10 +689,24 @@ class AppStore {
         page.elements.splice(this.dragIndex, 0, comp)
         this.setSelectedElement(comp.id, null)
         this.dragIndex = 0
+        this.elementLen += 1
       }else{
-        
+        //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
+        if(targetElement && spliceIndex !== null){
+          const nextChild = targetElement.children[spliceIndex]
+          let insertBefore = null
+          let insertAfter = null
+          const hasChildren = targetElement.children && targetElement.children.length > 0
+          if(nextChild && hasChildren){
+            insertAfter = nextChild.id
+          }
+          if(!nextChild && hasChildren){
+            insertBefore = targetElement.children[spliceIndex - 1].id
+          }
+          targetElement.children.splice(spliceIndex, 0, comp)
+          this.insertIFrameElement(comp, insertBefore, insertAfter, targetElement)
+        }
       }
-      this.elementLen += 1
       setTimeout(() => {
         this.recalculateSizes(this.pages[0].elements)
         this.setElementInitStyle(this.pages[0].elements)
@@ -604,6 +737,8 @@ class AppStore {
 
   setActiveDragItem(item, x, y){
     if(item){
+      this.activeDrag = null
+      this.unsetSelectedElement()
       const copy = {...item}
       let width = item.style.width
       let height = item.style.height

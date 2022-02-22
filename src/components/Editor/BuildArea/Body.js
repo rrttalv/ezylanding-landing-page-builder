@@ -144,8 +144,14 @@ export const Body = observer((props) => {
       }
     }
     const isSelected = app.selectedElement === id
-    const elemClass = isSelected ? 'component-wrapper selected' : 'component-wrapper'
-    const divClass = isSelected ? 'section-wrapper selected' : 'section-wrapper'
+    let elemClass = isSelected ? 'component-wrapper selected' : 'component-wrapper'
+    let divClass = isSelected ? 'section-wrapper selected' : 'section-wrapper'
+    const isDragTarget = app.dragTarget === id
+    if(isDragTarget){
+      elemClass += ' active-drag-target'
+      divClass += ' active-drag-target'
+      style.position = 'relative'
+    }
     switch(elem.type){
       case 'div':
         return <div 
@@ -246,7 +252,7 @@ export const Body = observer((props) => {
           return (
             <>
               {
-                idx === dragIndex && activeDrag ? (
+                idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                   <div className='build-area_insert-preview insert-above' />
                 )
                 :
@@ -289,7 +295,7 @@ export const Body = observer((props) => {
                 }
               </div>
               {
-                activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag ? (
+                activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                   <div className='build-area_insert-preview insert-below' />
                 )
                 :
