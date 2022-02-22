@@ -39,6 +39,9 @@ export const CSSTab = observer((props) => {
       if(yPos.top <= 0){
         yPos.top = 25
       }
+      if(xPos.left <= 0){
+        xPos.left = 25
+      }
       setPositionStyle({
         ...xPos,
         ...yPos,

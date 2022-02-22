@@ -46,7 +46,6 @@ export const Page = observer((props) => {
     if(activePage){
       setTimeout(() => {
         const { elementsHeight } = activePage
-        console.log(elementsHeight)
         setSeparators({
           header: 0,
           footer: elementsHeight

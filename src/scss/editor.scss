@@ -111,8 +111,13 @@
           }
         }
         &_action.move {
+          display: inline-flex;
+          align-items: flex-start;
+          width: calc(100% - 50px);
+          cursor: move;
           svg {
-            cursor: move;
+            float: left;
+            margin-top: 2px;
           }
         }
       }
