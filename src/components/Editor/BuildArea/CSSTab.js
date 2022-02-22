@@ -3,6 +3,8 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import { CodeEditorEditable } from 'react-code-editor-editable'
 import 'highlight.js/styles/dracula.css';
 import { camelToDash } from '../../../utils';
+import { ReactComponent as MoveIcon } from '../../../svg/move.svg';
+import { ReactComponent as CloseIcon } from '../../../svg/close2.svg';
 
 export const CSSTab = observer((props) => {
 
@@ -34,7 +36,6 @@ export const CSSTab = observer((props) => {
           left: x - 450 - offsetX - width + 10
         }
       }
-      console.log(yPos.top, offsetY)
       if(yPos.top <= 0){
         yPos.top = 25
       }
@@ -43,16 +44,20 @@ export const CSSTab = observer((props) => {
         ...yPos,
         display: 'initial'
       })
+      app.setCSSTabPosition(xPos.left, yPos.top)
     }
     setStringStyle()
   }, [])
 
   useEffect(() => {
-    checkIfShouldMove()
-  }, [value])
+    const { x, y } = app.cssEditorPosition
+    setPositionStyle({
+      left: x,
+      top: y,
+      display: 'initial'
+    })
+  }, [app.cssEditorPosition.x, app.cssEditorPosition.y])
 
-  const checkIfShouldMove = () => {
-  }
 
   const handleChange = (newValue) => {
     setValue(newValue)
@@ -60,7 +65,7 @@ export const CSSTab = observer((props) => {
   }
 
   const handleClick = e => {
-    e.prevetDefault()
+    e.preventDefault()
     e.stopPropagation()
   }
 
@@ -74,18 +79,36 @@ export const CSSTab = observer((props) => {
     setValue(str)
   }
 
+  const setMovingCSSTab = (e, status) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setMovingCSSTab(status, e.clientX, e.clientY)
+  }
+
   return (
     <div 
       className='css-tab'
       style={positionStyle}
     >
+      <div className='css-tab_header'>
+        <button
+          className='css-tab_action move'
+          onMouseDown={e => setMovingCSSTab(e, true)}
+          onMouseUp={e => setMovingCSSTab(e, false)}
+        >
+          <MoveIcon />
+        </button>
+        <button
+          className='css-tab_action close'>
+            <CloseIcon />
+        </button>
+      </div>
       <CodeEditorEditable
         onClick={e => handleClick(e)}
         value={value}
         tabSize={2}
         setValue={handleChange}
         width='500px'
-        borderRadius={4}
         height='450px'
         language='css'
       />

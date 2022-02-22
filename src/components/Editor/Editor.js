@@ -30,11 +30,17 @@ export const Editor = observer((props) => {
       app.handleItemDragMove(clientX - x, clientY - y, clientX, clientY)
       shouldCloseSidebar(e)
     }
+    if(app.movingCSSTab){
+      app.moveCSSTab(clientX, clientY)
+    }
   }
 
   const handleMouseUp = e => {
     if(app.activeTextEditor){
       return
+    }
+    if(app.movingCSSTab){
+      app.setMovingCSSTab(status, 0, 0)
     }
     if(app.activeDrag){
       app.insertComponent(e)

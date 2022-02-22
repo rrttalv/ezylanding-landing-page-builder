@@ -45,6 +45,13 @@ class AppStore {
   editingCSS = false
   //CSS Element is an object which contains the current element the user is editing
   cssElement = null
+  //The position of the CSS editor
+  cssEditorPosition = {
+    x: 0,
+    y: 0,
+    width: 400,
+    height: 500
+  }
 
   parentElements = ['section', 'header']
   activeFramework = null
@@ -377,6 +384,27 @@ class AppStore {
       this.cssElement = target
       target.cssOpen = newVal
     }
+  }
+
+  setMovingCSSTab(status, x, y){
+    this.movingCSSTab = status
+    this.mouseStartX = x
+    this.mouseStartY = y
+  }
+
+  setCSSTabPosition(x, y){
+    this.cssEditorPosition = {
+      x, y
+    }
+  }
+
+  moveCSSTab(x, y){
+    const dx = x - this.mouseStartX
+    const dy = y - this.mouseStartY
+    this.cssEditorPosition.x += dx
+    this.cssEditorPosition.y += dy
+    this.mouseStartX = x
+    this.mouseStartY = y
   }
 
   changeStylePropInFrame(elementId, propName, propValue){
