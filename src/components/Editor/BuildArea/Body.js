@@ -158,14 +158,26 @@ export const Body = observer((props) => {
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
           {
             isSelected ? (
-              <div className='element-tools'>
-                <div className='element-tools_toolbar'>
-                  <ElementIndicator 
-                    elementTag={elem.type}
-                    elementClass={elem.className}
-                  />
+              <>
+                <div className='element-tools'>
+                  <div className='element-tools_toolbar'>
+                    <ElementIndicator 
+                      elementTag={elem.type}
+                      elementClass={elem.className}
+                    />
+                  </div>
                 </div>
-              </div>
+                <div className='prop-menu'>
+                  <div 
+                    className='prop-menu__css'
+                    onClick={e => toggleCSSTab(e, id, sectionId)}
+                  >
+                    <CSSIcon />
+                  </div>
+                  <div className='prop-menu__lock'>
+                  </div>
+                </div>
+              </>
             )
             :
             undefined

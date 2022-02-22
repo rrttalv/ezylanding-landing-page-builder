@@ -355,12 +355,13 @@ class AppStore {
     }
   }
 
-  changeElementCSSValue(newValue){
+  changeElementCSSValue(v){
     //const multi = new RegExp(/((?:^\s*)([\w#.@*,:\-.:>,*\s]+)\s*{(?:[\s]*)((?:[A-Za-z\- \s]+[:]\s*['"0-9\w .,\/()\-!%]+;?)*)*\s*}(?:\s*))/, 'gi')
     //const cssString = `.${this.cssElement.className} { \n ${newValue} \n}`
     //console.log(cssString)
     //const isValid = multi.test(cssString)
     //console.log(isValid)
+    const newValue = replace(v.trim(), '\n', '')
     const arrValues = newValue.split(';')
     const cssMap = {}
     const elemCSSValues = {}

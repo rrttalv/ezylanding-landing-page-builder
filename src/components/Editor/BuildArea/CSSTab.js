@@ -67,6 +67,7 @@ export const CSSTab = observer((props) => {
   const handleClick = e => {
     e.preventDefault()
     e.stopPropagation()
+    app.toggleCSSTab(props.id)
   }
 
   const setStringStyle = () => {
@@ -99,12 +100,12 @@ export const CSSTab = observer((props) => {
           <MoveIcon />
         </button>
         <button
+          onClick={e => handleClick(e)}
           className='css-tab_action close'>
             <CloseIcon />
         </button>
       </div>
       <CodeEditorEditable
-        onClick={e => handleClick(e)}
         value={value}
         tabSize={2}
         setValue={handleChange}
