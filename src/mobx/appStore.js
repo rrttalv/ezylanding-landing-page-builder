@@ -1,8 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
+import cssParser from 'css'
 import { camelCase, replace, trim } from "lodash";
-import { getFlexKeys } from "../utils";
+import { camelToDash, getFlexKeys } from "../utils";
 
 const initSectionProps = {
   insertBefore: null,
@@ -364,14 +365,20 @@ class AppStore {
         Object.keys(cssMap).forEach(key => {
           if(computedStyle.hasOwnProperty(key)){
             el.style[key] = cssMap[key]
-            const camelKey = camelCase(key)
-            component.style[camelKey] = cssMap[key]
           }
         })
         Object.keys(el.style).forEach(styleKey => {
           if(!isNaN(Number(styleKey))){
             const key = el.style[styleKey]
-            if(!cssMap[key]){
+            const [firstPartOfKey] = key.split('-')
+            let exists = false
+            Object.keys(cssMap).forEach(cssMapKey => {
+              const [firstPartOfCSSMapKey] = cssMapKey.split('-')
+              if(firstPartOfCSSMapKey.includes(firstPartOfKey)){
+                exists = true
+              }
+            })
+            if(!cssMap[key] && !exists){
               el.style[key] = ''
             }
           }
@@ -382,26 +389,34 @@ class AppStore {
     }
   }
 
-  changeElementCSSValue(v){
-    //const multi = new RegExp(/((?:^\s*)([\w#.@*,:\-.:>,*\s]+)\s*{(?:[\s]*)((?:[A-Za-z\- \s]+[:]\s*['"0-9\w .,\/()\-!%]+;?)*)*\s*}(?:\s*))/, 'gi')
-    //const cssString = `.${this.cssElement.className} { \n ${newValue} \n}`
-    //console.log(cssString)
-    //const isValid = multi.test(cssString)
-    //console.log(isValid)
-    const newValue = replace(v.trim(), '\n', '')
-    const arrValues = newValue.split(';')
-    const cssMap = {}
-    const elemCSSValues = {}
-    arrValues.forEach(cssValue => {
-      const [k, v] = cssValue.split(':')
-      if(!k || !v){
-        return
-      }
-      const key = k.trim()
-      const value = replace(v.trim(), '\n', '')
-      cssMap[key] = value
-    })
-    this.updateIframeAndComponentCSS(this.cssElement, cssMap)
+  changeElementCSSValue(newValue){
+    const { tagName } = this.cssElement
+    const cssString = `${tagName} { \n ${newValue} \n}`
+    try{
+      const val = cssParser.parse(cssString, { silent: false })
+      const cssMap = {}
+      val.stylesheet.rules.forEach(rule => {
+        rule.declarations.forEach(declaration => {
+          const [trueValue] = declaration.value.split('\n')
+          cssMap[declaration.property] = trueValue.trim()
+        })
+      })
+      Object.keys(cssMap).forEach(key => {
+        const camelKey = camelCase(key)
+        this.cssElement.style[camelKey] = cssMap[key]
+      })
+      Object.keys(this.cssElement.style).forEach(elementStyleKey => {
+        const dashKey = camelToDash(elementStyleKey)
+        if(!cssMap[dashKey]){
+          delete this.cssElement.style[elementStyleKey]
+        }
+      })
+      this.updateIframeAndComponentCSS(this.cssElement, cssMap)
+    }catch(err){
+      this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
+      return
+    }
   }
 
   toggleCSSTab(id){
@@ -641,8 +656,48 @@ class AppStore {
     return { insertIndex, element }
   }
 
-  insertIFrameElement(){
-    return
+  insertElementIntoIframe(comp, targetElement, insertBefore = null){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const doc = frame.contentWindow.document
+      const parent = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
+      const domElement = doc.createElement(comp.tagName)
+      if(comp.src){
+        domElement.src = comp.src
+      }
+      if(comp.content){
+        domElement.textContent = comp.content
+      }
+      if(comp.inputType){
+        domElement.type = comp.inputType
+      }
+      domElement.className = comp.className
+      domElement.setAttribute('data-uuid', comp.id)
+      Object.keys(comp.style).forEach(key => {
+        domElement.style[key] = comp.style[key]
+      })
+      if(insertBefore){
+        const child = doc.querySelector(`[data-uuid="${insertBefore}"]`)
+        if(child){
+          parent.insertBefore(domElement, child)
+        }else{
+          parent.appendChild(domElement)
+        }
+      }
+      if(!insertBefore){
+        parent.appendChild(domElement)
+      }
+      const inserted = doc.querySelector(`[data-uuid="${comp.id}"]`)
+      if(inserted){
+        Object.keys(inserted.style).forEach(styleKey => {
+          if(!isNaN(Number(styleKey))){
+            const key = inserted.style[styleKey]
+            const camelKey = camelCase(key)
+            comp.style[camelKey] = inserted.style[key]
+          }
+        })
+      }
+    }
   }
 
   insertComponent(e){
@@ -669,6 +724,7 @@ class AppStore {
           }else{
             spliceIndex = toInsertInto.children.length - 1
           }
+          targetElement = toInsertInto
         }
         this.dragTarget = null
       }
@@ -693,23 +749,19 @@ class AppStore {
       }else{
         //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
         if(targetElement && spliceIndex !== null){
-          const nextChild = targetElement.children[spliceIndex]
+          const nextChild = targetElement.children[spliceIndex + 1]
           let insertBefore = null
-          let insertAfter = null
           const hasChildren = targetElement.children && targetElement.children.length > 0
           if(nextChild && hasChildren){
-            insertAfter = nextChild.id
-          }
-          if(!nextChild && hasChildren){
-            insertBefore = targetElement.children[spliceIndex - 1].id
+            insertBefore = nextChild.id
           }
           targetElement.children.splice(spliceIndex, 0, comp)
-          this.insertIFrameElement(comp, insertBefore, insertAfter, targetElement)
+          this.insertElementIntoIframe(comp, targetElement, insertBefore)
         }
       }
       setTimeout(() => {
         this.recalculateSizes(this.pages[0].elements)
-        this.setElementInitStyle(this.pages[0].elements)
+        //this.setElementInitStyle(this.pages[0].elements)
         this.sizeCalcChange = !this.sizeCalcChange
       }, 500)
     }

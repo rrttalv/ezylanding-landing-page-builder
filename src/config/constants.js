@@ -42,6 +42,7 @@ const constants = {
       {
         title: '2 Columns',
         type: 'section',
+        tagName: 'section',
         partitions: 2,
         thumb: '/images/sections/flex-row-2.svg',
         style: {
@@ -55,6 +56,7 @@ const constants = {
         children: [
           {
             type: 'div',
+            tagName: 'div',
             className: 'col-6',
             style: {
               position: 'relative',
@@ -64,6 +66,7 @@ const constants = {
             children: [
               {
                 type: 'div',
+                tagName: 'div',
                 className: 'wrapper',
                 style: {
                   width: '100%',
@@ -103,6 +106,7 @@ const constants = {
               },
               {
                 type: 'div',
+                tagName: 'div',
                 className: 'wrapper',
                 style: {
                   width: '100%',
@@ -114,6 +118,7 @@ const constants = {
                   {
                     title: 'Rounded button',
                     type: 'button',
+                    tagName: 'button',
                     className: 'btn',
                     content: 'Click me!',
                     thumb: '/images/inputs/regular-btn.svg',
@@ -135,6 +140,7 @@ const constants = {
           },
           {
             type: 'div',
+            tagName: 'div',
             className: 'col-6',
             style: {
               position: 'relative',
@@ -145,6 +151,7 @@ const constants = {
               {
                 type: 'div',
                 className: 'wrapper',
+                tagName: 'div',
                 style: {
                   width: '100%',
                   height: 'fit-content',
@@ -158,6 +165,7 @@ const constants = {
                     type: 'button',
                     className: 'btn',
                     content: 'Click me!',
+                    tagName: 'button',
                     thumb: '/images/inputs/regular-btn.svg',
                     style: {
                       'borderRadius': '4px',
@@ -180,6 +188,7 @@ const constants = {
       {
         title: '3 Columns',
         type: 'section',
+        tagName: 'section',
         partitions: 3,
         thumb: '/images/sections/flex-row-3.svg',
         style: {
@@ -195,6 +204,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            tagName: 'div',
             style: {
               position: 'relative',
               width: '33.3%',
@@ -205,6 +215,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            tagName: 'div',
             style: {
               position: 'relative',
               width: '33.3%',
@@ -215,6 +226,7 @@ const constants = {
           {
             type: 'div',
             className: 'col-4',
+            tagName: 'div',
             style: {
               position: 'relative',
               width: '33.3%',
@@ -227,6 +239,7 @@ const constants = {
       {
         title: '4 Columns',
         type: 'section',
+        tagName: 'section',
         partitions: 4,
         thumb: '/images/sections/flex-row-4.svg',
         displayStyle: {
@@ -235,48 +248,6 @@ const constants = {
             padding: '0 10px'
           }
         },
-        style: {
-          display: 'flex',
-          'flex-direction': 'row',
-          width: '80%',
-          margin: '0 auto',
-          position: 'relative',
-          height: '300px'
-        },
-      },
-      {
-        title: '2 Rows',
-        type: 'section',
-        partitions: 2,
-        thumb: '',
-        style: {
-          display: 'flex',
-          'flex-direction': 'row',
-          width: '80%',
-          margin: '0 auto',
-          position: 'relative',
-          height: '300px'
-        },
-      },
-      {
-        title: '3 Rows',
-        type: 'section',
-        partitions: 3,
-        thumb: '',
-        style: {
-          display: 'flex',
-          'flex-direction': 'row',
-          width: '80%',
-          margin: '0 auto',
-          position: 'relative',
-          height: '300px'
-        },
-      },
-      {
-        title: '4 Rows',
-        type: 'section',
-        partitions: 4,
-        thumb: '',
         style: {
           display: 'flex',
           'flex-direction': 'row',
@@ -296,6 +267,7 @@ const constants = {
         title: 'Text input',
         type: 'input',
         inputType: 'textarea',
+        tagName: 'textarea',
         className: 'form-control',
         labelData: {
           content: 'Text area label',
@@ -327,6 +299,7 @@ const constants = {
         title: 'Rounded button',
         type: 'button',
         className: 'btn',
+        tagName: 'button',
         content: 'Click me!',
         thumb: '/images/inputs/regular-btn.svg',
         style: {
@@ -344,6 +317,7 @@ const constants = {
       {
         title: 'Box-shadow button',
         type: 'button',
+        tagName: 'button',
         content: 'Click me!',
         thumb: '/images/inputs/box-shadow-btn.svg',
         style: {
