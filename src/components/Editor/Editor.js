@@ -54,6 +54,7 @@ export const Editor = observer((props) => {
 
   useEffect(() => {
     app.setActivePage()
+    app.setIframeHeight()
     window.addEventListener('resize', resizeHandler.bind(this))
     app.setActiveFramework('bootstrap')
     return function cleanup() {

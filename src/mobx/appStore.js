@@ -57,6 +57,8 @@ class AppStore {
     height: 500
   }
 
+  frameWidth = 0
+
   parentElements = ['section', 'header']
   activeFramework = null
   pages = [
@@ -91,6 +93,7 @@ class AppStore {
   handleWindowResize(){
     this.recalculateSizes(this.pages[0].elements)
     this.sizeCalcChange = !this.sizeCalcChange
+    this.setIframeHeight()
   }
 
   findElement(id){
@@ -346,14 +349,12 @@ class AppStore {
     const frame = document.querySelector('iframe').contentWindow.document
     const el = frame.querySelector(`[data-uuid="${id ? id : this.activeTextEditor}"]`)
     if(el){
-      console.log(el)
       if(id){
         el.style.opacity = '0.1'
       }else{
         const component = this.findElement(this.activeTextEditor)
         el.style.opacity = component.style.opacity ? component.style.opacity : '1'
       }
-      console.log(el.style)
     }
     this.activeTextEditor = id
     if(parentId){
@@ -745,6 +746,14 @@ class AppStore {
     }
   }
 
+  setIframeHeight(){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      this.pages[0].elementsHeight = frame.contentWindow.outerHeight
+      this.frameWidth = frame.contentWindow.innerWidth
+    }
+  }
+
   insertComponent(e){
     if(this.activeDrag){
       const { clientX, clientY } = e
@@ -815,8 +824,9 @@ class AppStore {
       setTimeout(() => {
         this.recalculateSizes(this.pages[0].elements)
         //this.setElementInitStyle(this.pages[0].elements)
+        this.setIframeHeight()
         this.sizeCalcChange = !this.sizeCalcChange
-      }, 500)
+      }, 100)
     }
   }
 

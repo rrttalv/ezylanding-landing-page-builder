@@ -46,16 +46,24 @@ export const SlateEditor = observer((props) => {
     e.stopPropagation()
   }
 
+  const getStyle = () => {
+    const copy = {...props.style}
+    if(!copy.position){
+      copy.position = 'relative'
+    }
+    return copy
+  }
+
   return (
     <div 
-      style={{...props.style, position: 'relative'}}
+      style={getStyle()}
       onPointerDown={e => handleClick(e)}
       onClick={e => handleClick(e)}
       onDoubleClick={e => app.setActiveTextEditor(null, null)}
-      className='text-editor-wrapper'
+      className={`text-editor-wrapper${props.elem.className ? ' ' + props.elem.className : ''}`}
     >
       <Slate editor={editor} value={value} onChange={value => handleChange(value)}>
-        <Editable placeholder="Enter some plain text..." />
+        <Editable placeholder="Enter your text" />
       </Slate>
     </div>
   )

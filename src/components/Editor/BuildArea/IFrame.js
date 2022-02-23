@@ -32,7 +32,6 @@ export const IFrame = observer((props) => {
     const activePage = app.getActivePage()
     if(activePage && activePage.elements.length === 0){
       const {  elementsHeight } = activePage
-      setFrameHeight(elementsHeight)
     }
   }, [app.pages, app.activeDrag])
 
@@ -58,6 +57,10 @@ export const IFrame = observer((props) => {
         return <h5 data-uuid={id} key={id}className={className} style={style}>{content}</h5>
       case 'h6':
         return <h6 data-uuid={id} key={id}className={className} style={style}>{content}</h6>
+      case 'label':
+        return <label data-uuid={id} key={id} className={className} style={style}>{content}</label>
+      case 'span':
+        return <span data-uuid={id} key={id} className={className} style={style}>{content}</span>
       default:
         return <p data-uuid={id} key={id} className={className} style={style}>{content}</p>
     }
@@ -158,6 +161,7 @@ export const IFrame = observer((props) => {
           html {
             margin: 0;
             padding: 0;
+            width: 100%;
           }
           body {
             ${pageStyle}
@@ -166,6 +170,7 @@ export const IFrame = observer((props) => {
             }).join(' ')};
             margin: 0;
             padding: 0;
+            width: 100%;
             pointer-events: none;
             overflow: hidden;
           } 
@@ -204,7 +209,7 @@ export const IFrame = observer((props) => {
   return (
     blobUrl ? (
       <iframe 
-        style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: frameHeight, zIndex: -2 }} 
+        style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: app.pages[0].elementsHeight, zIndex: -2 }} 
         src={blobUrl}
         id="HTML-FRAME" 
       />

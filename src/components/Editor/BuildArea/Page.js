@@ -5,11 +5,6 @@ import { Header } from './Header'
 
 export const Page = observer((props) => {
 
-  const [style, setStyle] = useState({
-    width: 0,
-    height: 0
-  })
-
   const [separators, setSeparators] = useState({
     header: 0,
     footer: 0
@@ -29,18 +24,6 @@ export const Page = observer((props) => {
     customCode
   } = props.page
 
-  const iframe = document.querySelector('#HTML-FRAME')
-
-  useEffect(() => {
-    const activePage = app.getActivePage()
-    if(iframe && activePage && activePage.elements.length === 0){
-      setStyle({
-        width: iframe.clientWidth + 'px',
-        height: iframe.clientHeight + 'px'
-      })
-    }
-  }, [iframe])
-
   useEffect(() => {
     const activePage = app.getActivePage()
     if(activePage){
@@ -52,16 +35,17 @@ export const Page = observer((props) => {
         })
       }, 10)
     }
-  }, [app.pages.elements, app.sizeCalcChange, app.selectedElement, iframe])
+  }, [app.pages.elements, app.sizeCalcChange, app.selectedElement])
 
-  const { width } = style
   const activePage = app.getActivePage()
   const { elementsHeight } = activePage
 
   return (
     <div 
       className='build-area_page'
-      style={style}
+      style={{
+        width: '100%'
+      }}
     >
       <Body 
         height={elementsHeight} 
@@ -73,14 +57,14 @@ export const Page = observer((props) => {
       <div 
         className='build-area_page_separator' 
         style={{
-          width,
+          width: app.frameWidth,
           top: separators.header
         }}
       />
       <div 
         className='build-area_page_separator'
         style={{
-          width,
+          width: app.frameWidth,
           bottom: 0
         }}
        />

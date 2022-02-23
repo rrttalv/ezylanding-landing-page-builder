@@ -79,15 +79,15 @@ export const Body = observer((props) => {
     let copy = {...style}
     const { type } = elem
     if(type === 'text' && elem.tagName.includes('h') && !style.fontWeight){
-      copy.fontWeight = 600
+      copy.fontWeight = 500
     }
     if(!style.fontFamily){
-      copy.fontFamily = app.activeFonts[0].name
+      //copy.fontFamily = app.activeFonts[0].name
     }
     if(type === 'button'){
       copy = {
         ...copy,
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center'
       }
@@ -168,7 +168,10 @@ export const Body = observer((props) => {
         margin: position.margin,
         padding: position.padding,
         zIndex: 10,
-        ...position.flexProps
+        backgroundColor: 'transparent',
+        background: 'transparent',
+        border: 'none',
+        
       }
       if(elemStyle.position){
         style.position = elemStyle.position
@@ -177,6 +180,9 @@ export const Body = observer((props) => {
         style.bottom = elemStyle.bottom || undefined
         style.right = elemStyle.right || undefined
       }
+    }
+    if(elem.type === 'image' && elemStyle.display !== 'block'){
+      style.display = 'block'
     }
     if(elem.type === 'div'){
       if(!elemStyle.height){
@@ -214,15 +220,6 @@ export const Body = observer((props) => {
             undefined
           }
         </div>
-      case 'img':
-        return (
-          <img
-            style={{...style}}
-            className={elemClass}
-            src={elem.src}
-            key={idx + sectionId}
-          />
-        )
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
