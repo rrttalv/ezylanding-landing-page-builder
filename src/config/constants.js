@@ -50,6 +50,7 @@ const constants = {
           flexDirection: 'row',
           width: '80%',
           margin: '0 auto',
+          padding: '25px',
           position: 'relative',
           height: '300px'
         },
@@ -305,7 +306,6 @@ const constants = {
         style: {
           'borderRadius': '4px',
           width: '100px',
-          margin: '0 auto',
           display: 'block',
           background: '#3E41DC',
           color: '#fff',
@@ -324,7 +324,6 @@ const constants = {
           'borderRadius': '4px',
           width: '100px',
           height: '50px',
-          margin: '0 auto',
           display: 'block',
           border: '1px solid rgba(0,0,0,0.175)'
         }

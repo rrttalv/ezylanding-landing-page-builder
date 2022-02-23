@@ -164,30 +164,23 @@ class AppStore {
     this.selectedParentElement = null
   }
 
-  findNestedChild(children, id, parentElem = null){
+
+  findNestedChild(children, id){
     let target = null
-    let parent = null
     if(!children){
       return null
     }
     children.forEach((element, childIdx) => {
       if(!target){
         if(element.id !== id && element.children){
-          target = this.findNestedChild(element.children, id, parentElem ? element : null)
+          target = this.findNestedChild(element.children, id)
         }
         if(element.id === id){
           target = element
-          if(parentElem){
-            parent = parentElem
-          }
         }
       }
     })
-    if(parentElem){
-      return { target, parent }
-    }else{
       return target
-    }
   }
 
   setActivePage(id){
@@ -578,14 +571,30 @@ class AppStore {
     })
   }
 
+  findParentElementByChildID(children, id, parent = null){
+    let target = null
+    if(!children){
+      return null
+    }
+    children.forEach((element, childIdx) => {
+      if(!target){
+        if(element.id !== id && element.children){
+          target = this.findParentElementByChildID(element.children, id, element)
+        }
+        if(element.id === id){
+          target = parent
+        }
+      }
+    })
+    return target
+  }
+
   findDragTargetInsertIndex(id, clientX, clientY){
-    const element = this.findElement(id)
+    let element = this.findElement(id)
     let insertIndex = null
     if(element){
       if(!element.children){
-        element.children = []
-        insertIndex = 0
-        return { insertIndex, element }
+        element = this.findParentElementByChildID(this.pages[0].elements, id)
       }
       if(element.children && element.children.length === 1){
         //Just check if the clientX and clientY is before or after the element
@@ -613,6 +622,14 @@ class AppStore {
               insertIndex = 1
             }
           }
+          const isBetweenX = x < clientX && (x + width) > clientX
+          if(insertIndex === null && isBetweenX){
+            insertIndex = 0
+          }
+          const isBetweenY = y < clientY && (y + height) > clientY
+          if(insertIndex === null && isBetweenY){
+            insertIndex = 0
+          }
         }
         return { insertIndex, element }
       }
@@ -628,20 +645,27 @@ class AppStore {
               const { x, y, width, height } = domChild.getBoundingClientRect()
               const xMax = x + width
               const yMax = y + height
-              if(idx === 0){
-                if(clientX < x || clientY < y){
-                  insertIndex = 0
-                }
-                prevX = x
-                prevXMax = xMax
-                prevY = y
-                prevYMax = yMax
-              }else{
-                //This means that the element is between the two elements horizontally
-                const betweenX = prevXMax < clientX && x > clientX
-                const betweenY = prevYMax < clientY && y > clientY
-                if(betweenX || betweenY){
-                  insertIndex = idx
+              const isOnElementX = x < clientX && xMax > clientX
+              const isOnElementY = y < clientY && yMax > clientY
+              if(isOnElementX && isOnElementY && insertIndex === null){
+                insertIndex = idx
+              }
+              if(insertIndex === null){
+                if(idx === 0){
+                  if(clientX < x || clientY < y){
+                    insertIndex = 0
+                  }
+                  prevX = x
+                  prevXMax = xMax
+                  prevY = y
+                  prevYMax = yMax
+                }else{
+                  //This means that the element is between the two elements horizontally
+                  const betweenX = prevXMax < clientX && x > clientX
+                  const betweenY = prevYMax < clientY && y > clientY
+                  if((betweenX || betweenY) && insertIndex === null){
+                    insertIndex = idx
+                  }
                 }
               }
               //If the last child is looped and there is no result, the insert index will be the current index + 1
@@ -719,7 +743,7 @@ class AppStore {
         //Find the targetelement to append to
         const { insertIndex, element: toInsertInto } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
         if(toInsertInto){
-          if(insertIndex){
+          if(insertIndex !== null){
             spliceIndex = insertIndex
           }else{
             spliceIndex = toInsertInto.children.length - 1
@@ -749,13 +773,21 @@ class AppStore {
       }else{
         //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
         if(targetElement && spliceIndex !== null){
-          const nextChild = targetElement.children[spliceIndex + 1]
+          const nextChild = targetElement.children[spliceIndex ]
           let insertBefore = null
           const hasChildren = targetElement.children && targetElement.children.length > 0
           if(nextChild && hasChildren){
             insertBefore = nextChild.id
           }
-          targetElement.children.splice(spliceIndex, 0, comp)
+          if(spliceIndex === 0 && hasChildren){
+            insertBefore = targetElement.children[0].id
+          }
+          console.log(nextChild, spliceIndex)
+          if(!nextChild && hasChildren && spliceIndex > 0){
+            targetElement.children.push(comp)
+          }else{
+            targetElement.children.splice(spliceIndex, 0, comp)
+          }
           this.insertElementIntoIframe(comp, targetElement, insertBefore)
         }
       }
@@ -812,6 +844,7 @@ class AppStore {
       if(pxHeight){
         yOffset = pxHeight / 2
       }
+      //NEED TO FIX THIS FOR ITEMS THAT DONT HAVE A WIDTH OR HEIGHT!!
       if(!item.style.height || !item.style.width){
         const { clientWidth, clientHeight } = this.getItemSize(item)
         yOffset = clientHeight / 2

@@ -128,6 +128,37 @@ export const Body = observer((props) => {
     app.toggleCSSTab(id)
   }
 
+  const getHelpers = (elem, sectionId, indicatorOnly = false) => {
+    return (
+      <>
+        <div className='element-tools'>
+          <div className='element-tools_toolbar'>
+            <ElementIndicator 
+              elementTag={elem.tagName}
+              elementClass={elem.className}
+            />
+          </div>
+        </div>
+        {
+          !indicatorOnly ? (
+            <div className='prop-menu'>
+              <div 
+                className='prop-menu__css'
+                onClick={e => toggleCSSTab(e, elem.id, sectionId)}
+              >
+                <CSSIcon />
+              </div>
+              <div className='prop-menu__lock'>
+              </div>
+            </div>
+          )
+          :
+          undefined
+        }
+      </>
+    )
+  }
+
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
     let style = {}
@@ -163,27 +194,8 @@ export const Body = observer((props) => {
         >
           {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
           {
-            isSelected ? (
-              <>
-                <div className='element-tools'>
-                  <div className='element-tools_toolbar'>
-                    <ElementIndicator 
-                      elementTag={elem.type}
-                      elementClass={elem.className}
-                    />
-                  </div>
-                </div>
-                <div className='prop-menu'>
-                  <div 
-                    className='prop-menu__css'
-                    onClick={e => toggleCSSTab(e, id, sectionId)}
-                  >
-                    <CSSIcon />
-                  </div>
-                  <div className='prop-menu__lock'>
-                  </div>
-                </div>
-              </>
+            isSelected || isDragTarget ? (
+              getHelpers(elem, sectionId, isDragTarget)
             )
             :
             undefined
@@ -214,17 +226,8 @@ export const Body = observer((props) => {
             onClick={e => selectComponent(e, id, sectionId)}
           >
           {
-            isSelected ? (
-              <div className='prop-menu'>
-                <div 
-                  className='prop-menu__css'
-                  onClick={e => toggleCSSTab(e, id, sectionId)}
-                >
-                  <CSSIcon />
-                </div>
-                <div className='prop-menu__lock'>
-                </div>
-              </div>
+            isSelected || isDragTarget ? (
+              getHelpers(elem, sectionId, isDragTarget)
             )
             :
             undefined
@@ -249,6 +252,13 @@ export const Body = observer((props) => {
         activePage.elements.map((elem, idx) => {
           const { style, children, id, type, position } = elem
           const isSelected = app.selectedElement === id
+          const tempStyle = {
+            width: position.width,
+            height: position.height,
+            margin: position.margin,
+            padding: position.padding,
+            ...position.flexProps
+          }
           return (
             <>
               {
@@ -263,7 +273,7 @@ export const Body = observer((props) => {
                 data-uuid={elem.id}
                 className={`section-component ${isSelected ? ' active-component' : ''}`}
                 style={{
-                  ...style,
+                  ...tempStyle,
                   zIndex: 0
                 }}
               >

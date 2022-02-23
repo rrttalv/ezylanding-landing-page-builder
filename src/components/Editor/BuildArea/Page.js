@@ -81,7 +81,7 @@ export const Page = observer((props) => {
         className='build-area_page_separator'
         style={{
           width,
-          top: separators.footer
+          bottom: 0
         }}
        />
     </div>

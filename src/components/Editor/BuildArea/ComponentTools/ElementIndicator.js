@@ -29,11 +29,11 @@ export const ElementIndicator = observer((props) => {
     <div className='element-indicator'>
       <span
         style={{
-          color: '#d7ba7d'
+          color: '#d7ba7d',
         }}
         className='element-indicator_tag'
       >
-        {elementTag}
+        {'<'}{elementTag}{' />'}
       </span>
       <span
         className='element-indicator_class'
