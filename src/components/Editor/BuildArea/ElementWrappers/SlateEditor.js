@@ -48,7 +48,7 @@ export const SlateEditor = observer((props) => {
 
   return (
     <div 
-      style={{...props.style}}
+      style={{...props.style, position: 'relative'}}
       onPointerDown={e => handleClick(e)}
       onClick={e => handleClick(e)}
       onDoubleClick={e => app.setActiveTextEditor(null, null)}

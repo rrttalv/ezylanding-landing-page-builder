@@ -334,6 +334,18 @@ class AppStore {
 
   //Id is text ID, parentID is the parent DIV that surrounds the text
   setActiveTextEditor(id, parentId){
+    const frame = document.querySelector('iframe').contentWindow.document
+    const el = frame.querySelector(`[data-uuid="${id ? id : this.activeTextEditor}"]`)
+    if(el){
+      console.log(el)
+      if(id){
+        el.style.opacity = '0.1'
+      }else{
+        const component = this.findElement(this.activeTextEditor)
+        el.style.opacity = component.style.opacity ? component.style.opacity : '1'
+      }
+      console.log(el.style)
+    }
     this.activeTextEditor = id
     if(parentId){
       this.activeElementMeta = {
