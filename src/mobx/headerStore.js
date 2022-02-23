@@ -43,6 +43,7 @@ class HeaderStore {
   }
 
   handleFrameworkChange(id){
+    console.log(id)
     const item = this.settingsMenuContent.find(({ id: mid }) => mid === 'frameworks')
     if(item){
       item.children.forEach(child => {
@@ -50,6 +51,7 @@ class HeaderStore {
         child.selected = false
       })
       item.children.forEach(child => {
+        console.log('here', child)
         if(child.id === id){
           this.appStore.setActiveFramework(id)
           child.selected = true

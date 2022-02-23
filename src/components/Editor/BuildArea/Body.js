@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
-import { PartitionBorder } from './PartitionBorder'
 import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
 import { ReactComponent as ColumnIcon } from '../../../svg/column.svg'
 import { SlateEditor } from './ElementWrappers/SlateEditor'
@@ -168,9 +167,19 @@ export const Body = observer((props) => {
         height: position.height,
         margin: position.margin,
         padding: position.padding,
+        zIndex: 10,
         ...position.flexProps
       }
-      if(elem.type === 'div'){
+      if(elemStyle.position){
+        style.position = elemStyle.position
+        style.top = elemStyle.top || undefined
+        style.left = elemStyle.left || undefined
+        style.bottom = elemStyle.bottom || undefined
+        style.right = elemStyle.right || undefined
+      }
+    }
+    if(elem.type === 'div'){
+      if(!elemStyle.height){
         delete style.height
       }
     }
@@ -182,6 +191,10 @@ export const Body = observer((props) => {
       elemClass += ' active-drag-target'
       divClass += ' active-drag-target'
       style.position = 'relative'
+    }
+    if(elem.className){
+      elemClass += ' ' + elem.className
+      divClass += ' ' + elem.className
     }
     switch(elem.type){
       case 'div':
@@ -240,81 +253,79 @@ export const Body = observer((props) => {
   const { dragIndex, activeDrag, } = app
 
   return (
-    <div 
-      className={`build-area_body`}
-      style={{
-        top: props.top,
-        height: props.height,
-        width: '100%'
-      }}
-    >
-      {
-        activePage.elements.map((elem, idx) => {
-          const { style, children, id, type, position } = elem
-          const isSelected = app.selectedElement === id
-          const tempStyle = {
-            width: position.width,
-            height: position.height,
-            margin: position.margin,
-            padding: position.padding,
-            ...position.flexProps
-          }
-          return (
-            <>
-              {
-                idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
-                  <div className='build-area_insert-preview insert-above' />
-                )
-                :
-                undefined
-              }
-              <div 
-                onClick={e => selectComponent(e, id, null, true)}
-                data-uuid={elem.id}
-                className={`section-component ${isSelected ? ' active-component' : ''}`}
-                style={{
-                  ...tempStyle,
-                  zIndex: 0
-                }}
-              >
-                <div className='section-options'>
-                  <div className='section-options_btn'>
-                    <CSSIcon />
-                  </div>
-                </div>
-                <ComponentBorder display={isSelected} style={{...elem.style}}>
-                  {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
-                </ComponentBorder>
+    <>
+      <div 
+        className={`build-area_body${app.activeFramework ? ' ' + app.activeFramework.parentClass : ''}`}
+        style={{
+          top: props.top,
+          height: props.height,
+          width: '100%'
+        }}
+      >
+        {
+          activePage.elements.map((elem, idx) => {
+            const { style, children, id, type, position } = elem
+            const isSelected = app.selectedElement === id
+            const tempStyle = {
+              width: position.width,
+              height: position.height,
+              margin: position.margin,
+              padding: position.padding,
+              ...position.flexProps
+            }
+            return (
+              <>
                 {
-                  isSelected ? <PartitionBorder {...elem} /> : undefined
-                }
-                {
-                  isSelected ? (
-                    <div className='prop-menu section-prop-menu'>
-                      <div 
-                        className='prop-menu__css'
-                        onClick={e => toggleCSSTab(e, id, null, true)}
-                      >
-                      </div>
-                      <div className='prop-menu__lock'>
-                      </div>
-                    </div>
+                  idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                    <div className='build-area_insert-preview insert-above' />
                   )
                   :
                   undefined
                 }
-              </div>
-              {
-                activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
-                  <div className='build-area_insert-preview insert-below' />
-                )
-                :
-                undefined
-              }
-            </>
-          )
-        })
-      }
+                <div 
+                  onClick={e => selectComponent(e, id, null, true)}
+                  data-uuid={elem.id}
+                  className={`section-component ${isSelected ? ' active-component' : ''} ${elem.className ? ' ' + elem.className : ''}`}
+                  style={{
+                    ...tempStyle,
+                    position: 'relative',
+                    zIndex: 0
+                  }}
+                >
+                  <div className='section-options'>
+                    <div className='section-options_btn'>
+                      <CSSIcon />
+                    </div>
+                  </div>
+                  {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
+                  {
+                    isSelected ? (
+                      <div className='prop-menu section-prop-menu'>
+                        <div 
+                          className='prop-menu__css'
+                          onClick={e => toggleCSSTab(e, id, null, true)}
+                        >
+                        </div>
+                        <div className='prop-menu__lock'>
+                        </div>
+                      </div>
+                    )
+                    :
+                    undefined
+                  }
+                </div>
+                {
+                  activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                    <div className='build-area_insert-preview insert-below' />
+                  )
+                  :
+                  undefined
+                }
+              </>
+            )
+          })
+        }
+      </div>
       {
         app.editingCSS && app.cssElement ? (
           <CSSTab 
@@ -326,6 +337,6 @@ export const Body = observer((props) => {
         :
         undefined
       }
-    </div>
+    </>
   )
 })

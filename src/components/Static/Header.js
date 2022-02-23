@@ -44,8 +44,10 @@ export const Header = observer(() => {
   }, [header.settingsOpen])
 
   const handleChildClick = (e, item) => {
+    console.log('here')
     e.preventDefault()
     e.stopPropagation()
+    console.log(item)
     if(item.onClick){
       item.onClick.call()
     }
@@ -54,9 +56,12 @@ export const Header = observer(() => {
   const getMenuItemChild = (item, idx) => {
     const { title, id, selected, onClick } = item
     return (
-      <div className={`header_settings_menu-item${selected ? ' active' : ''}`} key={id + idx}>
+      <div 
+        onClick={e => handleChildClick(e, item)} 
+        className={`header_settings_menu-item${selected ? ' active' : ''}`} 
+        key={id + idx}
+        >
         <button 
-          onClick={e => handleChildClick(e, item)}
           className={`header_settings_menu-item-title`}
         >
           {title}

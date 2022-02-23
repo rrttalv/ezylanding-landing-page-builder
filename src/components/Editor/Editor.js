@@ -47,9 +47,18 @@ export const Editor = observer((props) => {
       app.setActiveDragItem(null)
     }
   }
+  
+  const resizeHandler = e => {
+    app.handleWindowResize()
+  }
 
   useEffect(() => {
     app.setActivePage()
+    window.addEventListener('resize', resizeHandler.bind(this))
+    app.setActiveFramework('bootstrap')
+    return function cleanup() {
+      window.removeEventListener('resize', resizeHandler)
+    }
   }, [])
 
   return (

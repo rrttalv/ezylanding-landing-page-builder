@@ -38,7 +38,7 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.elementLen])
+  }, [app.elementLen, app.activeFramework])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName, id } = elem

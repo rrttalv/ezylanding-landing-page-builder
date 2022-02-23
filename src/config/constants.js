@@ -43,11 +43,10 @@ const constants = {
         title: '2 Columns',
         type: 'section',
         tagName: 'section',
+        className: 'row',
         partitions: 2,
         thumb: '/images/sections/flex-row-2.svg',
         style: {
-          display: 'flex',
-          flexDirection: 'row',
           width: '80%',
           margin: '0 auto',
           padding: '25px',
@@ -58,7 +57,7 @@ const constants = {
           {
             type: 'div',
             tagName: 'div',
-            className: 'col-6',
+            className: 'col-md-12 col-lg-6',
             style: {
               position: 'relative',
               width: '50%',
@@ -411,6 +410,7 @@ const constants = {
 export const scripts = [
   {
     title: 'Foundation 6',
+    parentClass: 'use-foundation',
     id: 'foundation',
     scripts: [
       { path: '/frameworks/foundation/css/foundation.min.css', type: 'style' },
@@ -421,6 +421,7 @@ export const scripts = [
   },
   {
     title: 'Bootstrap 4.6',
+    parentClass: 'use-bootstrap',
     id: 'bootstrap',
     scripts: [
       { path: '/frameworks/jquery/jquery-3.6.0.min.js', type: 'script' },
@@ -432,6 +433,7 @@ export const scripts = [
   },
   {
     title: 'Bulma',
+    parentClass: 'use-bulma',
     id: 'bulma',
     scripts: [
       { path: '/frameworks/bootstrap/css/bootstrap.min.css', type: 'style' }

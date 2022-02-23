@@ -82,6 +82,15 @@ class AppStore {
     }else{
       this.activeFramework = null
     }
+    setTimeout(() => {
+      this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
+    }, 1000)
+  }
+
+  handleWindowResize(){
+    this.recalculateSizes(this.pages[0].elements)
+    this.sizeCalcChange = !this.sizeCalcChange
   }
 
   findElement(id){

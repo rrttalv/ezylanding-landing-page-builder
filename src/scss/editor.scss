@@ -77,50 +77,50 @@
         position: absolute;
       }
     }
-    &_body {
+    .css-tab {
+      z-index: 100;
       position: absolute;
-      .css-tab {
-        z-index: 100;
-        position: absolute;
-        left: calc(100% + 8px);
-        top: -20px;
-        &_header {
-          border-top-left-radius: 4px;
-          border-top-right-radius: 4px;
-          width: 100%;
-          margin-bottom: -2px;
-          background-color: #2b2c35ad;
-          padding: 5px;
-        }
-        &_action {
-          border: none;
-          background-color: none;
-          box-shadow: none;
-          background: none;
-          svg {
-            margin-top: -2px;
-            fill: #eeeeee;
-            width: 20px;
-          }
-        }
-        &_action.close {
-          float: right;
-          svg {
-            margin-top: -1px;
-            cursor: pointer;
-          }
-        }
-        &_action.move {
-          display: inline-flex;
-          align-items: flex-start;
-          width: calc(100% - 50px);
-          cursor: move;
-          svg {
-            float: left;
-            margin-top: 2px;
-          }
+      left: calc(100% + 8px);
+      top: -20px;
+      &_header {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        width: 100%;
+        margin-bottom: -2px;
+        background-color: #2b2c35ad;
+        padding: 5px;
+      }
+      &_action {
+        border: none;
+        background-color: none;
+        box-shadow: none;
+        background: none;
+        svg {
+          margin-top: -2px;
+          fill: #eeeeee;
+          width: 20px;
         }
       }
+      &_action.close {
+        float: right;
+        svg {
+          margin-top: -1px;
+          cursor: pointer;
+        }
+      }
+      &_action.move {
+        display: inline-flex;
+        align-items: flex-start;
+        width: calc(100% - 50px);
+        cursor: move;
+        svg {
+          float: left;
+          margin-top: 2px;
+        }
+      }
+    }
+    &_body {
+      position: absolute;
       .prop-menu {
         position: absolute;
         top: -40px;
@@ -152,120 +152,118 @@
           border: 1px solid rgba(62, 227, 197, 0.5);      
         }
       }
-      .comp-border {
-        .component-wrapper {
-          z-index: 2;
-          position: relative;
-          &::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            cursor: pointer;
-          }
-        }
-        .shift-box {
+      .component-wrapper {
+        z-index: 2;
+        position: relative;
+        &::after {
+          content: '';
           position: absolute;
-          background-color: #8d92fa8a;
-          height: 20px;
           width: 100%;
-          z-index: -1;
-          border-radius: 5px;
-        }
-        .shift-box.top {
-          top: -22px;
-        }
-        .shift-box.bottom {
-          bottom: -22px;
-        }
-        .component-wrapper.selected {
+          height: 100%;
+          background: transparent;
           cursor: pointer;
-          &::after {
-            cursor: pointer;
-            content: "";
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: calc(100% + 10px);
-            height: calc(100% + 10px);
-            border-radius: 4px;
-            border: 1px solid rgba(62, 227, 197, 0.5);
-          }
-          .pan-point {
-            z-index: 10;
-            position: absolute;
-            background: transparent;
-          }
-          .pan-point.side {
-            height: 100%;
-            width: 10px;
-            &:hover {
-              cursor: ew-resize;
-            }
-          }
-          .pan-point.left {
-            left: -14px;
-          }
-          .pan-point.right {
-            right: -14px;
-          }
-          .pan-point.horizontal {
-            width: 100%;
-            height: 10px;
-            &:hover {
-              cursor: ns-resize;
-            }
-          }
-          .pan-point.top {
-            top: -14px;
-          }
-          .pan-point.bottom {
-            bottom: -14px;
+        }
+      }
+      .shift-box {
+        position: absolute;
+        background-color: #8d92fa8a;
+        height: 20px;
+        width: 100%;
+        z-index: -1;
+        border-radius: 5px;
+      }
+      .shift-box.top {
+        top: -22px;
+      }
+      .shift-box.bottom {
+        bottom: -22px;
+      }
+      .component-wrapper.selected {
+        cursor: pointer;
+        &::after {
+          cursor: pointer;
+          content: "";
+          position: absolute;
+          top: -5px;
+          left: -5px;
+          width: calc(100% + 10px);
+          height: calc(100% + 10px);
+          border-radius: 4px;
+          border: 1px solid rgba(62, 227, 197, 0.5);
+        }
+        .pan-point {
+          z-index: 10;
+          position: absolute;
+          background: transparent;
+        }
+        .pan-point.side {
+          height: 100%;
+          width: 10px;
+          &:hover {
+            cursor: ew-resize;
           }
         }
-        .component-wrapper.active-drag-target {
-          &::after {
-            z-index: -3;
-            content: "";
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: calc(100% + 10px);
-            height: calc(100% + 10px);
-            border-radius: 4px;
-            border: 5px solid rgba(141, 146, 250, 0.5);
+        .pan-point.left {
+          left: -14px;
+        }
+        .pan-point.right {
+          right: -14px;
+        }
+        .pan-point.horizontal {
+          width: 100%;
+          height: 10px;
+          &:hover {
+            cursor: ns-resize;
           }
         }
-        .section-wrapper {
-          z-index: 2;
+        .pan-point.top {
+          top: -14px;
         }
-        .section-wrapper.selected {
-          position: relative;
-          &::after {
-            cursor: pointer;
-            content: "";
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: calc(100% + 10px);
-            height: calc(100% + 10px);
-            border-radius: 4px;
-            border: 1px solid rgba(62, 227, 197, 0.5);
-          }
+        .pan-point.bottom {
+          bottom: -14px;
         }
-        .section-wrapper.active-drag-target {
-          &::after {
-            z-index: -3;
-            content: "";
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: calc(100% + 10px);
-            height: calc(100% + 10px);
-            border-radius: 4px;
-            border: 5px solid rgba(141, 146, 250, 0.5);
-          }
+      }
+      .component-wrapper.active-drag-target {
+        &::after {
+          z-index: -3;
+          content: "";
+          position: absolute;
+          top: -5px;
+          left: -5px;
+          width: calc(100% + 10px);
+          height: calc(100% + 10px);
+          border-radius: 4px;
+          border: 5px solid rgba(141, 146, 250, 0.5);
+        }
+      }
+      .section-wrapper {
+        z-index: 2;
+      }
+      .section-wrapper.selected {
+        position: relative;
+        &::after {
+          cursor: pointer;
+          content: "";
+          position: absolute;
+          top: -5px;
+          left: -5px;
+          width: calc(100% + 10px);
+          height: calc(100% + 10px);
+          border-radius: 4px;
+          border: 1px solid rgba(62, 227, 197, 0.5);
+        }
+      }
+      .section-wrapper.active-drag-target {
+        &::after {
+          z-index: -3;
+          content: "";
+          position: absolute;
+          top: -5px;
+          left: -5px;
+          width: calc(100% + 10px);
+          height: calc(100% + 10px);
+          border-radius: 4px;
+          border: 5px solid rgba(141, 146, 250, 0.5);
         }
       }
       .comp-border.visible {
