@@ -158,6 +158,17 @@ export const Body = observer((props) => {
     )
   }
 
+  const mapAllElements = (childElems, parentId) => {
+    let children = []
+    childElems.forEach((child, idx) => {
+      children.push(child)
+      if(child.children && child.children.length){
+        children = [...children, ...mapAllElements(child.children, child.id)]
+      }
+    })
+    return children
+  }
+
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, style: elemStyle, id } = elem
     let style = {}
@@ -165,28 +176,12 @@ export const Body = observer((props) => {
       style = {
         width: position.width,
         height: position.height,
-        margin: position.margin,
-        padding: position.padding,
+        top: position.y - 1,
+        left: position.x - 2,
         zIndex: 10,
         backgroundColor: 'transparent',
         background: 'transparent',
         border: 'none',
-        
-      }
-      if(elemStyle.position){
-        style.position = elemStyle.position
-        style.top = elemStyle.top || undefined
-        style.left = elemStyle.left || undefined
-        style.bottom = elemStyle.bottom || undefined
-        style.right = elemStyle.right || undefined
-      }
-    }
-    if(elem.type === 'image' && elemStyle.display !== 'block'){
-      style.display = 'block'
-    }
-    if(elem.type === 'div'){
-      if(!elemStyle.height){
-        delete style.height
       }
     }
     const isSelected = app.selectedElement === id
@@ -196,12 +191,8 @@ export const Body = observer((props) => {
     if(isDragTarget){
       elemClass += ' active-drag-target'
       divClass += ' active-drag-target'
-      style.position = 'relative'
     }
-    if(elem.className){
-      elemClass += ' ' + elem.className
-      divClass += ' ' + elem.className
-    }
+    style.position = 'absolute'
     switch(elem.type){
       case 'div':
         return <div 
@@ -211,27 +202,27 @@ export const Body = observer((props) => {
           style={{...style}} 
           data-uuid={id}
         >
-          {elem.children && elem.children.length ? elem.children.map((child, cidx) => getChildElemBorder(child, cidx, id)) : undefined}
-          {
-            isSelected || isDragTarget ? (
-              getHelpers(elem, sectionId, isDragTarget)
-            )
-            :
-            undefined
+          <div />
+            {
+              isSelected || isDragTarget ? (
+                getHelpers(elem, sectionId, isDragTarget)
+              )
+              :
+              undefined
           }
         </div>
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          return getEditingTextElem(elem, sectionId, elemStyle)
+          return getEditingTextElem(elem, sectionId, style)
         }
       default:
         return (
           <div 
             key={idx + sectionId}
-            className={elemClass} 
             style={{...style}}
             data-uuid={id} 
+            className={elemClass}
             onDoubleClick={e => handleDoubleClick(e, elem, sectionId)}
             onClick={e => selectComponent(e, id, sectionId)}
           >
@@ -250,9 +241,10 @@ export const Body = observer((props) => {
   const { dragIndex, activeDrag, } = app
 
   return (
+    //${app.activeFramework ? ' ' + app.activeFramework.parentClass : ''}
     <>
       <div 
-        className={`build-area_body${app.activeFramework ? ' ' + app.activeFramework.parentClass : ''}`}
+        className={`build-area_body`}
         style={{
           top: props.top,
           height: props.height,
@@ -268,7 +260,6 @@ export const Body = observer((props) => {
               height: position.height,
               margin: position.margin,
               padding: position.padding,
-              ...position.flexProps
             }
             return (
               <>
@@ -284,7 +275,6 @@ export const Body = observer((props) => {
                   data-uuid={elem.id}
                   className={`section-component ${isSelected ? ' active-component' : ''} ${elem.className ? ' ' + elem.className : ''}`}
                   style={{
-                    ...tempStyle,
                     position: 'relative',
                     zIndex: 0
                   }}
@@ -294,7 +284,9 @@ export const Body = observer((props) => {
                       <CSSIcon />
                     </div>
                   </div>
-                  {children ? children.map((child, idx) => getChildElemBorder(child, idx, elem.id)) : undefined}
+                  {mapAllElements(elem.children, elem.id).map((child, idx) => (
+                    getChildElemBorder(child, idx, elem.id)
+                  ))}
                   {
                     isSelected ? (
                       <div className='prop-menu section-prop-menu'>

@@ -36,6 +36,8 @@ export const flexRow2Col = {
               style: {
                 width: '100%',
                 fontSize: '32px',
+                fontWeight: 600,
+                marginBottom: '15px',
                 lineHeight: '1.5',
                 display: 'block',
               }
@@ -46,6 +48,8 @@ export const flexRow2Col = {
               className: 'paragraph',
               content: 'Write something cool here!',
               style: {
+                fontSize: '20px',
+                fontWeight: 500,
                 width: '100%',
                 marginBottom: '10px',
                 lineHeight: '1.5',
@@ -93,7 +97,8 @@ export const flexRow2Col = {
                   style: {
                     'borderRadius': '4px',
                     width: '100px',
-                    display: 'block',
+                    marginLeft: '5%',
+                    display: 'inline-block',
                     background: '#3E41DC',
                     color: '#fff',
                     height: '35px',
