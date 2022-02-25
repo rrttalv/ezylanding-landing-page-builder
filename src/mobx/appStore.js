@@ -105,6 +105,10 @@ class AppStore {
     this.setIframeHeight()
   }
 
+  setRawBootstrapValue(newValue){
+    this.rawBootstrap = newValue
+  }
+
   findElement(id){
     const elements = this.pages[0].elements
     let target = null

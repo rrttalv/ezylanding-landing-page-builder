@@ -11,6 +11,10 @@ export const SlideHeader = ((props) => {
     'components': {
       icon: <Block />,
       title: 'Insert a component'
+    },
+    'code': {
+      icon: <Code style={{ marginTop: '5px' }} />,
+      title: 'Customize code'
     }
   })
 

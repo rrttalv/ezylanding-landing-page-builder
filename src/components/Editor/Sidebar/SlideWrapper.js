@@ -2,6 +2,7 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { SlideHeader } from './SlideHeader'
 import { Components } from './Slides/Components'
+import { Code } from './Slides/Code'
 
 export const SlideWrapper = observer((props) => {
 
@@ -56,6 +57,8 @@ export const SlideWrapper = observer((props) => {
     switch(activeItem){
       case 'components':
         return <Components />
+      case 'code':
+        return <Code />
       default:
         return <div />
     }

@@ -6,7 +6,7 @@
   border-bottom: 1px solid rgba(0,0,0,0.1);
   z-index: 2;
   &_settings {
-    z-index: 100;
+    z-index: 13;
     width: 105px;
     height: 40px;
     margin-top: 5px;
@@ -31,8 +31,7 @@
       margin-left: 1px;
     }
     &_menu, &_sub-menu {
-      z-index: 100;
-      z-index: 10;
+      z-index: 13;
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
       border-radius: 4px 4px;
@@ -90,7 +89,7 @@
 
 
 .header_settings_menu.visible {
-  z-index: 10;
+  z-index: 20;
 }
 
 .header_settings_menu.hidden {
@@ -99,13 +98,13 @@
 }
 
 .header_settings_menu.animating-open {
-  z-index: 10;
+  z-index: 20;
   animation: openModal 0.2s ease-out forwards;
 }
 
 .header_settings_menu.animating-close {
   animation: closeModal 0.2s ease-out forwards;
-  z-index: 10;
+  z-index: 20;
 }
 
 

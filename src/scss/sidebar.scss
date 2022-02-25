@@ -3,7 +3,7 @@
   min-width: 100px;
   display: flex;
   flex-direction: row;
-  z-index: 1000;
+  z-index: 11;
   &_toggles {
     display: flex;
     flex-direction: column;
@@ -60,6 +60,7 @@
 }
 
 .slide-wrapper {
+  overflow-x: hidden;
   background-color: #eeeeee;
   transition: all 0.3s ease-out;
   width: 400px;
@@ -90,7 +91,45 @@
     }
     svg {
       margin-right: 10px;
+      margin-left: 5px;
     }
+  }
+  .code-slide {
+    
+  }
+}
+
+#css-grid {
+  .ReactVirtualized__Grid.ReactVirtualized__List {
+    overflow-x: scroll!important;
+  }
+  .ReactVirtualized__Grid__innerScrollContainer {
+    overflow-x: visible!important;
+  }
+  code {
+    white-space: pre-wrap;
+    padding-left: 5px;
+    white-space: pre;
+  }
+  .row-input {
+    all: unset;
+    position: absolute;
+    left: 0;
+    background: transparent;
+    color: black;
+    -webkit-text-fill-color: transparent;
+    caret-color: red;
+    z-index: 5;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace !important;
+    direction: ltr;
+    padding: 0;
+    white-space: pre;
+    margin: 0;
+    border: none;
+    outline: none;
+    overflow: hidden;
+    resize: none;
+    padding-left: 5px;
   }
 }
 
@@ -127,6 +166,23 @@
   0% { transform: translateX(0); }
   100% { 
     transform: translateX(-100%);
+  }
+}
+
+.code-slide {
+  &_wrapper {
+    margin-top: 1.5rem;
+  }
+  &_title {
+    text-align: left;
+    font-size: 1.15rem;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  #css-grid {
+    .ReactVirtualized__Grid.ReactVirtualized__List {
+      margin-top: 25px;
+    }
   }
 }
 
