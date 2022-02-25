@@ -666,8 +666,8 @@ class AppStore {
           const { x, y, width, height } = document.querySelector(`[data-uuid="${elem.id}"]`).getBoundingClientRect()
           const xMax = x + width
           const yMax = y + height
-          const halfX = xMax / 2
-          const halfY = yMax / 2
+          const halfX = x + (width / 2)
+          const halfY = y + (height / 2)
 
           const xMatch = x <= clientX && xMax >= clientX
           const yMatch = y <= clientY && yMax >= clientY
@@ -706,6 +706,8 @@ class AppStore {
 
         })
 
+        console.log(clientX, clientY, matches)
+
         if(matches.length > 0){
           const xMatches = matches.filter(match => match.matchMeta.xMatch)
           const yMatches = matches.filter(match => match.matchMeta.yMatch)
@@ -713,16 +715,18 @@ class AppStore {
             const { matchMeta, matchMeta: { xMatch, yMatch } } = match
             //Means that the user was hovering over the element
             if(xMatch && yMatch){
+              console.log('here')
               const { x, y, xMax, yMax, halfX, halfY } = matchMeta
               const isBeforeXHalf = x <= clientX && halfX > clientX
               const isBeforeYHalf = y <= clientY && halfY > clientY
               const isAfterXHalf = halfX <= clientX && xMax > clientX
               const isAfterYHalf = halfY <= clientY && yMax > clientY
               //This means that there are more elements in the same ROW so the xCordinate should be checked for insertion data
-              if(isBeforeXHalf){
+              if(isBeforeXHalf && isBeforeYHalf){
                 insertBefore = match.id
                 found = true
               }
+              console.log(isBeforeXHalf, isBeforeYHalf, isAfterXHalf, isAfterYHalf)
               if(isAfterXHalf){
                 const nextElement = childElements[idx + 1]
                 if(nextElement){
