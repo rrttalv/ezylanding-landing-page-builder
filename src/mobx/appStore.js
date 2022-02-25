@@ -620,11 +620,11 @@ class AppStore {
     return target
   }
 
-  getAllChildrenArray(element){
+  getFullChildrenArray(element){
     let result = []
     element.children.forEach(child => {
       if(child.children && child.children.length){
-        result = [...result, ...this.getAllChildrenArray(child)]
+        result = [...result, ...this.getFullChildrenArray(child)]
       }
       result.push(child)
     })
@@ -653,7 +653,7 @@ class AppStore {
         }
       }
       if(element.children && element.children.length > 0){
-        const childElements = this.getAllChildrenArray(element)
+        const childElements = this.getFullChildrenArray(element)
         const matches = []
         const allElements = []
 
@@ -706,8 +706,6 @@ class AppStore {
 
         })
 
-        console.log(clientX, clientY, matches)
-
         if(matches.length > 0){
           const xMatches = matches.filter(match => match.matchMeta.xMatch)
           const yMatches = matches.filter(match => match.matchMeta.yMatch)
@@ -715,7 +713,6 @@ class AppStore {
             const { matchMeta, matchMeta: { xMatch, yMatch } } = match
             //Means that the user was hovering over the element
             if(xMatch && yMatch){
-              console.log('here')
               const { x, y, xMax, yMax, halfX, halfY } = matchMeta
               const isBeforeXHalf = x <= clientX && halfX > clientX
               const isBeforeYHalf = y <= clientY && halfY > clientY
@@ -726,7 +723,6 @@ class AppStore {
                 insertBefore = match.id
                 found = true
               }
-              console.log(isBeforeXHalf, isBeforeYHalf, isAfterXHalf, isAfterYHalf)
               if(isAfterXHalf){
                 const nextElement = childElements[idx + 1]
                 if(nextElement){
@@ -927,7 +923,7 @@ class AppStore {
         //this.setElementInitStyle(this.pages[0].elements)
         this.setIframeHeight()
         this.sizeCalcChange = !this.sizeCalcChange
-      }, 100)
+      }, 200)
     }
   }
 
