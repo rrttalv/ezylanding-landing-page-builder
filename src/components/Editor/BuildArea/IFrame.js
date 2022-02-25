@@ -183,7 +183,7 @@ export const IFrame = observer((props) => {
             app.activeFramework.scripts.map((tag, idx) => {
               const origin = window.location.origin
               if(tag.type === 'style'){
-                return <link key={idx} rel="stylesheet" href={`${origin}${tag.path}`} />
+                return <style type='text/css'>{app.activeFramework.rawCSS}</style>
               }
               if(tag.type === 'script'){
                 return <script key={idx} src={`${origin}${tag.path}`}></script>

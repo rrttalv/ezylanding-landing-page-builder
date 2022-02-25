@@ -97,8 +97,7 @@ export const flexRow2Col = {
                   style: {
                     'borderRadius': '4px',
                     width: '100px',
-                    marginLeft: '15%',
-                    marginTop: '100px',
+                    marginLeft: '5%',
                     display: 'inline-block',
                     background: '#3E41DC',
                     color: '#fff',

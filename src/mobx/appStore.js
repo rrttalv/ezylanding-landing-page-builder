@@ -4,6 +4,7 @@ import { scripts } from "../config/constants";
 import cssParser from 'css'
 import { camelCase, replace, trim } from "lodash";
 import { camelToDash, getFlexKeys } from "../utils";
+import bootstrapCSS from '!!raw-loader!../libraries/bootstrap.css';
 
 const initSectionProps = {
   insertBefore: null,
@@ -24,6 +25,8 @@ class AppStore {
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
+
+  rawBootstrap = ''
 
 
   activeFonts = [
@@ -79,6 +82,12 @@ class AppStore {
 
   setActiveFramework(id){
     const script = scripts.find(({ id: sid }) => sid === id)
+    if(id === 'bootstrap' && !this.rawBootstrap){
+      this.rawBootstrap = bootstrapCSS
+    }
+    if(script && script.id === 'bootstrap'){
+      script.rawCSS = this.rawBootstrap
+    }
     if(script){
       this.activeFramework = script
     }else{
