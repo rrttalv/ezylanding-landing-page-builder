@@ -75,16 +75,41 @@ export const Body = observer((props) => {
     }
   }
 
-  const getEditingTextElem = (elem, parentId, style) => {
+  const getEditingTextElem = (elem, parentId, style, elemStyle) => {
     let copy = {...style}
     const { type } = elem
     if(type === 'text' && elem.tagName.includes('h') && !style.fontWeight){
       copy.fontWeight = 500
     }
+    const keys = [
+      'padding',
+      'paddingTop',
+      'paddingLeft',
+      'paddingRight',
+      'paddingBottom',
+      'margin',
+      'marginLeft',
+      'marginRight',
+      'marginTop',
+      'marginBottom',
+      'position',
+      'width',
+      'height',
+      'top',
+      'left',
+      'right',
+      'bottom'
+    ]
+    const realStyle = {...elemStyle}
+    keys.forEach(key => {
+      delete realStyle[key]
+    })
+    copy = {...copy, ...realStyle}
     if(!style.fontFamily){
       //copy.fontFamily = app.activeFonts[0].name
     }
     if(type === 'button'){
+      copy
       copy = {
         ...copy,
         display: 'inline-flex',
@@ -214,7 +239,7 @@ export const Body = observer((props) => {
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          return getEditingTextElem(elem, sectionId, style)
+          return getEditingTextElem(elem, sectionId, style, elemStyle)
         }
       default:
         return (
@@ -258,8 +283,6 @@ export const Body = observer((props) => {
             const tempStyle = {
               width: position.width,
               height: position.height,
-              margin: position.margin,
-              padding: position.padding,
             }
             return (
               <>
@@ -275,8 +298,11 @@ export const Body = observer((props) => {
                   data-uuid={elem.id}
                   className={`section-component ${isSelected ? ' active-component' : ''} ${elem.className ? ' ' + elem.className : ''}`}
                   style={{
-                    position: 'relative',
-                    zIndex: 0
+                    ...tempStyle,
+                    position: 'absolute',
+                    top: elem.position.y,
+                    left: elem.position.x,
+                    zIndex: 0,
                   }}
                 >
                   <div className='section-options'>
@@ -284,6 +310,7 @@ export const Body = observer((props) => {
                       <CSSIcon />
                     </div>
                   </div>
+                </div>
                   {mapAllElements(elem.children, elem.id).map((child, idx) => (
                     getChildElemBorder(child, idx, elem.id)
                   ))}
@@ -302,7 +329,6 @@ export const Body = observer((props) => {
                     :
                     undefined
                   }
-                </div>
                 {
                   activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                     <div className='build-area_insert-preview insert-below' />

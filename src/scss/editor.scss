@@ -11,7 +11,7 @@
     min-height: calc(100vh - 50px);
   }
   .build-area {
-    overflow-y: hidden;
+    overflow: hidden;
     width: 100%;
     background: #fff;
     .text-editor-wrapper {
@@ -33,9 +33,9 @@
     }
     .section-options {
       position: absolute;
-      top: 5px;
+      top: -30px;
       height: 50px;
-      left: -30px;
+      left: 25px;
       display: flex;
       flex-direction: column;
       &_btn {
@@ -67,8 +67,9 @@
       border: 1px solid rgba(0,0,0,0.15);
       position: relative;
       min-height: 100%;
-      overflow-y: scroll;
-      padding-bottom: 50px;
+      padding-bottom: 50px;   
+      width: 100%;
+      overflow: visible;
     }
     &_page {
       background: rgb(255, 255, 255);
@@ -95,7 +96,8 @@
         width: 100%;
         margin-bottom: -2px;
         background-color: #2b2c35ad;
-        padding: 5px;
+        padding-top: 8px;
+        padding-bottom: 3px;
       }
       &_action {
         border: none;
@@ -122,7 +124,7 @@
         cursor: move;
         svg {
           float: left;
-          margin-top: 2px;
+          margin-top: -2px;
         }
       }
     }
@@ -238,20 +240,19 @@
           position: absolute;
           top: -5px;
           left: -5px;
-          width: calc(100% + 10px);
-          height: calc(100% + 10px);
+          width: calc(100% + 5px);
+          height: calc(100% + 5px);
           border-radius: 4px;
           border: 5px solid rgba(141, 146, 250, 0.5);
         }
       }
       .section-wrapper {
-        z-index: 2;
+        z-index: 0;
         position: absolute;
         height: 100%;
         width: 100%;
       }
       .section-wrapper.selected {
-        position: relative;
         &::after {
           cursor: pointer;
           content: "";
@@ -271,8 +272,8 @@
           position: absolute;
           top: -5px;
           left: -5px;
-          width: calc(100% + 10px);
-          height: calc(100% + 10px);
+          width: calc(100% + 5px);
+          height: calc(100% + 5px);
           border-radius: 4px;
           border: 5px solid rgba(141, 146, 250, 0.5);
         }
@@ -310,8 +311,8 @@
   .element-tools {
     &_toolbar {
       position: absolute;
-      top: 0;
-      left: calc(100% + 10px);
+      top: calc(100% + 7.5px);
+      left: calc(100% - 50px);
       .element-indicator {
         span {
           display: block;

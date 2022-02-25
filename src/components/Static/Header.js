@@ -19,7 +19,7 @@ export const Header = observer(() => {
     return React.useContext(MobXProviderContext)
   }
 
-  const { store: { header } } = getStore()
+  const { store: { header, app } } = getStore()
 
   useEffect(() => {
     header.initMenuContent()
@@ -41,13 +41,12 @@ export const Header = observer(() => {
         }, 250)
       }
     }
+    header.handleFrameworkChange(app.activeFramework ? app.activeFramework.id : null)
   }, [header.settingsOpen])
 
   const handleChildClick = (e, item) => {
-    console.log('here')
     e.preventDefault()
     e.stopPropagation()
-    console.log(item)
     if(item.onClick){
       item.onClick.call()
     }

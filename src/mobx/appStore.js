@@ -143,6 +143,9 @@ class AppStore {
         this.updateInsideFrame(target, 'innerText', propValue)
       }
     }
+    setTimeout(() => {
+      this.recalculateSizes(this.pages[0].elements)
+    }, 100)
   }
 
   setSelectedElement(id, parentId){
@@ -305,7 +308,6 @@ class AppStore {
           }
           if(idx === 0 || idx === 1){
             const id = element.getAttribute('data-uuid')
-            console.log(element)
             if(id){
               target = id
             }
@@ -618,98 +620,179 @@ class AppStore {
     return target
   }
 
+  getAllChildrenArray(element){
+    let result = []
+    element.children.forEach(child => {
+      if(child.children && child.children.length){
+        result = [...result, ...this.getAllChildrenArray(child)]
+      }
+      result.push(child)
+    })
+    return result
+  }
+
   findDragTargetInsertIndex(id, clientX, clientY){
     let element = this.findElement(id)
-    let insertIndex = null
-    if(element){
+    const frame = document.querySelector('iframe')
+    if(element && frame){
+      let insertBefore = null
+      let pushToParent = false
+      let insertAsFirstChild = false
+      let found = false
+      const doc = frame.contentWindow.document
       if(!element.children){
         element = this.findParentElementByChildID(this.pages[0].elements, id)
       }
-      if(element.children && element.children.length === 1){
-        //Just check if the clientX and clientY is before or after the element
-        const [child] = element.children
-        const domChild = document.querySelector(`[data-uuid="${child.id}"]`)
-        if(domChild){
-          const { x, y, width, height } = domChild.getBoundingClientRect()
-          const xMax = x + width
-          const yMax = y + height
-          if(clientX < x){
-            insertIndex = 0
-          }
-          if(insertIndex === null){
-            if(clientY < y){
-              insertIndex = 0
-            }
-          }
-          if(insertIndex === null){
-            if(xMax < clientX){
-              insertIndex = 1
-            }
-          }
-          if(insertIndex === null){
-            if(yMax < clientY){
-              insertIndex = 1
-            }
-          }
-          const isBetweenX = x < clientX && (x + width) > clientX
-          if(insertIndex === null && isBetweenX){
-            insertIndex = 0
-          }
-          const isBetweenY = y < clientY && (y + height) > clientY
-          if(insertIndex === null && isBetweenY){
-            insertIndex = 0
-          }
+      parent = element
+      if(element.children && element.children.length === 0){
+        return {
+          insertBefore,
+          pushToParent: true,
+          insertAsFirstChild: false,
+          found: false
         }
-        return { insertIndex, element }
       }
-      if(element.children && element.children.length > 1){
+      if(element.children && element.children.length > 0){
+        const childElements = this.getAllChildrenArray(element)
+        const matches = []
+        const allElements = []
+
         let prevX = 0
         let prevY = 0
         let prevXMax = 0
         let prevYMax = 0
-        element.children.forEach((child, idx) => {
-          if(insertIndex === null){
-            const domChild = document.querySelector(`[data-uuid="${child.id}"]`)
-            if(domChild){
-              const { x, y, width, height } = domChild.getBoundingClientRect()
-              const xMax = x + width
-              const yMax = y + height
-              const isOnElementX = x < clientX && xMax > clientX
-              const isOnElementY = y < clientY && yMax > clientY
-              if(isOnElementX && isOnElementY && insertIndex === null){
-                insertIndex = idx
+        
+        childElements.forEach((elem, idx) => {
+          const { x, y, width, height } = document.querySelector(`[data-uuid="${elem.id}"]`).getBoundingClientRect()
+          const xMax = x + width
+          const yMax = y + height
+          const halfX = xMax / 2
+          const halfY = yMax / 2
+
+          const xMatch = x <= clientX && xMax >= clientX
+          const yMatch = y <= clientY && yMax >= clientY
+
+          const obj = {
+            ...elem,
+            matchMeta: {
+              xMatch,
+              yMatch,
+
+              halfX,
+              halfY,
+
+              prevX,
+              prevY,
+              prevXMax,
+              prevYMax,
+              
+              x,
+              y,
+              yMax,
+              xMax,
+            }
+          }
+
+          if(xMatch || yMatch){
+            matches.push(obj)
+          }
+
+          allElements.push(obj)
+
+          prevX = x
+          prevY = y
+          prevXMax = xMax
+          prevYMax = yMax
+
+        })
+
+        if(matches.length > 0){
+          const xMatches = matches.filter(match => match.matchMeta.xMatch)
+          const yMatches = matches.filter(match => match.matchMeta.yMatch)
+          matches.forEach((match, idx) => {
+            const { matchMeta, matchMeta: { xMatch, yMatch } } = match
+            //Means that the user was hovering over the element
+            if(xMatch && yMatch){
+              const { x, y, xMax, yMax, halfX, halfY } = matchMeta
+              const isBeforeXHalf = x <= clientX && halfX > clientX
+              const isBeforeYHalf = y <= clientY && halfY > clientY
+              const isAfterXHalf = halfX <= clientX && xMax > clientX
+              const isAfterYHalf = halfY <= clientY && yMax > clientY
+              //This means that there are more elements in the same ROW so the xCordinate should be checked for insertion data
+              if(isBeforeXHalf){
+                insertBefore = match.id
+                found = true
               }
-              if(insertIndex === null){
-                if(idx === 0){
-                  if(clientX < x || clientY < y){
-                    insertIndex = 0
-                  }
-                  prevX = x
-                  prevXMax = xMax
-                  prevY = y
-                  prevYMax = yMax
+              if(isAfterXHalf){
+                const nextElement = childElements[idx + 1]
+                if(nextElement){
+                  insertBefore = nextElement.id
+                  found = true
                 }else{
-                  //This means that the element is between the two elements horizontally
-                  const betweenX = prevXMax < clientX && x > clientX
-                  const betweenY = prevYMax < clientY && y > clientY
-                  if((betweenX || betweenY) && insertIndex === null){
-                    insertIndex = idx
+                  pushToParent = true
+                  found = true
+                }
+              }
+            }
+          })
+          //If there was no match, then we try to determine the closes cordinates
+          if(!found){
+            allElements.forEach((match, idx) => {
+              if(!found){
+                const { matchMeta: { x, y, xMax, yMax} } = match
+                //Check if the cursor was before the first element
+                if(idx === 0){
+                  if(x > clientX && y > clientX){
+                    insertBefore = match.id
+                    found = true
+                  }
+                }
+                if(!found && idx > 0){
+                  const { matchMeta: { x: prevX, prevY } } = allElements[idx - 1]
+                  const rangeXMin = prevX
+                  const rangeXMax = x
+                  
+                  const rangeYMin = prevY
+                  const rangeYMax = yMax
+                  const withinX = rangeXMin < clientX && rangeXMax > clientX
+                  const withinY = rangeYMin < clientY && rangeYMax > clientY
+                  if(withinX && withinY){
+                    insertBefore = match.id
+                    found = true
                   }
                 }
               }
-              //If the last child is looped and there is no result, the insert index will be the current index + 1
-              if(element.children.length - 1 === idx && insertIndex === null){
-                insertIndex = idx + 1
-              }
-            }
+            })
           }
-        })
+        }
+        if(!found){
+          const { x, y, width, height } = document.querySelector(`[data-uuid="${element.id}"]`).getBoundingClientRect()
+          const xMax = x + width
+          const yMax = y + height
+          const halfX = xMax / 2
+          const halfY = yMax / 2
+          if(clientY >= y && clientY < halfY){
+            insertAsFirstChild = true
+            found = true
+          }
+          if(clientY > halfY && clientY < yMax){
+            pushToParent = true
+            found = true
+          }
+        }
+
+        return { 
+          insertBefore, 
+          parent,
+          pushToParent, 
+          insertAsFirstChild, 
+          found
+        }
       }
     }
-    return { insertIndex, element }
   }
 
-  insertElementIntoIframe(comp, targetElement, insertBefore = null){
+  insertElementIntoIframe(comp, targetElement, insertBefore = null, push = false, insertAsFirst = false){
     const frame = document.querySelector('iframe')
     if(frame){
       const doc = frame.contentWindow.document
@@ -737,8 +820,11 @@ class AppStore {
           parent.appendChild(domElement)
         }
       }
-      if(!insertBefore){
+      if(push){
         parent.appendChild(domElement)
+      }
+      if(insertAsFirst){
+        parent.insertBefore(domElement, parent.firstChild)
       }
       const inserted = doc.querySelector(`[data-uuid="${comp.id}"]`)
       if(inserted){
@@ -774,19 +860,26 @@ class AppStore {
       if(this.activeDrag.type === 'section'){
         this.activeDrag.style.height = 'fit-content'
       }
-      let targetElement = null
+      let targetParent = null
+      let insertBeforeID = null
+      let pushToParentElem = false
+      let insertAsFirst = false
       let spliceIndex = null
       if(this.dragTarget){
         //Find the targetelement to append to
-        const { insertIndex, element: toInsertInto } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
-        if(toInsertInto){
-          if(insertIndex !== null){
-            spliceIndex = insertIndex
-          }else{
-            spliceIndex = toInsertInto.children.length - 1
-          }
-          targetElement = toInsertInto
+        const { 
+          insertBefore, 
+          pushToParent, 
+          parent,
+          insertAsFirstChild, 
+          found
+         } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
+        if(found){
+          insertBeforeID = insertBefore
+          insertAsFirst = insertAsFirstChild
+          pushToParentElem = pushToParent
         }
+        targetParent = parent
         this.dragTarget = null
       }
       const comp = {
@@ -809,23 +902,20 @@ class AppStore {
         this.elementLen += 1
       }else{
         //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
-        if(targetElement && spliceIndex !== null){
-          const nextChild = targetElement.children[spliceIndex ]
-          let insertBefore = null
-          const hasChildren = targetElement.children && targetElement.children.length > 0
-          if(nextChild && hasChildren){
-            insertBefore = nextChild.id
+        if(targetParent){
+          if(insertBeforeID){
+            const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)
+            targetParent.children.splice(idx, 0, comp)
+            this.insertElementIntoIframe(comp, targetParent, insertBeforeID)
           }
-          if(spliceIndex === 0 && hasChildren){
-            insertBefore = targetElement.children[0].id
+          if(!insertBeforeID && pushToParentElem){
+            this.insertElementIntoIframe(comp, targetParent, null, true)
+            targetParent.children.push(comp)
           }
-          console.log(nextChild, spliceIndex)
-          if(!nextChild && hasChildren && spliceIndex > 0){
-            targetElement.children.push(comp)
-          }else{
-            targetElement.children.splice(spliceIndex, 0, comp)
+          if(!pushToParentElem && insertAsFirst){
+            targetParent.children.splice(-1, 0, comp)
+            this.insertElementIntoIframe(comp, targetParent, null, false, true)
           }
-          this.insertElementIntoIframe(comp, targetElement, insertBefore)
         }
       }
       setTimeout(() => {

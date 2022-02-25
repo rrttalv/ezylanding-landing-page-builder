@@ -53,21 +53,6 @@ export const Page = observer((props) => {
         area={'body'} 
         iframeSelector={'#PAGE-BODY'}
       />
-
-      <div 
-        className='build-area_page_separator' 
-        style={{
-          width: app.frameWidth,
-          top: separators.header
-        }}
-      />
-      <div 
-        className='build-area_page_separator'
-        style={{
-          width: app.frameWidth,
-          bottom: 0
-        }}
-       />
     </div>
   )
 
