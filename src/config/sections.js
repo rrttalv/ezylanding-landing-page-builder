@@ -40,33 +40,21 @@ export const flexRow2Col = {
               className: 'content-wrapper',
               style: {
                 display: 'block',
-                padding: '50px',
+                paddingTop: '50px',
+                paddingBottom: '50px',
+                width: '100%',
               },
               children: [
                 {
                   type: 'text',
                   tagName: 'h1',
                   className: 'h1',
-                  content: 'Write something cool here!',
+                  content: 'Work with professionals on demand!',
                   style: {
                     width: '100%',
-                    fontSize: '32px',
-                    fontWeight: 600,
+                    fontSize: '3rem',
+                    fontWeight: 700,
                     marginBottom: '15px',
-                    lineHeight: '1.5',
-                    display: 'block',
-                  }
-                },
-                {
-                  type: 'text',
-                  tagName: 'p',
-                  className: 'paragraph',
-                  content: 'Write something cool here!',
-                  style: {
-                    fontSize: '20px',
-                    fontWeight: 500,
-                    width: '100%',
-                    marginBottom: '10px',
                     lineHeight: '1.5',
                     display: 'block',
                   }
@@ -78,16 +66,19 @@ export const flexRow2Col = {
                   className: 'form-group',
                   style: {
                     position: 'relative',
-                    marginTop: '3rem'
+                    marginTop: '2rem'
                   },
                   children: [
                     {
                       type: 'text',
                       tagName: 'label',
                       className: 'label',
-                      content: 'Sign up for our newsletter!',
+                      content: 'Want early access?',
                       style: {
                         width: '100%',
+                        fontSize: '1.25rem',
+                        color: `var(--gray)`,
+                        fontWeight: 400,
                         marginBottom: '10px',
                         lineHeight: 'normal',
                         display: 'block',
@@ -98,10 +89,12 @@ export const flexRow2Col = {
                       inputType: 'text',
                       tagName: 'input',
                       className: 'form-control',
+                      placeHolder: 'Your email address',
                       style: {
                         borderRadius: '4px',
                         width: '250px',
                         maxWidth: '400px',
+                        padding: '1rem 0.5rem',
                         display: 'inline-block',
                         border: `1px solid rgba(0,0,0,0.1)`,
                         boxShadow: `0px 3px 8px 1px rgba(0 0 0 / 8%)`,
@@ -114,6 +107,8 @@ export const flexRow2Col = {
                       content: 'Sign up!',
                       style: {
                         'borderRadius': '4px',
+                        padding: '0.5rem 1rem',
+                        verticalAlign: 'top',
                         marginLeft: '0.5rem',
                         display: 'inline-block',
                         background: '#6610f2',

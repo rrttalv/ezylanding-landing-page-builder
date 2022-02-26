@@ -114,7 +114,7 @@ export const IFrame = observer((props) => {
         }
         return <button key={elem.id} data-uuid={elem.id} style={styleCopy} className={elem.className}>{elem.content}</button>
       case 'input':
-        return <input key={elem.id} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
+        return <input key={elem.id} placeholder={elem.placeHolder} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
       case 'img':
         return <img key={elem.id} data-uuid={elem.id} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
       case 'style':
