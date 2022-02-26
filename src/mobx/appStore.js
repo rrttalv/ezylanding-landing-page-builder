@@ -27,6 +27,15 @@ class AppStore {
   activeTextEditor = null
 
   rawBootstrap = ''
+  cssTabs = [{
+    type: 'custom',
+    id: uuidv4(),
+    selected: false,
+    unsaved: false,
+    active: true,
+    name: `custom_1.css`,
+    content: `body { \n margin: 0; \n}`
+  }]
 
 
   activeFonts = [
@@ -80,10 +89,54 @@ class AppStore {
     }
   ]
 
+  changeActiveTab(tabId){
+    this.cssTabs = this.cssTabs.map(tab => {
+      return {
+        ...tab,
+        selected: false
+      }
+    })
+    const item = this.cssTabs.find(({ id }) => id === tabId)
+    if(item){
+      item.selected = true
+    }
+  }
+
+  addCustomCSSTab(){
+    const tab = {
+      type: 'custom',
+      id: uuidv4(),
+      selected: true,
+      unsaved: false,
+      active: true,
+      name: `custom_${this.cssTabs.length}.css`,
+      content: `body { \n margin: 0; \n}`
+    }
+  }
+
+  createTab(type, id, name, content){
+    return { 
+      type,
+      id,
+      active: true,
+      selected: true,
+      unsaved: false,
+      name,
+      content
+    }
+  }
+
   setActiveFramework(id){
     const script = scripts.find(({ id: sid }) => sid === id)
     if(id === 'bootstrap' && !this.rawBootstrap){
       this.rawBootstrap = bootstrapCSS
+      const item = this.cssTabs.find(({ id }) => id === 'bootstrap')
+      if(!item){
+        this.cssTabs.splice(-1, 0, this.createTab('library', 'bootstrap', 'bootstrap.css', bootstrapCSS))
+      }else{
+        item.active = true
+        item.selected = true
+      }
     }
     if(script && script.id === 'bootstrap'){
       script.rawCSS = this.rawBootstrap

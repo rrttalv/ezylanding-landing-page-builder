@@ -140,38 +140,31 @@ export const Code = observer((props) => {
 
   const { store: { sidebar, app } } = getStore()
 
-  const getValue = () => {
-    if(app.activeFramework){
-      switch(app.activeFramework.id){
-        case 'bootstrap':
-          return app.rawBootstrap
-        default:
-          return ''
-      }
-    }
-  }
+  const activeTab = app.cssTabs.find(({ active, selected }) => active && selected)
 
   const loadCodeRows = () => {
-    const rows = app.rawBootstrap.split('\n')
+    const rows = activeTab.content.split('\n')
     setCodeRows(rows)
   }
+  
 
   useEffect(() => {
     loadCodeRows()
-  }, [])
+  }, [app.cssTabs])
 
   const handleChange = (value, index, isNewline = false) => {
     const rows = [...codeRows]
     if(isNewline){
       const area = document.querySelector(`#css-grid textarea[data-index="${index}"]`)
-      console.log(area)
       if(area){
         const selectionStart = area.selectionStart
         const selectionEnd = area.selectionEnd
         if(selectionEnd - selectionStart === 0 && selectionEnd === value.length){
           //INSERT NEW LINE
+          console.log(rows[index + 1])
           rows.splice(index + 1, 0, `  `)
           setCodeRows(rows)
+          console.log(index)
           setTimeout(() => {
             const newArea = document.querySelector(`#css-grid textarea[data-index="${index + 1}"]`)
             newArea.focus()
@@ -180,9 +173,25 @@ export const Code = observer((props) => {
         }
       }
     }else{
-      rows[index] = value
+      if(!value.indexOf(' ') === -1 && value === ''){
+        let prevIdx = index - 1
+        if(prevIdx > 0){
+          const newArea = document.querySelector(`#css-grid textarea[data-index="${prevIdx}"]`)
+          newArea.focus()
+          newArea.setSelectionRange(newArea.value.length, newArea.value.length, 'forward')
+          rows.splice(index, 1)
+        }else{
+          rows[index] = ' '
+        }
+      }else{
+        rows[index] = value
+      }
       setCodeRows(rows)
     }
+  }
+
+  const handleTabChange = (id) => {
+    app.changeActiveTab(id)
   }
 
 
@@ -192,6 +201,35 @@ export const Code = observer((props) => {
     >
       <div className='code-slide_wrapper'>
         <h6 className='code-slide_title'>Customize {app.activeFramework.id} CSS</h6>
+        <div className='code-slide_tabs'>
+          {
+            app.cssTabs.map(tab => (
+              tab.active ? (
+                tab.selected ? (
+                  <div key={tab.id} className='code-slide_tab active'>
+                    {
+                      tab.name
+                    }
+                    {
+                      tab.unsaved ? '*' : undefined
+                    }
+                  </div>
+                )
+                :
+                <div key={tab.id} className='code-slide_tab inactive' onClick={e => handleTabChange(tab.id)} >
+                  {
+                    tab.name
+                  }
+                  {
+                    tab.unsaved ? '*' : undefined
+                  }
+                </div>
+              )
+              :
+              undefined
+            ))
+          }
+        </div>
         <div id="css-grid" className='code-slide_css-editor'>
           <ListElement
             handleChange={handleChange}
