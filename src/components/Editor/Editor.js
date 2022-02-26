@@ -1,5 +1,6 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect } from 'react'
+import { BottomToolbar } from './BuildArea/BottomToolbar'
 import { BuildArea } from './BuildArea/BuildArea'
 import { Element } from './BuildArea/Element'
 import { Sidebar } from './Sidebar/Sidebar'
@@ -80,6 +81,7 @@ export const Editor = observer((props) => {
           undefined
         }
       </div>
+      <BottomToolbar />
     </div>
   )
 

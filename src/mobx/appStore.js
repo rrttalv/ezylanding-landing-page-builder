@@ -62,6 +62,8 @@ class AppStore {
     height: 500
   }
 
+  layersOpen = false
+
   frameWidth = 0
 
   parentElements = ['section', 'header']
@@ -81,6 +83,10 @@ class AppStore {
       customCode: ''
     }
   ]
+
+  toggleLayerToolbar(){
+    this.layersOpen = !this.layersOpen
+  }
 
   saveTabContent(tabId, value){
     const tab = this.cssTabs.find(({ id }) => id === tabId)

@@ -2,6 +2,57 @@
   iframe {
     border: none;
   }
+  .layer-toolbar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    transition: all 0.2s;
+    &_header {
+      display: flex;
+      background: #2d2d2d;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      padding: 2px 5px;
+      align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
+      span {
+        font-size: 12px;
+        color: #eeeeee;
+        margin-left: 5px;
+        font-weight: 500;
+        justify-self: flex-start;
+      }
+      svg {
+        fill: #eeeeee;
+        width: 25px;
+        margin-left: auto;
+        height: 25px;
+      }
+    }
+    &-list {
+      background-color: #3c405a;
+      color: #fff;
+      &-item {
+        padding: 2.5px;
+        span {
+          font-size: 14px;
+          color: #ffffff66;
+          margin-left: 5px;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      &-item.selected > .elem-meta {
+        span {
+          color: #fff;
+        }
+      }
+    }
+  }
   height: 100%;
   &_area {
     width: 100%;
@@ -329,5 +380,41 @@
         }
       }
     }
+  }
+}
+
+
+.layer-toolbar-list.visible {
+  z-index: 1000;
+  display: block;
+}
+
+.layer-toolbar-list.hidden {
+  display: none;
+  z-index: 0;
+}
+
+.layer-toolbar-list.animating-open {
+  z-index: 0;
+  animation: openToolbar 0.2s ease-out forwards;
+}
+
+.layer-toolbar-list.animating-close {
+  animation: closeToolbar 0.2s ease-out forwards;
+  z-index: 0;
+}
+
+@keyframes openToolbar {
+  0% { transform: translateY(100%); }
+  100% { 
+    transform: translateY(0);   
+    display: block;
+  }
+}
+
+@keyframes closeToolbar {
+  0% { transform: translateY(0); }
+  100% { 
+    transform: translateY(100%);
   }
 }
