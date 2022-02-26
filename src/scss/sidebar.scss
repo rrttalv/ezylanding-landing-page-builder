@@ -95,11 +95,26 @@
     }
   }
   .code-slide {
-    
+    &_css-editor {
+      &_save {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 5px;
+        .btn {
+          margin-right: 5px;
+          &:disabled {
+            background-color: #bec0ec;
+          }
+        }
+      }
+    }
   }
 }
 
 #css-grid {
+
+  /*
   .ReactVirtualized__Grid.ReactVirtualized__List {
     overflow-x: scroll!important;
     .row-wrapper {
@@ -141,6 +156,7 @@
     overflow: hidden;
     resize: none;
   }
+  */
 }
 
 .slide-wrapper.visible {
@@ -190,26 +206,45 @@
     margin-bottom: 0;
   }
   &_tabs {
-    margin-top: 25px;
+    margin-top: 10px;
     overflow-x: auto;
+    display: flex;
   }
-  &_tab {
+  &_tab, &_add-file {
     font-size: 12px;
     padding: 5px 10px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     width: fit-content;
     display: inline-block;
     background: #3c405ac7;
-    margin-right: 2.5px;
+    margin-right: -1px;
     color: #fff;
     font-weight: 600;
+    &:hover {
+      cursor: pointer;
+    }
+    &:first-child {
+      border-top-left-radius: 4px;
+    }
+    &:last-child {
+      border-top-right-radius: 4px;
+    }
+  }
+  &_add-file {
+    position: relative;
+    padding: 1px 3px;
+    svg {
+      fill: #fff;
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      vertical-align: -webkit-baseline-middle;
+    }
   }
   &_tab.active {
-
+    background: #3c405a;
   }
   &_tab.inactive {
-    color: #f8f8f8;
+    color: #b2bab6;
   }
   #css-grid {
     .ReactVirtualized__Grid.ReactVirtualized__List {

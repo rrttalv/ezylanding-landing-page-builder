@@ -37,7 +37,7 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.elementLen, app.activeFramework])
+  }, [app.elementLen, app.activeFramework, app.cssSaved])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName, id } = elem
@@ -154,30 +154,6 @@ export const IFrame = observer((props) => {
     const head = (
       <head>
         <title>My Page</title>
-        <style type="text/css">{`
-          *, *::before, *::after {
-            box-sizing: border-box;
-          }
-          html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-          }
-          body {
-            ${pageStyle}
-            font-family: ${app.activeFonts.map(meta => {
-              return JSON.stringify(meta.name)
-            }).join(' ')};
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            pointer-events: none;
-            overflow: hidden;
-          } 
-          #PAGE-BODY, #PAGE-HEADER {
-            position: relative;
-          }
-        `}</style>
         {
           app.activeFramework ? (
             app.activeFramework.scripts.map((tag, idx) => {
@@ -193,6 +169,29 @@ export const IFrame = observer((props) => {
           :
           ''
         }
+        {
+          app.cssTabs.map(tab => {
+            const { id, content } = tab
+            return <style type="text/css" key={id} data-uuid={id}>{content}</style>
+          })
+        }
+        <style data-uuid={"editor-temp-style"} type="text/css">{`
+          html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            pointer-events: none;
+            overflow: hidden;
+          } 
+          #PAGE-BODY, #PAGE-HEADER {
+            position: relative;
+          }
+        `}</style>
       </head>
     )
     const bodyString = ReactDOMServer.renderToStaticMarkup(container)

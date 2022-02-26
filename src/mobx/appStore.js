@@ -26,25 +26,18 @@ class AppStore {
   elementLen = 0
   activeTextEditor = null
 
-  rawBootstrap = ''
-  cssTabs = [{
-    type: 'custom',
-    id: uuidv4(),
-    selected: false,
-    unsaved: false,
-    active: true,
-    name: `custom_1.css`,
-    content: `body { \n margin: 0; \n}`
-  }]
-
-
-  activeFonts = [
+  cssTabs = [
     {
-      name: 'arial',
-      script: null,
-      id: 'arial'
-    }
+      type: 'custom',
+      id: uuidv4(),
+      selected: true,
+      unsaved: false,
+      active: true,
+      name: `custom_1.css`,
+      content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`
+    },
   ]
+  cssSaved = false
 
   activeDrag = null
   activePage = null
@@ -89,6 +82,13 @@ class AppStore {
     }
   ]
 
+  saveTabContent(tabId, value){
+    const tab = this.cssTabs.find(({ id }) => id === tabId)
+    tab.content = value
+    tab.unsaved = false
+    this.cssSaved = !this.cssSaved
+  }
+
   changeActiveTab(tabId){
     this.cssTabs = this.cssTabs.map(tab => {
       return {
@@ -102,16 +102,28 @@ class AppStore {
     }
   }
 
+  setTabChanged(tabId, currentValue){
+    const tab = this.cssTabs.find(({ id }) => id === tabId)
+    if(tab.content === currentValue){
+      tab.unsaved = false
+    }else{
+      tab.unsaved = true
+    }
+  }
+
   addCustomCSSTab(){
+    const id = uuidv4()
     const tab = {
       type: 'custom',
-      id: uuidv4(),
-      selected: true,
+      id,
+      selected: false,
       unsaved: false,
       active: true,
-      name: `custom_${this.cssTabs.length}.css`,
-      content: `body { \n margin: 0; \n}`
+      name: `custom_${this.cssTabs.length + 1}.css`,
+      content: ``
     }
+    this.cssTabs.push(tab)
+    this.changeActiveTab(id)
   }
 
   createTab(type, id, name, content){
@@ -128,18 +140,8 @@ class AppStore {
 
   setActiveFramework(id){
     const script = scripts.find(({ id: sid }) => sid === id)
-    if(id === 'bootstrap' && !this.rawBootstrap){
-      this.rawBootstrap = bootstrapCSS
-      const item = this.cssTabs.find(({ id }) => id === 'bootstrap')
-      if(!item){
-        this.cssTabs.splice(-1, 0, this.createTab('library', 'bootstrap', 'bootstrap.css', bootstrapCSS))
-      }else{
-        item.active = true
-        item.selected = true
-      }
-    }
     if(script && script.id === 'bootstrap'){
-      script.rawCSS = this.rawBootstrap
+      script.rawCSS = bootstrapCSS
     }
     if(script){
       this.activeFramework = script
@@ -156,10 +158,6 @@ class AppStore {
     this.recalculateSizes(this.pages[0].elements)
     this.sizeCalcChange = !this.sizeCalcChange
     this.setIframeHeight()
-  }
-
-  setRawBootstrapValue(newValue){
-    this.rawBootstrap = newValue
   }
 
   findElement(id){

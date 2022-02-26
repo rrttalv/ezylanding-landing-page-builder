@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { CodeEditorEditable } from 'react-code-editor-editable'
-import 'highlight.js/styles/dracula.css';
+import 'highlight.js/styles/tomorrow-night-eighties.css';
 import { camelToDash } from '../../../utils';
 import { ReactComponent as MoveIcon } from '../../../svg/move.svg';
 import { ReactComponent as CloseIcon } from '../../../svg/close2.svg';

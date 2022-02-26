@@ -105,9 +105,6 @@ export const Body = observer((props) => {
       delete realStyle[key]
     })
     copy = {...copy, ...realStyle}
-    if(!style.fontFamily){
-      //copy.fontFamily = app.activeFonts[0].name
-    }
     if(type === 'button'){
       copy
       copy = {
@@ -285,7 +282,9 @@ export const Body = observer((props) => {
               height: position.height,
             }
             return (
-              <>
+              <React.Fragment 
+                key={elem.id}
+              >
                 {
                   idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                     <div className='build-area_insert-preview insert-above' />
@@ -336,7 +335,7 @@ export const Body = observer((props) => {
                   :
                   undefined
                 }
-              </>
+              </React.Fragment>
             )
           })
         }

@@ -7,28 +7,14 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css"; //Example style, you can use another
 import { camelToDash } from '../../../../utils';
+import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
 import { camelCase as dashToCamel } from 'lodash'
-import 'highlight.js/styles/dracula.css';
-import 'react-virtualized/styles.css';
 import { CodeEditorEditable } from 'react-code-editor-editable';
-import 'highlight.js/styles/atelier-forest-dark.css';
+import 'highlight.js/styles/tomorrow-night-eighties.css';
 
 
 
 const ListElement = (props) => {
-
-  const handleInput = (e, index) => {
-    const { value } = e.target
-    props.handleChange(value, index)
-  }
-
-  const checkEnterKey = (e, index) => {
-    if(e.keyCode === 13){
-      e.preventDefault()
-      e.stopPropagation()
-      props.handleChange(e.target.value, index, true)
-    }
-  }
   
   useEffect(() => {
 
@@ -46,19 +32,6 @@ const ListElement = (props) => {
           >
             {value}
           </code>
-          <textarea
-            data-index={index}
-            type='text'
-            className='row-input'
-            onChange={e => handleInput(e, index)}
-            onKeyDown={e => checkEnterKey(e, index)}
-            style={{
-              width: '500vw',
-              height: '100%'
-            }}
-            value={value}
-          >
-          </textarea>
         </>
     }
     if(!set && (value.indexOf(';') !== -1 || value.indexOf(':') !== -1 || value.indexOf(' ') !== -1)){
@@ -69,19 +42,6 @@ const ListElement = (props) => {
           >
             {value}
           </code>
-          <textarea
-            data-index={index}
-            type='text'
-            className='row-input'
-            onChange={e => handleInput(e, index)}
-            onKeyDown={e => checkEnterKey(e, index)}
-            style={{
-              width: '500vw',
-              height: '100%'
-            }}
-            value={value}
-          >
-          </textarea>
         </>
     }
     return elems
@@ -128,11 +88,7 @@ const ListElement = (props) => {
 
 export const Code = observer((props) => {
 
-  const [rowStart, setRowStart] = useState(0)
-  const [rowEnd, setRowEnd] = useState(100)
-  const [currentScrollPos, setcurrentScrollPos] = useState(0)
-  const [fullArray, setFullArray] = useState([])
-  const [codeRows, setCodeRows] = useState([])
+  const [codeRows, setCodeRows] = useState('')
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -141,6 +97,117 @@ export const Code = observer((props) => {
   const { store: { sidebar, app } } = getStore()
 
   const activeTab = app.cssTabs.find(({ active, selected }) => active && selected)
+
+  useEffect(() => {
+    setCodeRows(activeTab.content)
+  }, [activeTab])
+
+  const changeActiveTab = (id) => {
+    app.saveTabContent(activeTab.id, codeRows)
+    setTimeout(() => {
+      app.changeActiveTab(id)
+    }, 50)
+  }
+
+  const handleChange = value => {
+    setCodeRows(value)
+    app.setTabChanged(activeTab.id, value)
+  }
+
+  const hasActiveChanges = () => {
+    const list = app.cssTabs.filter(({ unsaved }) => unsaved)
+    return list.length === 0
+  }
+
+  const handleSave = () => {
+    app.saveTabContent(activeTab.id, codeRows)
+  }
+
+  const addNew = () => {
+    app.saveTabContent(activeTab.id, codeRows)
+    setTimeout(() => {
+      app.addCustomCSSTab()
+    }, 50)
+  }
+
+  return (
+    <div 
+      className='code-slide'
+    >
+      <div className='code-slide_wrapper'>
+        <h6 className='code-slide_title'>Customize CSS</h6>
+        <div className='code-slide_tabs'>
+          {
+            app.cssTabs.map((tab, idx) => (
+              <React.Fragment key={tab.id}>
+              {
+                tab.active ? (
+                  tab.selected ? (
+                    <div key={tab.id} className='code-slide_tab active'>
+                      {
+                        tab.name
+                      }
+                      {
+                        tab.unsaved ? '*' : undefined
+                      }
+                    </div>
+                  )
+                  :
+                  <div key={tab.id} className='code-slide_tab inactive' onClick={e => changeActiveTab(tab.id)} >
+                    {
+                      tab.name
+                    }
+                    {
+                      tab.unsaved ? '*' : undefined
+                    }
+                  </div>
+                )
+                :
+                undefined
+              }
+              {
+                app.cssTabs.length - 1 === idx ? (
+                  <div 
+                    className='code-slide_add-file'
+                    onClick={() => addNew()}
+                  >
+                    <PlusIcon />
+                  </div>
+                )
+                :
+                undefined
+              }
+              </React.Fragment>
+            ))
+          }
+        </div>
+        <div id="css-grid" className='code-slide_css-editor'>
+          <CodeEditorEditable
+            value={codeRows}
+            tabSize={2}
+            setValue={handleChange}
+            width='100%'
+            height='450px'
+            language='css'
+          />
+          <div className='code-slide_css-editor_save'>
+            <button 
+              className='btn'
+              disabled={hasActiveChanges()}
+              onClick={e => handleSave()}
+            >
+              Save File
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+})
+
+/*
+
 
   const loadCodeRows = () => {
     const rows = activeTab.content.split('\n')
@@ -173,71 +240,21 @@ export const Code = observer((props) => {
         }
       }
     }else{
-      if(!value.indexOf(' ') === -1 && value === ''){
-        let prevIdx = index - 1
-        if(prevIdx > 0){
-          const newArea = document.querySelector(`#css-grid textarea[data-index="${prevIdx}"]`)
-          newArea.focus()
-          newArea.setSelectionRange(newArea.value.length, newArea.value.length, 'forward')
-          rows.splice(index, 1)
-        }else{
-          rows[index] = ' '
-        }
-      }else{
-        rows[index] = value
-      }
       setCodeRows(rows)
     }
   }
 
-  const handleTabChange = (id) => {
-    app.changeActiveTab(id)
+  const handleInput = (e, index) => {
+    const { value } = e.target
+    handleChange(value, index)
   }
 
+  const checkEnterKey = (e, index) => {
+    if(e.keyCode === 13){
+      e.preventDefault()
+      e.stopPropagation()
+      handleChange(e.target.value, index, true)
+    }
+  }
 
-  return (
-    <div 
-      className='code-slide'
-    >
-      <div className='code-slide_wrapper'>
-        <h6 className='code-slide_title'>Customize {app.activeFramework.id} CSS</h6>
-        <div className='code-slide_tabs'>
-          {
-            app.cssTabs.map(tab => (
-              tab.active ? (
-                tab.selected ? (
-                  <div key={tab.id} className='code-slide_tab active'>
-                    {
-                      tab.name
-                    }
-                    {
-                      tab.unsaved ? '*' : undefined
-                    }
-                  </div>
-                )
-                :
-                <div key={tab.id} className='code-slide_tab inactive' onClick={e => handleTabChange(tab.id)} >
-                  {
-                    tab.name
-                  }
-                  {
-                    tab.unsaved ? '*' : undefined
-                  }
-                </div>
-              )
-              :
-              undefined
-            ))
-          }
-        </div>
-        <div id="css-grid" className='code-slide_css-editor'>
-          <ListElement
-            handleChange={handleChange}
-            codeValue={codeRows}
-          />
-        </div>
-      </div>
-    </div>
-  )
-
-})
+*/
