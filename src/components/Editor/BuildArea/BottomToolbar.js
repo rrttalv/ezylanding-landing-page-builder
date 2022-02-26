@@ -57,15 +57,17 @@ export const BottomToolbar = observer((props) => {
     app.setSelectedElement(id, null)
   }
 
+  const addLevel = (level) => {
+    level += 1
+    return level
+  }
+
   const getElems = (element, level = 0) => {
-    if(element.children){
-      level += 1
-    }
     return (
       <div 
-        className={`layer-toolbar-list-item${app.selectedElement === element.id ? ' selected' : ''}`}
+        className={`layer-toolbar-list-item${app.selectedElement === element.id ? ' selected' : ''}${level > 1 ? ' is-child' : ''}`}
         style={{
-          paddingLeft: level * 2 + 'px'
+          marginLeft: level * 1.5 + 'px'
         }}
         key={element.id}
       >
@@ -78,6 +80,13 @@ export const BottomToolbar = observer((props) => {
             element.className ? <span className='elem-class'>.{element.className}</span> : undefined
           }
         </div>
+        {
+          element.children && element.children.length ? (
+            <span style={{display: 'none'}}>{level += 1}</span>
+          )
+          :
+          undefined
+        }
         {
           element.children && element.children.length ? (
             element.children.map(child => getElems(child, level))

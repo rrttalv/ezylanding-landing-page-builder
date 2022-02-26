@@ -690,11 +690,17 @@ class AppStore {
     return target
   }
 
-  getFullChildrenArray(element){
+  getFullChildrenArray(element, level){
     let result = []
+    if(level > 0){
+      result.push(element)
+    }
+    if(element.children && element.children.length){
+      level += 1
+    }
     element.children.forEach(child => {
       if(child.children && child.children.length){
-        result = [...result, ...this.getFullChildrenArray(child)]
+        result = [...result, ...this.getFullChildrenArray(child, level)]
       }
       result.push(child)
     })
@@ -723,7 +729,7 @@ class AppStore {
         }
       }
       if(element.children && element.children.length > 0){
-        const childElements = this.getFullChildrenArray(element)
+        const childElements = this.getFullChildrenArray(element, 0)
         const matches = []
         const allElements = []
 
@@ -776,31 +782,35 @@ class AppStore {
 
         })
 
+        console.log(matches)
+
         if(matches.length > 0){
           const xMatches = matches.filter(match => match.matchMeta.xMatch)
           const yMatches = matches.filter(match => match.matchMeta.yMatch)
           matches.forEach((match, idx) => {
-            const { matchMeta, matchMeta: { xMatch, yMatch } } = match
-            //Means that the user was hovering over the element
-            if(xMatch && yMatch){
-              const { x, y, xMax, yMax, halfX, halfY } = matchMeta
-              const isBeforeXHalf = x <= clientX && halfX > clientX
-              const isBeforeYHalf = y <= clientY && halfY > clientY
-              const isAfterXHalf = halfX <= clientX && xMax > clientX
-              const isAfterYHalf = halfY <= clientY && yMax > clientY
-              //This means that there are more elements in the same ROW so the xCordinate should be checked for insertion data
-              if(isBeforeXHalf && isBeforeYHalf){
-                insertBefore = match.id
-                found = true
-              }
-              if(isAfterXHalf){
-                const nextElement = childElements[idx + 1]
-                if(nextElement){
-                  insertBefore = nextElement.id
+            if(!found){
+              const { matchMeta, matchMeta: { xMatch, yMatch } } = match
+              //Means that the user was hovering over the element
+              if(xMatch && yMatch){
+                const { x, y, xMax, yMax, halfX, halfY } = matchMeta
+                const isBeforeXHalf = x <= clientX && halfX > clientX
+                const isBeforeYHalf = y <= clientY && halfY > clientY
+                const isAfterXHalf = halfX <= clientX && xMax > clientX
+                const isAfterYHalf = halfY <= clientY && yMax > clientY
+                //This means that there are more elements in the same ROW so the xCordinate should be checked for insertion data
+                if(isBeforeXHalf && isBeforeYHalf && !found){
+                  insertBefore = match.id
                   found = true
-                }else{
-                  pushToParent = true
-                  found = true
+                }
+                if((isAfterXHalf || isAfterYHalf) && !found){
+                  const nextElement = childElements[idx + 1]
+                  if(nextElement){
+                    insertBefore = nextElement.id
+                    found = true
+                  }else{
+                    pushToParent = true
+                    found = true
+                  }
                 }
               }
             }
@@ -918,82 +928,87 @@ class AppStore {
   }
 
   insertComponent(e){
-    if(this.activeDrag){
-      const { clientX, clientY } = e
-      const activeArea = this.pages[0].elements
-      const editor = document.querySelector('.editor')
-      if(!activeArea || !editor){
-        return
-      }
-      const { x: editorX, y: editorY } = editor.getBoundingClientRect()
-      const page = this.getActivePage()
-      if(this.activeDrag.type === 'section'){
-        this.activeDrag.style.height = 'fit-content'
-      }
-      let targetParent = null
-      let insertBeforeID = null
-      let pushToParentElem = false
-      let insertAsFirst = false
-      let spliceIndex = null
-      if(this.dragTarget){
-        //Find the targetelement to append to
-        const { 
-          insertBefore, 
-          pushToParent, 
-          parent,
-          insertAsFirstChild, 
-          found
-         } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
-        if(found){
-          insertBeforeID = insertBefore
-          insertAsFirst = insertAsFirstChild
-          pushToParentElem = pushToParent
+    try{
+
+      if(this.activeDrag){
+        const { clientX, clientY } = e
+        const activeArea = this.pages[0].elements
+        const editor = document.querySelector('.editor')
+        if(!activeArea || !editor){
+          return
         }
-        targetParent = parent
-        this.dragTarget = null
-      }
-      const comp = {
-        ...this.activeDrag,
-        cssOpen: false,
-        locked: false,
-        classNameOpen: false,
-        id: uuidv4()
-      }
-      if(comp.children && comp.children.length){
-        this.assignChildIds(comp.children)
-      }
-      //If the parent element is a section
-      if(this.parentElements.includes(this.activeDrag.type)){
-        comp.position.xPos -= editorX
-        comp.position.yPos -= editorY
-        page.elements.splice(this.dragIndex, 0, comp)
-        this.setSelectedElement(comp.id, null)
-        this.dragIndex = 0
-        this.elementLen += 1
-      }else{
-        //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
-        if(targetParent){
-          if(insertBeforeID){
-            const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)
-            targetParent.children.splice(idx, 0, comp)
-            this.insertElementIntoIframe(comp, targetParent, insertBeforeID)
+        const { x: editorX, y: editorY } = editor.getBoundingClientRect()
+        const page = this.getActivePage()
+        if(this.activeDrag.type === 'section'){
+          this.activeDrag.style.height = 'fit-content'
+        }
+        let targetParent = null
+        let insertBeforeID = null
+        let pushToParentElem = false
+        let insertAsFirst = false
+        let spliceIndex = null
+        if(this.dragTarget){
+          //Find the targetelement to append to
+          const { 
+            insertBefore, 
+            pushToParent, 
+            parent,
+            insertAsFirstChild, 
+            found
+           } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
+          if(found){
+            insertBeforeID = insertBefore
+            insertAsFirst = insertAsFirstChild
+            pushToParentElem = pushToParent
           }
-          if(!insertBeforeID && pushToParentElem){
-            this.insertElementIntoIframe(comp, targetParent, null, true)
-            targetParent.children.push(comp)
-          }
-          if(!pushToParentElem && insertAsFirst){
-            targetParent.children.splice(-1, 0, comp)
-            this.insertElementIntoIframe(comp, targetParent, null, false, true)
+          targetParent = parent
+          this.dragTarget = null
+        }
+        const comp = {
+          ...this.activeDrag,
+          cssOpen: false,
+          locked: false,
+          classNameOpen: false,
+          id: uuidv4()
+        }
+        if(comp.children && comp.children.length){
+          this.assignChildIds(comp.children)
+        }
+        //If the parent element is a section
+        if(this.parentElements.includes(this.activeDrag.type)){
+          comp.position.xPos -= editorX
+          comp.position.yPos -= editorY
+          page.elements.splice(this.dragIndex, 0, comp)
+          this.setSelectedElement(comp.id, null)
+          this.dragIndex = 0
+          this.elementLen += 1
+        }else{
+          //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
+          if(targetParent){
+            if(insertBeforeID){
+              const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)
+              targetParent.children.splice(idx, 0, comp)
+              this.insertElementIntoIframe(comp, targetParent, insertBeforeID)
+            }
+            if(!insertBeforeID && pushToParentElem){
+              this.insertElementIntoIframe(comp, targetParent, null, true)
+              targetParent.children.push(comp)
+            }
+            if(!pushToParentElem && insertAsFirst){
+              targetParent.children.splice(-1, 0, comp)
+              this.insertElementIntoIframe(comp, targetParent, null, false, true)
+            }
           }
         }
+        setTimeout(() => {
+          this.recalculateSizes(this.pages[0].elements)
+          //this.setElementInitStyle(this.pages[0].elements)
+          this.setIframeHeight()
+          this.sizeCalcChange = !this.sizeCalcChange
+        }, 200)
       }
-      setTimeout(() => {
-        this.recalculateSizes(this.pages[0].elements)
-        //this.setElementInitStyle(this.pages[0].elements)
-        this.setIframeHeight()
-        this.sizeCalcChange = !this.sizeCalcChange
-      }, 200)
+    }catch(err){
+      this.activeDrag = null
     }
   }
 

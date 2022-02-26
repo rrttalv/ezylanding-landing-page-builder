@@ -30,6 +30,7 @@
         fill: #eeeeee;
         width: 25px;
         margin-left: auto;
+        margin-top: 1px;
         height: 25px;
       }
     }
@@ -41,11 +42,15 @@
         span {
           font-size: 14px;
           color: #ffffff66;
-          margin-left: 5px;
+          padding-left: 4px;
         }
         &:hover {
           cursor: pointer;
         }
+      }
+      &-item.is-child {
+        border-left: 0.5px solid rgba(255,255,255,0.25);
+        
       }
       &-item.selected > .elem-meta {
         span {
