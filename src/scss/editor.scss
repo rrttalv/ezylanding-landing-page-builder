@@ -50,7 +50,11 @@
       }
       &-item.is-child {
         border-left: 0.5px solid rgba(255,255,255,0.25);
-        
+      }
+      &-item {
+        .elem-options {
+          display: none;
+        }
       }
       &-item.selected > .elem-meta {
         span {
@@ -61,6 +65,19 @@
         }
         .elem-class {
           color: #68b4f2;
+        }
+        .elem-options {
+          display: inline-flex;
+          float: right;
+          button {
+            all: unset;
+            margin-right: 5px;
+            color: #fff;
+            font-size: 14px;
+          }
+          button.active {
+            color: #fecb85;
+          }
         }
       }
     }

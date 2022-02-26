@@ -62,6 +62,15 @@ export const BottomToolbar = observer((props) => {
     return level
   }
 
+  const toggleInlineCSSTab = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if(app.selectedElement !== id){
+      app.setSelectedElement(id)
+    }
+    app.toggleCSSTab(id)
+  }
+
   const getElems = (element, level = 0) => {
     return (
       <div 
@@ -79,6 +88,27 @@ export const BottomToolbar = observer((props) => {
           {
             element.className ? <span className='elem-class'>.{element.className}</span> : undefined
           }
+          <div className='elem-options'>
+            {
+              //Show SRC button
+              element.tagName === 'img' ? undefined : undefined
+            }
+            <div className='elem-options_css'>
+              <button
+                className={element.cssOpen ? 'active' : ''}
+                onClick={e => toggleInlineCSSTab(e, element.id)}
+              >
+                CSS
+              </button>
+            </div>
+            <div className='elem-options_custom-class'>
+              <button
+                className={element.editingClass ? 'active' : ''}
+              >
+                Class
+              </button>
+            </div>
+          </div>
         </div>
         {
           element.children && element.children.length ? (

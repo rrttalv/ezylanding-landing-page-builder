@@ -78,6 +78,7 @@ export const flexRow2Col = {
                   className: 'form-group',
                   style: {
                     position: 'relative',
+                    marginTop: '3rem'
                   },
                   children: [
                     {
@@ -98,10 +99,12 @@ export const flexRow2Col = {
                       tagName: 'input',
                       className: 'form-control',
                       style: {
-                        'borderRadius': '4px',
+                        borderRadius: '4px',
                         width: '250px',
+                        maxWidth: '400px',
                         display: 'inline-block',
-                        border: '1px solid rgba(0,0,0,0.05)'
+                        border: `1px solid rgba(0,0,0,0.1)`,
+                        boxShadow: `0px 3px 8px 1px rgba(0 0 0 / 8%)`,
                       }
                     },
                     {
@@ -111,12 +114,10 @@ export const flexRow2Col = {
                       content: 'Sign up!',
                       style: {
                         'borderRadius': '4px',
-                        width: '100px',
-                        marginLeft: '5%',
+                        marginLeft: '0.5rem',
                         display: 'inline-block',
-                        background: '#3E41DC',
+                        background: '#6610f2',
                         color: '#fff',
-                        height: '35px',
                         fontSize: '14px',
                         border: '1px solid rgba(0,0,0,0.175)'
                       }

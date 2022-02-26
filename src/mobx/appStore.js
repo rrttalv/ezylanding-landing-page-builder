@@ -215,12 +215,16 @@ class AppStore {
     }
     setTimeout(() => {
       this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
     }, 100)
   }
 
   setSelectedElement(id, parentId){
     this.selectedElement = id
     this.selectedParentElement = parentId
+    if(this.cssElement && id && this.cssElement.id !== id){
+      this.toggleCSSTab(this.cssElement.id)
+    }
   }
 
   updateInsideFrame(element, propName, propValue, style = false){
@@ -517,8 +521,22 @@ class AppStore {
     if(target){
       const newVal = !target.cssOpen
       this.editingCSS = newVal
-      this.cssElement = target
+      if(newVal){
+        this.cssElement = target
+      }else{
+        this.cssElement = null
+      }
       target.cssOpen = newVal
+    }
+  }
+
+  toggleClassTab(id){
+    const target = this.findElement(id)
+    if(target){
+      const newVal = !target.editingClass
+      this.editingClass = newVal
+      this.classElement = target
+      target.editingClass = newVal
     }
   }
 
@@ -976,8 +994,8 @@ class AppStore {
         const comp = {
           ...this.activeDrag,
           cssOpen: false,
+          editingClass: false,
           locked: false,
-          classNameOpen: false,
           id: uuidv4()
         }
         if(comp.children && comp.children.length){
