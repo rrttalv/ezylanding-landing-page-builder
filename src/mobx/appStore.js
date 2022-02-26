@@ -420,6 +420,11 @@ class AppStore {
   //Id is text ID, parentID is the parent DIV that surrounds the text
   setActiveTextEditor(id, parentId){
     const frame = document.querySelector('iframe').contentWindow.document
+    if(id && id !== this.activeTextEditor && this.activeTextEditor !== null){
+      const el = frame.querySelector(`[data-uuid="${this.activeTextEditor}"]`)
+      const current = this.findElement(this.activeTextEditor)
+      el.style.opacity = current.style.opacity ? current.style.opacity : '1'
+    }
     const el = frame.querySelector(`[data-uuid="${id ? id : this.activeTextEditor}"]`)
     if(el){
       if(id){
@@ -721,11 +726,15 @@ class AppStore {
       }
       parent = element
       if(element.children && element.children.length === 0){
+        pushToParent = true
+        insertAsFirstChild = true
+        found = true
         return {
           insertBefore,
-          pushToParent: true,
-          insertAsFirstChild: false,
-          found: false
+          parent: element,
+          pushToParent,
+          insertAsFirstChild,
+          found
         }
       }
       if(element.children && element.children.length > 0){
@@ -984,6 +993,7 @@ class AppStore {
           this.elementLen += 1
         }else{
           //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
+          console.log(targetParent, insertBeforeID, pushToParentElem)
           if(targetParent){
             if(insertBeforeID){
               const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)

@@ -255,6 +255,9 @@
 .component-slide {
   &_wrapper {
     margin-top: 2rem;
+    &:last-child {
+      margin-bottom: 5rem;
+    }
   }
   &_list {
     padding: 10px 5px;

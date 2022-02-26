@@ -60,7 +60,7 @@ export const SlateEditor = observer((props) => {
       onPointerDown={e => handleClick(e)}
       onClick={e => handleClick(e)}
       onDoubleClick={e => app.setActiveTextEditor(null, null)}
-      className={`text-editor-wrapper${props.elem.className ? ' ' + props.elem.className : ''}`}
+      className={`text-editor-wrapper`}
     >
       <Slate editor={editor} value={value} onChange={value => handleChange(value)}>
         <Editable placeholder="Enter your text" />
