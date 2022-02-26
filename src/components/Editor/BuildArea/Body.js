@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
-import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
 import { ReactComponent as ColumnIcon } from '../../../svg/column.svg'
 import { SlateEditor } from './ElementWrappers/SlateEditor'
 import { CSSTab } from './CSSTab'
@@ -160,22 +159,6 @@ export const Body = observer((props) => {
             />
           </div>
         </div>
-        {
-          !indicatorOnly ? (
-            <div className='prop-menu'>
-              <div 
-                className='prop-menu__css'
-                onClick={e => toggleCSSTab(e, elem.id, sectionId)}
-              >
-                <CSSIcon />
-              </div>
-              <div className='prop-menu__lock'>
-              </div>
-            </div>
-          )
-          :
-          undefined
-        }
       </>
     )
   }
@@ -304,30 +287,10 @@ export const Body = observer((props) => {
                     zIndex: 0,
                   }}
                 >
-                  <div className='section-options'>
-                    <div className='section-options_btn'>
-                      <CSSIcon />
-                    </div>
-                  </div>
                 </div>
                   {mapAllElements(elem.children, elem.id).map((child, idx) => (
                     getChildElemBorder(child, idx, elem.id)
                   ))}
-                  {
-                    isSelected ? (
-                      <div className='prop-menu section-prop-menu'>
-                        <div 
-                          className='prop-menu__css'
-                          onClick={e => toggleCSSTab(e, id, null, true)}
-                        >
-                        </div>
-                        <div className='prop-menu__lock'>
-                        </div>
-                      </div>
-                    )
-                    :
-                    undefined
-                  }
                 {
                   activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                     <div className='build-area_insert-preview insert-below' />

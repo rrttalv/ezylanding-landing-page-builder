@@ -5,7 +5,8 @@
   .layer-toolbar {
     position: fixed;
     bottom: 0;
-    right: 0;
+    right: 10px;
+    z-index: 100;
     width: 300px;
     transition: all 0.2s;
     &_header {
@@ -49,6 +50,12 @@
       &-item.selected > .elem-meta {
         span {
           color: #fff;
+        }
+        .elem-tag {
+          color: rgb(215, 186, 125);
+        }
+        .elem-class {
+          color: #68b4f2;
         }
       }
     }
@@ -386,6 +393,9 @@
 
 .layer-toolbar-list.visible {
   z-index: 1000;
+  padding-top: 2.5px;
+  max-height: 400px;
+  overflow-y: auto;
   display: block;
 }
 
@@ -394,12 +404,12 @@
   z-index: 0;
 }
 
-.layer-toolbar-list.animating-open {
+.layer-toolbar.animating-open {
   z-index: 0;
   animation: openToolbar 0.2s ease-out forwards;
 }
 
-.layer-toolbar-list.animating-close {
+.layer-toolbar.animating-close {
   animation: closeToolbar 0.2s ease-out forwards;
   z-index: 0;
 }
@@ -407,6 +417,8 @@
 @keyframes openToolbar {
   0% { transform: translateY(100%); }
   100% { 
+    max-height: 400px;
+    z-index: 1000;
     transform: translateY(0);   
     display: block;
   }
@@ -415,6 +427,8 @@
 @keyframes closeToolbar {
   0% { transform: translateY(0); }
   100% { 
-    transform: translateY(100%);
+    max-height: 400px;
+    z-index: 1000;
+    transform: translateY(370px);
   }
 }

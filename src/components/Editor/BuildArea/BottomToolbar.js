@@ -7,6 +7,7 @@ import { ReactComponent as Arrows } from '../../../svg/multi-arrow.svg'
 export const BottomToolbar = observer((props) => {
   
   const [wrapperClass, setClass] = useState('hidden')
+  const [toolbarClass, setToolbarClass] = useState('default')
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -25,14 +26,16 @@ export const BottomToolbar = observer((props) => {
   const prevItem = usePrevious(app.layersOpen)
 
   const animate = (show = false) => {
-    setClass(`animating-${show ? 'open' : 'close'}`)
+    setToolbarClass(`animating-${show ? 'open' : 'close'}`)
     if(show){
+      setClass('visible')
       setTimeout(() => {
-        setClass('visible')
+        setToolbarClass('visible-child')
       }, 400)
     }else{
       setTimeout(() => {
         setClass('hidden')
+        setToolbarClass('hidden-child')
       }, 400)
     }
   }
@@ -70,7 +73,7 @@ export const BottomToolbar = observer((props) => {
           className='elem-meta'
           onClick={e => selectElement(element.id)}
         >
-          <span className='elem-tag'>{element.tagName}</span>
+          <span className='elem-tag'>{'<'}{element.tagName}{'>'}</span>
           {
             element.className ? <span className='elem-class'>.{element.className}</span> : undefined
           }
@@ -100,7 +103,7 @@ export const BottomToolbar = observer((props) => {
   }
 
   return (
-    <div className='layer-toolbar'>
+    <div className={`layer-toolbar ${toolbarClass}`}>
       <div 
         className='layer-toolbar_header'
         onClick={e => handleToggle(e)}
