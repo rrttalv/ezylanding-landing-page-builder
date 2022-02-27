@@ -1,3 +1,4 @@
+import { singleCard } from "./cards"
 import { flexRow2Col } from "./sections"
 
 const constants = {
@@ -42,78 +43,7 @@ const constants = {
     title: 'Sections',
     elements: [
       {...flexRow2Col},
-      {
-        title: '3 Columns',
-        type: 'section',
-        tagName: 'section',
-        partitions: 3,
-        thumb: '/images/sections/flex-row-3.svg',
-        style: {
-          display: 'flex',
-          'flex-direction': 'row',
-          width: '80%',
-          margin: '0 auto',
-          position: 'relative',
-          height: '300px'
-        },
-        
-        children: [
-          {
-            type: 'div',
-            className: 'col-4',
-            tagName: 'div',
-            style: {
-              position: 'relative',
-              width: '33.3%',
-              height: '100%'
-            },
-            children: []
-          },
-          {
-            type: 'div',
-            className: 'col-4',
-            tagName: 'div',
-            style: {
-              position: 'relative',
-              width: '33.3%',
-              height: '100%'
-            },
-            children: []
-          },
-          {
-            type: 'div',
-            className: 'col-4',
-            tagName: 'div',
-            style: {
-              position: 'relative',
-              width: '33.3%',
-              height: '100%'
-            },
-            children: []
-          }
-        ]
-      },
-      {
-        title: '4 Columns',
-        type: 'section',
-        tagName: 'section',
-        partitions: 4,
-        thumb: '/images/sections/flex-row-4.svg',
-        displayStyle: {
-          wrapper: {},
-          image: {
-            padding: '0 10px'
-          }
-        },
-        style: {
-          display: 'flex',
-          'flex-direction': 'row',
-          width: '80%',
-          margin: '0 auto',
-          position: 'relative',
-          height: '300px'
-        },
-      }
+      {...singleCard},
     ]
   },
   inputs: {
@@ -123,6 +53,11 @@ const constants = {
       {
         title: 'Text input',
         type: 'input',
+        dragProps: {
+          rawWidth: 300,
+          rawHeight: 100,
+          width: '80%',
+        },
         inputType: 'textarea',
         tagName: 'textarea',
         className: 'form-control',
@@ -196,6 +131,11 @@ const constants = {
         tagName: 'h1',
         content: 'H1 Heading',
         thumb: '/images/text/Heading-1.svg',
+        dragProps: {
+          rawWidth: 300,
+          rawHeight: 50,
+          width: '100%',
+        },
         displayStyle: {
           wrapper: {
             width: '100%',
@@ -220,6 +160,11 @@ const constants = {
         tagName: 'h2',
         content: 'H2 Heading',
         thumb: '/images/text/Heading-2.svg',
+        dragProps: {
+          rawWidth: 300,
+          rawHeight: 50,
+          width: '100%',
+        },
         displayStyle: {
           wrapper: {
             width: '100%',
@@ -241,6 +186,11 @@ const constants = {
         title: 'Semibold H3 Heading',
         type: 'text',
         tagName: 'h3',
+        dragProps: {
+          rawWidth: 300,
+          rawHeight: 50,
+          width: '100%',
+        },
         content: 'H3 Heading',
         thumb: '/images/text/Heading-3.svg',
         displayStyle: {

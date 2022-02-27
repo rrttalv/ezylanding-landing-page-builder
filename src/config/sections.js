@@ -5,6 +5,12 @@ export const flexRow2Col = {
   tagName: 'section',
   partitions: 2,
   thumb: '/images/sections/flex-row-2.svg',
+  dragProps: {
+    rawWidth: 500,
+    rawHeight: 300,
+    width: '100%',
+    height: '300px'
+  },
   style: {
     width: '100%',
     margin: '0 auto',

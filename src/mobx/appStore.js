@@ -12,6 +12,12 @@ const initSectionProps = {
   sectionId: null
 }
 
+const initDragMeta = {
+  insertAfter: null,
+  insertBefore: null,
+  parent: null
+}
+
 
 class AppStore {
   constructor() {
@@ -25,6 +31,12 @@ class AppStore {
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
+
+  dragMetaData = {
+    insertAfter: null,
+    insertBefore: null,
+    parent: null
+  }
 
   cssTabs = [
     {
@@ -364,12 +376,19 @@ class AppStore {
     }
     this.mouseStartX = clientX
     this.mouseStartY = clientY
-    if(this.parentElements.includes(this.activeDrag.type)){
-      this.checkDragIndex(rawX, rawY)
-    }
-    if(!this.parentElements.includes(this.activeDrag.type)){
+    //The component has an active insert target parent so we should display a box
+    const isSection = this.parentElements.includes(this.activeDrag.type)
+    if(!isSection){
+      this.dragMetaData = {
+        ...initDragMeta
+      }
       const elems = document.elementsFromPoint(rawX, rawY)
       let target = null
+      let parent = null
+      let insertBefore = false
+      let insertAfter = false
+      let found = false
+      let selfTriggered = false
       elems.forEach((element, idx) => {
         if(!target){
           const isStrClass = typeof(element.className) === 'string'
@@ -378,17 +397,22 @@ class AppStore {
           }
           const isSelf = element.className === 'floating-element'
           if(isSelf){
+            selfTriggered = true
             return
           }
-          if(idx === 0 || idx === 1){
-            const id = element.getAttribute('data-uuid')
-            if(id){
-              target = id
+          if(!selfTriggered){
+            if(idx === 0){
+              const id = element.getAttribute('data-uuid')
+              if(id){
+                target = id
+              }
             }
           }
         }
       })
       this.dragTarget = target
+    }else{
+      this.checkDragIndex(rawX, rawY)
     }
   }
 
@@ -415,6 +439,7 @@ class AppStore {
 
   convertPrecentToNumber(val){
     if(!val) return false
+    if(!val.includes('%')) return false
     if(val.includes('%')){
       return Number(val.replace('%', ''))
     }
@@ -809,8 +834,6 @@ class AppStore {
 
         })
 
-        console.log(matches)
-
         if(matches.length > 0){
           const xMatches = matches.filter(match => match.matchMeta.xMatch)
           const yMatches = matches.filter(match => match.matchMeta.yMatch)
@@ -899,26 +922,37 @@ class AppStore {
     }
   }
 
+  compileDomElement(doc, comp){
+    const domElement = doc.createElement(comp.tagName)
+    if(comp.src){
+      domElement.src = comp.src
+    }
+    if(comp.content){
+      domElement.textContent = comp.content
+    }
+    if(comp.inputType){
+      domElement.type = comp.inputType
+    }
+    domElement.className = comp.className
+    domElement.setAttribute('data-uuid', comp.id)
+    Object.keys(comp.style).forEach(key => {
+      domElement.style[key] = comp.style[key]
+    })
+    if(comp.children && comp.children.length){
+      comp.children.forEach(child => {
+        const domChild = this.compileDomElement(doc, child)
+        domElement.appendChild(domChild)
+      })
+    }
+    return domElement
+  }
+
   insertElementIntoIframe(comp, targetElement, insertBefore = null, push = false, insertAsFirst = false){
     const frame = document.querySelector('iframe')
     if(frame){
       const doc = frame.contentWindow.document
       const parent = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
-      const domElement = doc.createElement(comp.tagName)
-      if(comp.src){
-        domElement.src = comp.src
-      }
-      if(comp.content){
-        domElement.textContent = comp.content
-      }
-      if(comp.inputType){
-        domElement.type = comp.inputType
-      }
-      domElement.className = comp.className
-      domElement.setAttribute('data-uuid', comp.id)
-      Object.keys(comp.style).forEach(key => {
-        domElement.style[key] = comp.style[key]
-      })
+      const domElement = this.compileDomElement(doc, comp)
       if(insertBefore){
         const child = doc.querySelector(`[data-uuid="${insertBefore}"]`)
         if(child){
@@ -949,14 +983,13 @@ class AppStore {
   setIframeHeight(){
     const frame = document.querySelector('iframe')
     if(frame){
-      this.pages[0].elementsHeight = frame.contentWindow.outerHeight
+      this.pages[0].elementsHeight = frame.contentWindow.innerHeight
       this.frameWidth = frame.contentWindow.innerWidth
     }
   }
 
   insertComponent(e){
     try{
-
       if(this.activeDrag){
         const { clientX, clientY } = e
         const activeArea = this.pages[0].elements
@@ -1002,7 +1035,7 @@ class AppStore {
           this.assignChildIds(comp.children)
         }
         //If the parent element is a section
-        if(this.parentElements.includes(this.activeDrag.type)){
+        if(this.parentElements.includes(this.activeDrag.type) && !targetParent){
           comp.position.xPos -= editorX
           comp.position.yPos -= editorY
           page.elements.splice(this.dragIndex, 0, comp)
@@ -1011,7 +1044,7 @@ class AppStore {
           this.elementLen += 1
         }else{
           //The element is not a section or header element and should be appended to the IFRAME manually using insertbefore
-          console.log(targetParent, insertBeforeID, pushToParentElem)
+          //If there is no targetparent then the item should be inserted between sections if there are any
           if(targetParent){
             if(insertBeforeID){
               const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)
@@ -1065,41 +1098,31 @@ class AppStore {
       this.activeDrag = null
       this.unsetSelectedElement()
       const copy = {...item}
-      let width = item.style.width
-      let height = item.style.height
-      let pxWidth = this.convertPixelsToNumber(width)
-      const precentWidth = this.convertPrecentToNumber(width)
-      let pxHeight = this.convertPixelsToNumber(height)
-      let xOffset = 0
-      let yOffset = 0
+      const { rawWidth, rawHeight, width: cssWidth } = copy.dragProps
+      let width = rawWidth
+      let height = rawHeight
+      let xOffset = rawWidth / 2
+      let yOffset = rawHeight / 2
+      const precentWidth = this.convertPrecentToNumber(cssWidth)
       if(precentWidth){
         const elem = document.querySelector('.build-area_page')
         const { width: pageWidth } = elem.getBoundingClientRect()
         width = pageWidth * (precentWidth / 100)
         xOffset = width / 2
       }
-      if(pxWidth){
-        width = pxWidth
-        xOffset = pxWidth / 2
-      }
-      if(pxHeight){
-        yOffset = pxHeight / 2
-      }
       //NEED TO FIX THIS FOR ITEMS THAT DONT HAVE A WIDTH OR HEIGHT!!
-      if(!item.style.height || !item.style.width){
+      if(!item.type === 'text'){
         const { clientWidth, clientHeight } = this.getItemSize(item)
         yOffset = clientHeight / 2
         xOffset = clientWidth / 2
         width = clientWidth
         height = clientHeight
-        pxWidth = clientWidth
-        pxHeight = clientHeight
       }
       copy.position = {
         xPos: x - xOffset,
         yPos: y - yOffset,
         width: width,
-        height: pxHeight
+        height: height
       }
       this.activeDrag = copy
       this.mouseStartX = x

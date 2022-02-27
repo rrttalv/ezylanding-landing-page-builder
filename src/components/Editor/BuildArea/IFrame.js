@@ -79,7 +79,7 @@ export const IFrame = observer((props) => {
         return getHeader(elem)
       case 'section':
         return (
-            <div 
+            <section 
               key={elem.id}
               data-uuid={elem.id}
               className={elem.className} 
@@ -88,7 +88,7 @@ export const IFrame = observer((props) => {
               {
                 elem.children ? elem.children.map(child => getCorrectElement(child, true)) : undefined
               }
-            </div>
+            </section>
           )
       case 'div':
         return (
@@ -142,11 +142,9 @@ export const IFrame = observer((props) => {
     } = page
     const container = (
       <body>
-        <div id="EMBED-CONTAINER">
-          <div id="PAGE-CONTAINER">
-            <div id="PAGE-BODY" className='PAGE-BODY' style={{ width: '100%', height: page.elements.length === 0 ? elementsHeight + 'px' : 'fit-content' }}>
-              {elements.map(elem => getCorrectElement(elem))}
-            </div>
+        <div id="root">
+          <div id="PAGE-BODY" className='PAGE-BODY' style={{ width: '100%', height: '100%' }}>
+            {elements.map(elem => getCorrectElement(elem))}
           </div>
         </div>
       </body>

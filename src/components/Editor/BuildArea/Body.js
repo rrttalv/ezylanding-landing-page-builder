@@ -214,7 +214,7 @@ export const Body = observer((props) => {
               )
               :
               undefined
-          }
+            }
         </div>
       case 'button':
       case 'text':
@@ -268,13 +268,6 @@ export const Body = observer((props) => {
               <React.Fragment 
                 key={elem.id}
               >
-                {
-                  idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
-                    <div className='build-area_insert-preview insert-above' />
-                  )
-                  :
-                  undefined
-                }
                 <div 
                   onClick={e => selectComponent(e, id, null, true)}
                   data-uuid={elem.id}
@@ -287,17 +280,24 @@ export const Body = observer((props) => {
                     zIndex: 0,
                   }}
                 >
+                  {
+                    idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                      <div className='build-area_insert-preview insert-above' />
+                    )
+                    :
+                    undefined
+                  }
+                  {
+                    activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                      <div className='build-area_insert-preview insert-below' />
+                    )
+                    :
+                    undefined
+                  }
                 </div>
                   {mapAllElements(elem.children, elem.id).map((child, idx) => (
                     getChildElemBorder(child, idx, elem.id)
                   ))}
-                {
-                  activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
-                    <div className='build-area_insert-preview insert-below' />
-                  )
-                  :
-                  undefined
-                }
               </React.Fragment>
             )
           })

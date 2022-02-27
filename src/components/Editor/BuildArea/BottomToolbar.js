@@ -84,7 +84,7 @@ export const BottomToolbar = observer((props) => {
           className='elem-meta'
           onClick={e => selectElement(element.id)}
         >
-          <span className='elem-tag'>{'<'}{element.tagName}{'>'}</span>
+          <span className='elem-tag'>{element.tagName}</span>
           {
             element.className ? <span className='elem-class'>.{element.className}</span> : undefined
           }

@@ -39,17 +39,21 @@
       color: #fff;
       &-item {
         padding: 2.5px;
+        padding-bottom: 3.5px;
         span {
           font-size: 14px;
           color: #ffffff66;
           padding-left: 4px;
+        }
+        .elem-tag {
+          font-size: 15px;
         }
         &:hover {
           cursor: pointer;
         }
       }
       &-item.is-child {
-        border-left: 0.5px solid rgba(255,255,255,0.25);
+        border-left: 0.5px solid rgba(255,255,255,0.2);
       }
       &-item {
         .elem-options {
@@ -61,7 +65,12 @@
           color: #fff;
         }
         .elem-tag {
-          color: rgb(215, 186, 125);
+          color: #ff5274;
+          font-size: 15px;
+          font-weight: 600;
+        }
+        .elem-class {
+          color: #68b4f2;
         }
         .elem-class {
           color: #68b4f2;
@@ -137,6 +146,9 @@
       border-radius: 8px;
       background: #0d6efd33;
       margin: 5px auto;
+    }
+    &_insert-preview.insert-below {
+      bottom: 0;
     }
     &_frame {
       width: 100%;
