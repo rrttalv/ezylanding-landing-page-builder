@@ -123,6 +123,11 @@ export const IFrame = observer((props) => {
     }
   }, [])
 
+  
+  const handleIframeLoad = () => {
+    app.handleWindowResize()
+  }
+
   const parseElements = () => {
     const page = app.getActivePage()
     let pageStyle = ''
@@ -203,6 +208,7 @@ export const IFrame = observer((props) => {
   return (
     blobUrl ? (
       <iframe 
+        onLoad={e => handleIframeLoad()}
         style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: fh, zIndex: -2 }} 
         frameborder="0" 
         scrolling="auto"
