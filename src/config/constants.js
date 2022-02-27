@@ -1,4 +1,4 @@
-import { singleCard } from "./cards"
+import { cardSection, singleCard } from "./cards"
 import { flexRow2Col } from "./sections"
 
 const constants = {
@@ -44,6 +44,7 @@ const constants = {
     elements: [
       {...flexRow2Col},
       {...singleCard},
+      {...cardSection},
     ]
   },
   inputs: {

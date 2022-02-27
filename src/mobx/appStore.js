@@ -384,10 +384,6 @@ class AppStore {
       }
       const elems = document.elementsFromPoint(rawX, rawY)
       let target = null
-      let parent = null
-      let insertBefore = false
-      let insertAfter = false
-      let found = false
       let selfTriggered = false
       elems.forEach((element, idx) => {
         if(!target){
@@ -397,16 +393,11 @@ class AppStore {
           }
           const isSelf = element.className === 'floating-element'
           if(isSelf){
-            selfTriggered = true
             return
           }
-          if(!selfTriggered){
-            if(idx === 0){
-              const id = element.getAttribute('data-uuid')
-              if(id){
-                target = id
-              }
-            }
+          const id = element.getAttribute('data-uuid')
+          if(id){
+            target = id
           }
         }
       })
@@ -1016,6 +1007,7 @@ class AppStore {
             insertAsFirstChild, 
             found
            } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
+           console.log(parent)
           if(found){
             insertBeforeID = insertBefore
             insertAsFirst = insertAsFirstChild

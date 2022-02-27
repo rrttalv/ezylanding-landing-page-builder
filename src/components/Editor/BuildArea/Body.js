@@ -264,6 +264,14 @@ export const Body = observer((props) => {
               width: position.width,
               height: position.height,
             }
+            let className = `section-component`
+            if(isSelected){
+              className += ' active-component'
+            }
+            const isDragTarget = app.dragTarget === id
+            if(isDragTarget){
+              className += ' active-drag-target'
+            }
             return (
               <React.Fragment 
                 key={elem.id}
@@ -271,7 +279,7 @@ export const Body = observer((props) => {
                 <div 
                   onClick={e => selectComponent(e, id, null, true)}
                   data-uuid={elem.id}
-                  className={`section-component ${isSelected ? ' active-component' : ''} ${elem.className ? ' ' + elem.className : ''}`}
+                  className={className}
                   style={{
                     ...tempStyle,
                     position: 'absolute',
