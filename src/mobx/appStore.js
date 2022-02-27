@@ -105,6 +105,7 @@ class AppStore {
     tab.content = value
     tab.unsaved = false
     this.cssSaved = !this.cssSaved
+    this.handleWindowResize()
   }
 
   changeActiveTab(tabId){
@@ -168,14 +169,15 @@ class AppStore {
     }
     setTimeout(() => {
       this.recalculateSizes(this.pages[0].elements)
+      this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }, 1000)
   }
 
   handleWindowResize(){
     this.recalculateSizes(this.pages[0].elements)
-    this.sizeCalcChange = !this.sizeCalcChange
     this.setIframeHeight()
+    this.sizeCalcChange = !this.sizeCalcChange
   }
 
   findElement(id){
@@ -227,15 +229,58 @@ class AppStore {
     }
     setTimeout(() => {
       this.recalculateSizes(this.pages[0].elements)
+      this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
-    }, 100)
+    }, 300)
+  }
+
+  setElementToolbarMenu(id, status = false){
+    const element = this.findElement(id)
+    element.toolbarOptionsOpen = status
+  }
+
+  updateElementProp(id, propName, propValue){
+    const element = this.findElement(id)
+    const frame = document.querySelector('iframe')
+    if(element && frame){
+      const doc = frame.contentWindow.document
+      element[propName] = propValue
+      const domElement = doc.querySelector(`[data-uuid="${id}"]`)
+      if(propName === 'className'){
+        domElement.className = propValue
+      }
+      if(propName === 'domID'){
+        domElement.id = propValue
+      }
+    }
+    setTimeout(() => {
+      this.recalculateSizes(this.pages[0].elements)
+      this.sizeCalcChange = !this.sizeCalcChange
+      this.setIframeHeight()
+    }, 300)
   }
 
   setSelectedElement(id, parentId){
+    //if(this.selectedElement && id !== this.selectedElement){
+    //  this.setElementToolbarMenu(this.selectedElement, false)
+    //}
     this.selectedElement = id
     this.selectedParentElement = parentId
     if(this.cssElement && id && this.cssElement.id !== id){
       this.toggleCSSTab(this.cssElement.id)
+    }
+  }
+
+  toggleElementProp(id, propName, status){
+    const element = this.findElement(id)
+    if(propName === 'editingID' && status){
+      element.editingClass = false
+    }
+    if(propName === 'editingClass' && status){
+      element.editingID = false
+    }
+    if(element){
+      element[propName] = status
     }
   }
 
@@ -463,6 +508,7 @@ class AppStore {
     //this means the text editor is closed so all the heights of elements should be recalibrated
     if(!id){
       this.recalculateSizes(this.pages[0].elements)
+      this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }
   }
@@ -498,6 +544,7 @@ class AppStore {
         })
       }
       this.recalculateSizes(this.pages[0].elements)
+      this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }
   }
@@ -527,6 +574,7 @@ class AppStore {
       this.updateIframeAndComponentCSS(this.cssElement, cssMap)
     }catch(err){
       this.recalculateSizes(this.pages[0].elements)
+      this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
       return
     }
@@ -974,7 +1022,10 @@ class AppStore {
   setIframeHeight(){
     const frame = document.querySelector('iframe')
     if(frame){
-      this.pages[0].elementsHeight = frame.contentWindow.innerHeight
+      const { outerHeight } = frame.contentWindow
+      const { scrollHeight } = frame.contentWindow.document.body
+      let frameHeight = scrollHeight === 0 ? outerHeight : scrollHeight
+      this.pages[0].elementsHeight = frameHeight
       this.frameWidth = frame.contentWindow.innerWidth
     }
   }
@@ -1018,8 +1069,11 @@ class AppStore {
         }
         const comp = {
           ...this.activeDrag,
+          domID: this.activeDrag.domID ? this.activeDrag.domID : '',
           cssOpen: false,
           editingClass: false,
+          editingID: false,
+          toolbarOptionsOpen: false,
           locked: false,
           id: uuidv4()
         }
@@ -1055,10 +1109,9 @@ class AppStore {
         }
         setTimeout(() => {
           this.recalculateSizes(this.pages[0].elements)
-          //this.setElementInitStyle(this.pages[0].elements)
           this.setIframeHeight()
           this.sizeCalcChange = !this.sizeCalcChange
-        }, 200)
+        }, 300)
       }
     }catch(err){
       this.activeDrag = null

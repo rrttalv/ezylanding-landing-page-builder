@@ -4,7 +4,7 @@ import ReactDOMServer from 'react-dom/server'
 
 export const IFrame = observer((props) => {
 
-  const [frameHeight, setFrameHeight] = useState(0)
+  const [fh, setFh] = useState(0)
   const [blobUrl, setBlobUrl] = useState(null)
 
   const getStore = () => {
@@ -27,13 +27,6 @@ export const IFrame = observer((props) => {
   }
 
   const { store: { app, sidebar } } = getStore()
-
-  useEffect(() => {
-    const activePage = app.getActivePage()
-    if(activePage && activePage.elements.length === 0){
-      const {  elementsHeight } = activePage
-    }
-  }, [app.pages, app.activeDrag])
 
   useEffect(() => {
     parseElements()
@@ -203,10 +196,16 @@ export const IFrame = observer((props) => {
     setBlobUrl(url)
   }
 
+  useEffect(() => {
+    setFh(app.pages[0].elementsHeight)
+  }, [app.sizeCalcChange])
+
   return (
     blobUrl ? (
       <iframe 
-        style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: app.pages[0].elementsHeight, zIndex: -2 }} 
+        style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: fh, zIndex: -2 }} 
+        frameborder="0" 
+        scrolling="auto"
         src={blobUrl}
         id="HTML-FRAME" 
       />

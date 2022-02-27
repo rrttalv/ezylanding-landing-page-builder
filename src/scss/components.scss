@@ -1,0 +1,19 @@
+.prop-input {
+  display: flex;
+  flex-wrap: wrap;
+  &_label {
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  &_input {
+    display: inline-block;
+    width: 80%;
+  }
+  &_save {
+    width: 20px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

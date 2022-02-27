@@ -148,10 +148,14 @@ export const Body = observer((props) => {
     app.toggleCSSTab(id)
   }
 
-  const getHelpers = (elem, sectionId, indicatorOnly = false) => {
+  const getHelpers = (elem, sectionId, indicatorOnly = false, isSection = false) => {
+    let className = `element-tools`
+    if(isSection){
+      className += ' section-tools'
+    }
     return (
       <>
-        <div className='element-tools'>
+        <div className={className}>
           <div className='element-tools_toolbar'>
             <ElementIndicator 
               elementTag={elem.tagName}
@@ -298,6 +302,13 @@ export const Body = observer((props) => {
                   {
                     activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
                       <div className='build-area_insert-preview insert-below' />
+                    )
+                    :
+                    undefined
+                  }
+                  {
+                    isDragTarget || isSelected ? (
+                      getHelpers(elem, elem.id, true, true)
                     )
                     :
                     undefined
