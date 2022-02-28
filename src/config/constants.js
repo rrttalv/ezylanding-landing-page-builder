@@ -62,6 +62,7 @@ const constants = {
         inputType: 'textarea',
         tagName: 'textarea',
         className: 'form-control',
+        domID: '',
         labelData: {
           content: 'Text area label',
           style: {
@@ -91,6 +92,7 @@ const constants = {
       {
         title: 'Rounded button',
         type: 'button',
+        domID: '',
         className: 'btn',
         tagName: 'button',
         content: 'Click me!',
@@ -109,6 +111,8 @@ const constants = {
       {
         title: 'Box-shadow button',
         type: 'button',
+        className: 'btn',
+        domID: '',
         tagName: 'button',
         content: 'Click me!',
         thumb: '/images/inputs/box-shadow-btn.svg',
@@ -130,6 +134,8 @@ const constants = {
         title: 'Semibold H1 Heading',
         type: 'text',
         tagName: 'h1',
+        domID: '',
+        className: '',
         content: 'H1 Heading',
         thumb: '/images/text/Heading-1.svg',
         dragProps: {
@@ -159,6 +165,8 @@ const constants = {
         title: 'Semibold H2 Heading',
         type: 'text',
         tagName: 'h2',
+        domID: '',
+        className: '',
         content: 'H2 Heading',
         thumb: '/images/text/Heading-2.svg',
         dragProps: {
@@ -186,6 +194,8 @@ const constants = {
       {
         title: 'Semibold H3 Heading',
         type: 'text',
+        domID: '',
+        className: '',
         tagName: 'h3',
         dragProps: {
           rawWidth: 300,

@@ -3,6 +3,8 @@ export const flexRow2Col = {
   title: '2 Columns',
   type: 'section',
   tagName: 'section',
+  className: '',
+  domID: '',
   partitions: 2,
   thumb: '/images/sections/flex-row-2.svg',
   dragProps: {
@@ -16,10 +18,6 @@ export const flexRow2Col = {
     margin: '0 auto',
     padding: '25px',
     position: 'relative',
-    height: '300px',
-    backgroundImage: `url(http://localhost:3000/images/static/blob-bg-1.png)`,
-    backgroundSize: `cover`,
-    backgroundRepeat: `repeat-x`
   },
   children: [
     {
@@ -35,9 +33,6 @@ export const flexRow2Col = {
           className: 'col-md-6',
           style: {
             position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
           },
           children: [
             {

@@ -24,6 +24,7 @@ export const PropInput = (props) => {
         {props.label}
       </label>
       <input 
+        placeholder={props.placeholder || 'Set a custom prop...'}
         className='prop-input_input'
         type="text"
         onChange={e => setValue(e.target.value)}

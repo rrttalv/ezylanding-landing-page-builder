@@ -101,7 +101,7 @@
             font-size: 13px;
             color: #83a9f4;
             position: absolute;
-            left: 15px;
+            left: 17px;
             top: 15px;
             display: inline-block;
             width: fit-content;
@@ -116,10 +116,13 @@
             border-radius: 5px;
             display: inline-block;
             width: 210px;
-            border: 1px solid #496295;
+            border: 1px solid #060308;
             padding-top: 30px;
             padding-bottom: 6px;
             padding-left: 8px;
+            &:focus {
+              border-color: #496295;
+            }
           }
           button {
             all: unset;

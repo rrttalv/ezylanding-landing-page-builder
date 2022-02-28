@@ -20,35 +20,15 @@ export const CSSTab = observer((props) => {
   const { store: { app } } = getStore()
 
   useEffect(() => {
-    const element = document.querySelector(`[data-uuid="${props.id}"]`)
-    const editor = document.querySelector('.build-area_page')
-    if(element && editor){
-      const { x, y, width, height } = element.getBoundingClientRect()
-      const { x: offsetX, y: offsetY } = editor.getBoundingClientRect()
-      let xPos = {
-        left: (x - offsetX) + width + 10,
-      }
-      let yPos = {
-        top: (y - offsetY) - height
-      }
-      if(document.body.clientWidth < xPos.left + 450){
-        xPos = {
-          left: x - 450 - offsetX - width + 10
-        }
-      }
-      if(yPos.top <= 0){
-        yPos.top = 25
-      }
-      if(xPos.left <= 0){
-        xPos.left = 25
-      }
-      setPositionStyle({
-        ...xPos,
-        ...yPos,
-        display: 'initial'
-      })
-      app.setCSSTabPosition(xPos.left, yPos.top)
+    const tb = document.querySelector('.layer-toolbar')
+    let xPos = 0
+    let yPos = 0
+    if(tb){
+      const { x, y, height } = tb.getBoundingClientRect()
+      xPos = x - 610
+      yPos = y - (450 - height / 1.5)
     }
+    app.setCSSTabPosition(xPos, yPos)
     setStringStyle()
   }, [])
 

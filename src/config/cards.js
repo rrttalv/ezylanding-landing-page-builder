@@ -2,6 +2,7 @@ export const singleCard = {
   type: 'div',
   tagName: 'div',
   className: 'card',
+  domID: '',
   dragProps: {
     rawWidth: 288,
     rawHeight: 300,
@@ -73,6 +74,8 @@ export const cardSection = {
   type: 'section',
   tagName: 'section',
   thumb: '/images/sections/flex-row-2.svg',
+  className: 'card-section',
+  domID: '',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,

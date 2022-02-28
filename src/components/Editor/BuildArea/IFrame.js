@@ -210,7 +210,7 @@ export const IFrame = observer((props) => {
       <iframe 
         onLoad={e => handleIframeLoad()}
         style={{ width: '100%', zIndex: 0, pointerEvents: 'none', height: fh, zIndex: -2 }} 
-        frameborder="0" 
+        frameBorder="0" 
         scrolling="auto"
         src={blobUrl}
         id="HTML-FRAME" 

@@ -748,8 +748,19 @@ class AppStore {
     })
   }
 
+  getElementCSSString(element){
+    const keys = Object.keys(element.style)
+    let str = ''
+    keys.forEach((key, idx) => {
+      str += `  ${camelToDash(key)}:${element.style[key]}; ${idx === keys.length - 1 ? '' : '\n'}`
+    })
+    return str
+  }
+
   assignChildIds(children){
-    children.forEach(child => {
+    const [firstCSSTab] = this.cssTabs
+    const { content } = firstCSSTab
+    children.forEach((child) => {
       if(!child.id){
         child.id = uuidv4()
       }
@@ -974,9 +985,6 @@ class AppStore {
     }
     domElement.className = comp.className
     domElement.setAttribute('data-uuid', comp.id)
-    Object.keys(comp.style).forEach(key => {
-      domElement.style[key] = comp.style[key]
-    })
     if(comp.children && comp.children.length){
       comp.children.forEach(child => {
         const domChild = this.compileDomElement(doc, child)
@@ -1020,13 +1028,41 @@ class AppStore {
   }
 
   setIframeHeight(){
-    const frame = document.querySelector('iframe')
-    if(frame){
-      const { outerHeight } = frame.contentWindow
-      const { scrollHeight } = frame.contentWindow.document.body
-      let frameHeight = scrollHeight === 0 ? outerHeight : scrollHeight
-      this.pages[0].elementsHeight = frameHeight
-      this.frameWidth = frame.contentWindow.innerWidth
+    try{
+      const frame = document.querySelector('iframe')
+      if(frame){
+        const { outerHeight } = frame.contentWindow
+        const { scrollHeight } = frame.contentWindow.document.body
+        let frameHeight = scrollHeight === 0 ? outerHeight : scrollHeight
+        this.pages[0].elementsHeight = frameHeight
+        this.frameWidth = frame.contentWindow.innerWidth
+      }
+    }catch(err){
+      console.log(err)
+      return
+    }
+  }
+
+  assignStyles(comp, CSSValues){
+    let selectorPrefix = '.'
+    let selector = comp.className.split(' ').join('.')
+    if(!selector){
+      selectorPrefix = '#'
+      selector = comp.domID.split(' ').join('#')
+    }
+    if(!selector){
+      selectorPrefix = ''
+      selector = comp.tagName
+    }
+    if(!CSSValues.includes(selectorPrefix + selector)){
+      const CSS = this.getElementCSSString(comp)
+      this.cssTabs[0].content += `\n${selectorPrefix}${selector} { \n${CSS}\n} \n`
+      comp.style = {}
+    }
+    if(comp.children && comp.children.length){
+      comp.children.forEach(child => {
+        this.assignStyles(child, CSSValues)
+      })
     }
   }
 
@@ -1058,7 +1094,6 @@ class AppStore {
             insertAsFirstChild, 
             found
            } = this.findDragTargetInsertIndex(this.dragTarget, clientX, clientY)
-           console.log(parent)
           if(found){
             insertBeforeID = insertBefore
             insertAsFirst = insertAsFirstChild
@@ -1077,6 +1112,8 @@ class AppStore {
           locked: false,
           id: uuidv4()
         }
+        const stylesheetValues = this.cssTabs.map(tab => tab.content + '\n')
+        this.assignStyles(comp, stylesheetValues)
         if(comp.children && comp.children.length){
           this.assignChildIds(comp.children)
         }
@@ -1105,6 +1142,7 @@ class AppStore {
               targetParent.children.splice(-1, 0, comp)
               this.insertElementIntoIframe(comp, targetParent, null, false, true)
             }
+            this.elementLen += 1
           }
         }
         setTimeout(() => {
