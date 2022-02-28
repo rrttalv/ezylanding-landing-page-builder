@@ -12,6 +12,8 @@ export const Palette = observer((props) => {
 
   const { store: { sidebar, app } } = getStore()
 
+  let _pickerDebounce = null
+
   const { palette } = app
 
   const handleChange = (e, id) => {
@@ -43,6 +45,11 @@ export const Palette = observer((props) => {
                 {
                   isEditing ? (
                     <ChromePicker
+                      styles={{
+                        wrap: {
+                          width: '100%'
+                        }
+                      }}
                       color={value}
                       onChangeComplete={color => handleColorChange(color, id)}
                     />

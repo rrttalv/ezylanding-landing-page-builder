@@ -43,8 +43,6 @@ const constants = {
     title: 'Sections',
     elements: [
       {...flexRow2Col},
-      {...singleCard},
-      {...cardSection},
     ]
   },
   inputs: {

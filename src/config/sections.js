@@ -3,9 +3,8 @@ export const flexRow2Col = {
   title: '2 Columns',
   type: 'section',
   tagName: 'section',
-  className: '',
+  className: 'section',
   domID: '',
-  partitions: 2,
   thumb: '/images/sections/flex-row-2.svg',
   dragProps: {
     rawWidth: 500,
@@ -14,9 +13,6 @@ export const flexRow2Col = {
     height: '300px'
   },
   style: {
-    width: '100%',
-    margin: '0 auto',
-    padding: '25px',
     position: 'relative',
   },
   children: [
@@ -24,129 +20,134 @@ export const flexRow2Col = {
       type: 'div',
       tagName: 'div',
       className: 'row',
-      style: {
-      },
+      bootstrapClass: 'row',
+      style: {},
       children: [
         {
           type: 'div',
           tagName: 'div',
-          className: 'col-md-6',
-          style: {
-            position: 'relative',
-          },
+          className: 'col-md-12 col-lg-6 col-xl-5',
+          bootstrapClass: 'col-md-12 col-lg-6 col-xl-5',
+          style: {},
           children: [
             {
               type: 'div',
               tagName: 'div',
               className: 'content-wrapper',
               style: {
-                display: 'block',
-                paddingTop: '50px',
-                paddingBottom: '50px',
-                width: '100%',
+                padding: '25px',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+                flexDirection: 'column',
               },
               children: [
                 {
                   type: 'text',
                   tagName: 'h1',
-                  className: 'h1',
-                  content: 'Work with professionals on demand!',
+                  className: 'two-col section-text',
+                  content: 'The Final Solution',
                   style: {
-                    width: '100%',
-                    fontSize: '3rem',
-                    fontWeight: 700,
-                    marginBottom: '15px',
-                    lineHeight: '1.5',
-                    display: 'block',
-                  }
+                    color: 'var(--dark)',
+                    fontWeight: 700
+                  },
                 },
-                //FORM GROUP
+                {
+                  type: 'text',
+                  tagName: 'h1',
+                  className: 'two-col text-main-lead',
+                  content: 'To all of your problems!',
+                  style: {
+                    color: 'var(--main)',
+                    fontWeight: 700
+                  },
+                },
+                {
+                  type: 'text',
+                  tagName: 'p',
+                  className: 'lead-text',
+                  content: 'At vero eos et accusamus et iusto odio dignissimos! Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime.',
+                  style: {
+                    color: 'var(--gray)',
+                    maxWidth: '500px'
+                  },
+                },
                 {
                   type: 'div',
                   tagName: 'div',
-                  className: 'form-group',
+                  className: 'two-col buttons',
                   style: {
-                    position: 'relative',
-                    marginTop: '2rem'
+                    marginTop: '1rem',
+                    display: 'flex',
+                    alignItems: 'center'
                   },
                   children: [
                     {
-                      type: 'text',
-                      tagName: 'label',
-                      className: 'label',
-                      content: 'Want early access?',
+                      type: 'button',
+                      tagName: 'button',
+                      className: 'btn two-col btn-main',
+                      bootstrapClass: 'btn',
+                      content: 'Get Started',
                       style: {
-                        width: '100%',
-                        fontSize: '1.25rem',
-                        color: `var(--gray)`,
-                        fontWeight: 400,
-                        marginBottom: '10px',
-                        lineHeight: 'normal',
-                        display: 'block',
-                      }
-                    },
-                    {
-                      type: 'input',
-                      inputType: 'text',
-                      tagName: 'input',
-                      className: 'form-control',
-                      placeHolder: 'Your email address',
-                      style: {
-                        borderRadius: '4px',
-                        width: '250px',
-                        maxWidth: '400px',
-                        padding: '1rem 0.5rem',
-                        display: 'inline-block',
-                        border: `1px solid rgba(0,0,0,0.1)`,
-                        boxShadow: `0px 3px 8px 1px rgba(0 0 0 / 8%)`,
+                        background: 'var(--main)',
+                        color: 'var(--white)',
+                        fontWeight: 600,
                       }
                     },
                     {
                       type: 'button',
-                      className: 'btn',
                       tagName: 'button',
-                      content: 'Sign up!',
+                      className: 'btn two-col btn-second',
+                      bootstrapClass: 'btn',
+                      content: 'Get Demo',
                       style: {
-                        'borderRadius': '4px',
-                        padding: '0.5rem 1rem',
-                        verticalAlign: 'top',
-                        marginLeft: '0.5rem',
-                        display: 'inline-block',
-                        background: '#6610f2',
-                        color: '#fff',
-                        fontSize: '14px',
-                        border: '1px solid rgba(0,0,0,0.175)'
+                        background: 'var(--secondary)',
+                        color: 'var(--main)',
+                        fontWeight: 600,
+                        marginLeft: '10px'
                       }
-                    },
+                    }
                   ]
                 }
               ]
             }
           ]
         },
-        /* Second row */
         {
           type: 'div',
           tagName: 'div',
-          className: 'col-md-6',
-          style: {
-            position: 'relative',
-          },
+          className: 'col-md-12 col-lg-6 col-xl-7',
+          bootstrapClass: 'col-md-12 col-lg-6 col-xl-7',
+          style: {},
           children: [
-            /*
             {
-              type: 'img',
-              tagName: 'img',
-              className: 'image',
+              type: 'div',
+              tagName: 'div',
+              className: 'content-wrapper',
               style: {
-                width: '100%',
-                borderRadius: '4px'
+                padding: '25px',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+                flexDirection: 'column',
               },
-              src: "http://localhost:3000/images/static/workstation.jpg"
-            },
-            */
+              children: [
+                {
+                  type: 'img',
+                  tagName: 'img',
+                  className: 'two-col large-image',
+                  src: 'http://localhost:3000/images/static/office-worker.jpeg',
+                  style: {
+                    width: '95%',
+                    display: 'block',
+                    margin: '0 auto',
+                    borderRadius: '10px'
+                  }
+                }
+              ]
+            }
           ]
-        },
+        }
       ]
     }
   ]

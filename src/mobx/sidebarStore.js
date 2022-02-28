@@ -9,10 +9,12 @@ class SidebarStore {
   activeItem = null
   
   toggleItem(id){
+    this.appStore.togglePaletteEditing(null)
     this.activeItem = id
   }
 
   unsetActiveItem(){
+    this.appStore.togglePaletteEditing(null)
     this.activeItem = null
   }
 

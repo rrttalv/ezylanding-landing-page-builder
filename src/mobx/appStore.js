@@ -197,8 +197,15 @@ class AppStore {
   }
 
   togglePaletteEditing(id){
+    this.palette.forEach(item => {
+      if(item.id !== id){
+        item.isEditing = false
+      }
+    })
     const item = this.palette.find(({ id: pid }) => pid === id)
-    item.isEditing = !item.isEditing
+    if(item){
+      item.isEditing = !item.isEditing
+    }
   }
 
   saveTabContent(tabId, value){
@@ -1146,6 +1153,12 @@ class AppStore {
 
   assignStyles(comp, CSSValues){
     let selectorPrefix = '.'
+    if(!comp.className){
+      comp.className = ''
+    }
+    if(!comp.domID){
+      comp.domID = ''
+    }
     let selector = comp.className.split(' ').join('.')
     if(!selector){
       selectorPrefix = '#'
@@ -1205,6 +1218,7 @@ class AppStore {
         }
         const comp = {
           ...this.activeDrag,
+          className: this.activeDrag.className ? this.activeDrag.className : '',
           domID: this.activeDrag.domID ? this.activeDrag.domID : '',
           cssOpen: false,
           editingClass: false,

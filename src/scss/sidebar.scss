@@ -67,7 +67,7 @@
 
 .slide-wrapper {
   overflow-x: hidden;
-  background-color: #eeeeee;
+  background-color: rgba(238, 238, 238, 0.9);
   border-right: 1px solid rgba(0,0,0,0.1);
   transition: all 0.3s ease-out;
   width: 400px;
@@ -319,6 +319,8 @@
       .chrome-picker {
         position: absolute;
         z-index: 100;
+        width: 100%!important;
+        right: 0;
       }
       &_color {
         &:hover {
