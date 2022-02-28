@@ -23,6 +23,7 @@ export const Header = observer(() => {
 
   useEffect(() => {
     header.initMenuContent()
+    header.handleFrameworkChange(app.activeFramework ? app.activeFramework.id : null)
   }, [])
 
   const prevOpen = usePrevious(header.settingsOpen)
@@ -41,7 +42,6 @@ export const Header = observer(() => {
         }, 250)
       }
     }
-    header.handleFrameworkChange(app.activeFramework ? app.activeFramework.id : null)
   }, [header.settingsOpen])
 
   const handleChildClick = (e, item) => {
@@ -108,22 +108,24 @@ export const Header = observer(() => {
 
   return (
     <div className='header'>
-      <div className='header_settings' onClick={() => header.toggleSettingsMenu()}>
-        <span>Project settings</span> <Caret style={{ transform: `rotate(${header.settingsOpen ? '180deg' : '0'})` }} />
+      <div className='header_wrapper'>
+        <div className='header_settings' onClick={() => header.toggleSettingsMenu()}>
+          <span>Project settings</span> <Caret style={{ transform: `rotate(${header.settingsOpen ? '180deg' : '0'})` }} />
+        </div>
+        {
+          header.settingsMenuContent ? (
+            <div className={`header_settings_menu ${menuClass}`}>
+              {
+                header.settingsMenuContent.map((item, idx) => (
+                  getContent(item, idx)
+                ))
+              }
+            </div>
+          )
+          :
+          undefined
+        }
       </div>
-      {
-        header.settingsMenuContent ? (
-          <div className={`header_settings_menu ${menuClass}`}>
-            {
-              header.settingsMenuContent.map((item, idx) => (
-                getContent(item, idx)
-              ))
-            }
-          </div>
-        )
-        :
-        undefined
-      }
     </div>
   )
 

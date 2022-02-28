@@ -9,6 +9,15 @@
     z-index: 100;
     width: 300px;
     transition: all 0.2s;
+    &_empty {
+      padding: 15px 0;
+      span {
+        color: #eeeeee;
+        display: block;
+        text-align: center;
+        font-size: 14px;
+      }
+    }
     &_header {
       display: flex;
       background: #2d2d2d;

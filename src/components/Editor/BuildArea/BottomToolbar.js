@@ -228,6 +228,13 @@ export const BottomToolbar = observer((props) => {
 
   const getLayerItems = () => {
     const elements = app.pages[0].elements
+    if(elements.length === 0){
+      return (
+        <div className='layer-toolbar_empty'>
+          <span>No layers</span>
+        </div>
+      )
+    }
     return (
       elements.map(el => getElems(el, 0))
     )

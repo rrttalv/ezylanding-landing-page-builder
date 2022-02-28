@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { Body } from './Body'
-import { Header } from './Header'
 
 export const Page = observer((props) => {
 

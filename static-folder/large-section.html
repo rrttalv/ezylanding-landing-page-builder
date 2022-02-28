@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
   <title>My Page</title>
@@ -11560,17 +11560,6 @@
 
     /*# sourceMappingURL=bootstrap.css.map */
   </style>
-  <style type="text/css" data-uuid="9b9f9384-9084-4480-aeed-c93c4f86f1d1">
-    html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    }
-  </style>
   <style data-uuid="editor-temp-style" type="text/css">
     html {
       margin: 0;
@@ -11590,25 +11579,143 @@
       position: relative;
     }
   </style>
+  <style type="text/css">
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .btn:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    :root {
+      --main: rgb(79, 70, 229);
+      --secondary: rgb(224, 231, 255);
+      --third: rgb(5, 169, 133);
+      --white: rgb(255, 255, 255);
+      --gray: rgb(108, 117, 125);
+      --dark: rgb(52, 58, 64);
+    }
+
+    h1 {
+      font-weight: 700;
+    }
+
+    .text-main {
+      color: var(--white);
+      text-align: center;
+    }
+
+    .text-lead {
+      color: var(--white);
+    }
+
+    .lead-text {
+      color: #fff;
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .buttons-wrapper {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-btn {
+      margin-right: 10px;
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-main {
+      color: var(--main);
+      background: var(--white);
+    }
+
+    .btn-main:hover {
+      color: var(--main);
+    }
+
+    .btn-second {
+      background: var(--main);
+      color: var(--white);
+    }
+
+    .btn-second:hover {
+      color: var(--white);
+    }
+
+    .content-background {
+      background: url(http://localhost:3000/images/static/office-worker.jpeg);
+      border-radius: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .content-background-overlay {
+      z-index: -1;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .content-wrapper {
+      position: relative;
+      margin: 20px;
+      padding: 75px 15px;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="EMBED-CONTAINER">
-    <div id="PAGE-CONTAINER">
-      <div id="PAGE-BODY" class="PAGE-BODY" style="width:100%;height:fit-content;padding-top:200px;">
-        <div class="card" style="max-width: 18rem; width: 30%; box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.05);">
-          <img src="http://localhost:3000/images/icons/rocket.svg" class="card-image"
-            style="width: 50px; display:block;margin: 25px auto 15px auto;" />
-          <div class="card-body" style="padding-top: 0.5rem;">
-            <h5 class="card-title" style="text-align: center;">Here's an awesome card!</h5>
-            <p class="card-text" style="text-align: center;">Describe something awesome that your customers want to hear
-              about!</p>
-            <a href="#" class="btn btn-primary"
-              style="display: block; width: fit-content; margin: 25px auto 15px auto;">Learn
-              More!</a>
+  <div id="root">
+    <div id="PAGE-BODY" class="PAGE-BODY" style="width:100%;height:100%">
+      <section class="section">
+        <div class="row">
+          <div class="col-12">
+            <div class="content-wrapper">
+              <div class="content-background">
+                <div class="content-background-overlay"></div>
+              </div>
+              <h1 class="text-main">The Final Solution</h1>
+              <h1 class="text-main text-lead">To all of your problems!</h1>
+              <p class="lead-text">
+                At vero eos et accusamus et iusto odio dignissimos! Nam libero tempore, cum soluta nobis est eligendi
+                optio cumque nihil impedit quo minus id quod maxime.
+              </p>
+              <div class="buttons-wrapper">
+                <button class="btn section-btn btn-main">
+                  Get Started
+                </button>
+                <button class="btn section-btn btn-second">
+                  Get Demo
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+      </section>
     </div>
   </div>
 </body>

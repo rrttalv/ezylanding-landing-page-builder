@@ -45,11 +45,58 @@ class AppStore {
       selected: true,
       unsaved: false,
       active: true,
-      name: `custom_1.css`,
-      content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`
+      name: `main.css`,
+      content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`,
+      paletteContent: ''
     },
   ]
   cssSaved = false
+
+  //Custom palette that is applied to the current template
+  palette = [
+    {
+      name: 'main',
+      id: uuidv4(),
+      var: '--main',
+      value: 'rgba(79, 70, 229, 1)',
+      isEditing: false
+    },
+    {
+      name: 'secondary',
+      id: uuidv4(),
+      var: '--secondary',
+      value: 'rgba(224, 231, 255, 1)',
+      isEditing: false
+    },
+    {
+      name: 'third',
+      id: uuidv4(),
+      var: '--third',
+      value: 'rgba(5, 169, 133, 1)',
+      isEditing: false
+    },
+    {
+      name: 'light',
+      id: uuidv4(),
+      var: '--light',
+      value: 'rgba(255, 255, 255, 1)',
+      isEditing: false
+    },
+    {
+      name: 'gray',
+      id: uuidv4(),
+      var: '--gray',
+      value: 'rgba(108, 117, 125, 1)',
+      isEditing: false
+    },
+    {
+      name: 'dark',
+      id: uuidv4(),
+      var: '--dark',
+      value: 'rgba(52, 58, 64, 1)',
+      isEditing: false
+    },
+  ]
 
   activeDrag = null
   activePage = null
@@ -98,6 +145,32 @@ class AppStore {
 
   toggleLayerToolbar(){
     this.layersOpen = !this.layersOpen
+  }
+
+  addPaletteItem(){
+    this.palette.push({
+      name: `color-${this.palette.length + 1}`,
+      var: `--color-${this.palette.length + 1}`,
+      value: `rgb(255, 255, 255)`,
+      isEditing: false
+    })
+  }
+
+  removePaletteItem(id){
+    const idx = this.palette.find(({ id: pid }) => pid === id)
+    if(idx > -1){
+      this.palette.splice(idx, 1)
+    }
+  }
+
+  editPaletteProp(id, propName, propValue){
+    const item = this.palette.find(({ id: pid }) => pid === id)
+    item[propName] = propValue
+  }
+
+  editPaletteColor(id){
+    const item = this.palette.find(({ id: pid }) => pid === id)
+    //Find the palette item in the custom CSS IFRAME and edit it, then edit the custom CSS too
   }
 
   saveTabContent(tabId, value){

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ReactComponent as Block } from '../../../svg/blocks.svg'
 import { ReactComponent as Code } from '../../../svg/code.svg'
 import { ReactComponent as Link } from '../../../svg/link.svg'
+import { ReactComponent as Palette } from '../../../svg/palette.svg'
 import { ReactComponent as Tools } from '../../../svg/tools.svg'
 import { ReactComponent as Templates } from '../../../svg/tools.svg'
 import { SlideWrapper } from './SlideWrapper'
@@ -14,6 +15,11 @@ export const Sidebar = observer((props) => {
       label: 'Components',
       id: 'components',
       icon: <Block />
+    },
+    {
+      label: 'Palette',
+      id: 'palette',
+      icon: <Palette style={{width: '25px'}} />
     },
     {
       label: 'Code',
@@ -57,10 +63,10 @@ export const Sidebar = observer((props) => {
     >
       <div className='sidebar_toggles'>
         {slideList.map(item => (
-          <div className={`sidebar_toggle ${item.id}${item.id === sidebar.activeItem ? ' active' : ''}`} key={item.id} onClick={() => handleItemClick(item.id)}>
+          <button className={`sidebar_toggle ${item.id}${item.id === sidebar.activeItem ? ' active' : ''}`} key={item.id} onClick={() => handleItemClick(item.id)}>
             {item.icon}
             <span>{item.label}</span>
-          </div>
+          </button>
         ))}
       </div>
       <SlideWrapper />

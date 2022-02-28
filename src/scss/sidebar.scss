@@ -6,16 +6,22 @@
   z-index: 11;
   &_toggles {
     display: flex;
+    height: 100%;
     flex-direction: column;
     padding: 5px;
     padding-top: 10px;
-    background-color: #EEEEEE;
+    position: fixed;
+    background-color: #f8f8f8;
     z-index: 1;
-    border-right: 1px solid rgba(0,0,0,0.1);
-    width: 100px;
+    width: 90px;
     align-items: center;
   }
   &_toggle {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: none;
+    background: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,6 +68,7 @@
 .slide-wrapper {
   overflow-x: hidden;
   background-color: #eeeeee;
+  border-right: 1px solid rgba(0,0,0,0.1);
   transition: all 0.3s ease-out;
   width: 400px;
   position: fixed;

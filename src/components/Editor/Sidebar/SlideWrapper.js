@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { SlideHeader } from './SlideHeader'
 import { Components } from './Slides/Components'
 import { Code } from './Slides/Code'
+import { Palette } from './Slides/Palette'
 
 export const SlideWrapper = observer((props) => {
 
@@ -59,6 +60,8 @@ export const SlideWrapper = observer((props) => {
         return <Components />
       case 'code':
         return <Code />
+      case 'palette':
+        return <Palette />
       default:
         return <div />
     }
