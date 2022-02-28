@@ -47,7 +47,7 @@ class AppStore {
       active: true,
       name: `main.css`,
       content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`,
-      paletteContent: ''
+      paletteContent: ``
     },
   ]
   cssSaved = false
@@ -147,6 +147,21 @@ class AppStore {
     this.layersOpen = !this.layersOpen
   }
 
+  compilePaletteStr(palette){
+    let str = ':root {'
+    palette.forEach(item => {
+      str += `\n  ${item.var}: ${item.value};`
+    })
+    str += '\n}'
+    return str
+  }
+
+  syncPalette(){
+    const mainTab = this.cssTabs.find(({ name }) => name === 'main.css')
+    const paletteStr = this.compilePaletteStr(this.palette)
+    mainTab.paletteContent = paletteStr
+  }
+
   addPaletteItem(){
     this.palette.push({
       name: `color-${this.palette.length + 1}`,
@@ -163,14 +178,27 @@ class AppStore {
     }
   }
 
+  updateIFramePalette(newValue){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const doc = frame.contentWindow.document
+      const paletteTag = doc.querySelector('#PALETTES')
+      paletteTag.innerHTML = newValue
+    }
+  }
+
   editPaletteProp(id, propName, propValue){
     const item = this.palette.find(({ id: pid }) => pid === id)
     item[propName] = propValue
+    const newString = this.compilePaletteStr(this.palette)
+    const mainTab = this.cssTabs.find(({ name }) => name === 'main.css')
+    mainTab.paletteContent = newString
+    this.updateIFramePalette(newString)
   }
 
-  editPaletteColor(id){
+  togglePaletteEditing(id){
     const item = this.palette.find(({ id: pid }) => pid === id)
-    //Find the palette item in the custom CSS IFRAME and edit it, then edit the custom CSS too
+    item.isEditing = !item.isEditing
   }
 
   saveTabContent(tabId, value){

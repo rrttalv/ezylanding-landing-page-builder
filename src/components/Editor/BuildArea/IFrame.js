@@ -167,7 +167,15 @@ export const IFrame = observer((props) => {
         }
         {
           app.cssTabs.map(tab => {
-            const { id, content } = tab
+            const { id, content, name, paletteContent } = tab
+            if(name === 'main.css'){
+              return <React.Fragment key={id}>
+                <style type="text/css" key={id} data-uuid={id}>{content}</style>
+                <style type="text/css" id="PALETTES">
+                  {paletteContent}
+                </style>
+              </React.Fragment>
+            }
             return <style type="text/css" key={id} data-uuid={id}>{content}</style>
           })
         }
