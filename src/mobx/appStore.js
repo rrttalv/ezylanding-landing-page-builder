@@ -868,7 +868,7 @@ class AppStore {
     const keys = Object.keys(element.style)
     let str = ''
     keys.forEach((key, idx) => {
-      str += `  ${camelToDash(key)}:${element.style[key]}; ${idx === keys.length - 1 ? '' : '\n'}`
+      str += `  ${camelToDash(key)}: ${element.style[key]};${idx === keys.length - 1 ? '' : '\n'}`
     })
     return str
   }
@@ -1176,9 +1176,10 @@ class AppStore {
       selectorPrefix = ''
       selector = comp.tagName
     }
-    if(!CSSValues.includes(selectorPrefix + selector)){
+    const keys = Object.keys(comp.style)
+    if(!CSSValues.includes(selectorPrefix + selector) && keys.length > 0){
       const CSS = this.getElementCSSString(comp)
-      this.cssTabs[0].content += `\n${selectorPrefix}${selector} { \n${CSS}\n} \n`
+      this.cssTabs[0].content += `\n\n${selectorPrefix}${selector} {\n${CSS}\n}`
       comp.style = {}
     }
     if(comp.children && comp.children.length){

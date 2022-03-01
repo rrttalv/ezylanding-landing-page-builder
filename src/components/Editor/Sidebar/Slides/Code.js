@@ -103,7 +103,7 @@ export const Code = observer((props) => {
 
   useEffect(() => {
     setCodeRows(activeTab.content)
-  }, [activeTab])
+  }, [])
 
   const changeActiveTab = (id) => {
     app.saveTabContent(activeTab.id, codeRows)
@@ -115,6 +115,10 @@ export const Code = observer((props) => {
   const handleChange = value => {
     setCodeRows(value)
     app.setTabChanged(activeTab.id, value)
+    const codeEditor = document.querySelector('.container-code-editor__qxcy .code-editor__textarea__qxcy')
+    if(codeEditor){
+      codeEditor.setAttribute('maxLength', 25000)
+    }
   }
 
   const hasActiveChanges = () => {
@@ -252,7 +256,7 @@ export const Code = observer((props) => {
           <CodeEditorEditable
             value={codeRows}
             tabSize={2}
-            setValue={handleChange}
+            setValue={value => handleChange(value)}
             width='100%'
             height='450px'
             language='css'

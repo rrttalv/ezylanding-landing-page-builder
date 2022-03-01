@@ -1,5 +1,5 @@
 import { cardSection, singleCard } from "./cards"
-import { flexRow2Col } from "./sections"
+import { features1, flexRow2Col, largeColumn } from "./sections"
 
 const constants = {
   headers: {
@@ -43,6 +43,8 @@ const constants = {
     title: 'Sections',
     elements: [
       {...flexRow2Col},
+      {...largeColumn},
+      {...features1}
     ]
   },
   inputs: {
