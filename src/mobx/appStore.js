@@ -370,6 +370,9 @@ class AppStore {
       if(propName === 'domID'){
         domElement.id = propValue
       }
+      if(propName === 'src'){
+        domElement.setAttribute('src', propValue)
+      }
     }
     setTimeout(() => {
       this.recalculateSizes(this.pages[0].elements)
@@ -1190,7 +1193,13 @@ class AppStore {
   }
 
   assignStyles(comp, CSSValues){
-    comp.childrenOpen = false
+    comp.childrenOpen = true
+    if(comp.tagName === 'img'){
+      comp.editingSrc = false
+    }
+    if(comp.type === 'input'){
+      comp.editingPlaceholder = false
+    }
     let selectorPrefix = '.'
     if(!comp.className){
       comp.className = ''

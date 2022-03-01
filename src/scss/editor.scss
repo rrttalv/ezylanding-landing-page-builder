@@ -105,7 +105,12 @@
             padding: 8px;
             background: #16151c;
             border-radius: 4px;
-            margin-top: 5px;
+          }
+          &_prop-input.top {
+            bottom: 100%;
+          }
+          &_prop-input.bottom {
+            top: 100%;
           }
           .prop-input_label {
             font-size: 13px;
@@ -149,10 +154,10 @@
           }
         }
         .element-options.top {
-          top: -27.5px;
+          bottom: 22.5px;
         }
         .element-options.bottom {
-          bottom: -27.5px;
+          top: 22.5px;
         }
       }
     }

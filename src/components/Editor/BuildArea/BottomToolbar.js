@@ -84,16 +84,30 @@ export const BottomToolbar = observer((props) => {
     app.toggleElementProp(id, propName, propStatus)
   }
 
+  const getPropToggle = (element, toggleName, text, active) => {
+    return (
+      <button
+        onClick={e => toggleProp(e, element.id, toggleName, !active)}
+        className={active ? 'active' : ''}
+      >
+        {text}
+      </button>
+    )
+  }
+
   const getOptionsMenu = element => {
     const menu = document.querySelector('.layer-toolbar-list')
     const parent = document.querySelector(`[data-metauuid="${element.id}"]`)
     const { y: offsetY } = menu.getBoundingClientRect()
     const { y } = parent.getBoundingClientRect()
     let className = `element-options`
+    let inputClass = `element-options_prop-input`
     if((y - offsetY) <= 60){
       className += ' bottom'
+      inputClass += ' bottom'
     }else{
       className += ' top'
+      inputClass += ' top'
     }
     return (
       <div className={className}>
@@ -107,18 +121,13 @@ export const BottomToolbar = observer((props) => {
             </button>
           </div>
           <div className='option-wrapper element-options_class'>
-            <button
-              onClick={e => toggleProp(e, element.id, 'editingClass', !element.editingClass)}
-              className={element.editingClass ? 'active' : ''}
-            >
-              .class
-            </button>
+            {getPropToggle(element, 'editingClass', '.class', element.editingClass)}
             {
               element.editingClass ? (
                 <PropInput
                   value={element.className}
                   save={(value) => saveElementProp(element.id, 'className', value)}
-                  className={`element-options_prop-input`}
+                  className={inputClass}
                   label={'Set element className'}
                 />
               )
@@ -127,18 +136,13 @@ export const BottomToolbar = observer((props) => {
             }
           </div>
           <div className='option-wrapper element-options_id'>
-            <button
-              className={element.editingID ? 'active' : ''}
-              onClick={e => toggleProp(e, element.id, 'editingID', !element.editingID)}
-            >
-              #id
-            </button>
+            {getPropToggle(element, 'editingID', '#id', element.editingID)}
             {
               element.editingID ? (
                 <PropInput
                   value={element.domID}
                   save={(value) => saveElementProp(element.id, 'domID', value)}
-                  className={`element-options_prop-input`}
+                  className={inputClass}
                   label={'Set element ID'}
                 />
               )
@@ -147,17 +151,37 @@ export const BottomToolbar = observer((props) => {
             }
           </div>
         </div>
-        {
-          //Show SRC button
-          element.tagName === 'img' ? undefined : undefined
-        }
-        {
-          //Show placeholder input
-          element.type === 'input' ? undefined : undefined
-        }
-        {
+        <div className='element-options_misc-row'>
+          {
+            //Show SRC button
+            element.tagName === 'img' ? (
+              <div className='option-wrapper'>
+                {getPropToggle(element, 'editingSrc', 'src', element.editingSrc)}
+                {
+                  element.editingSrc ? (
+                    <PropInput
+                      value={element.src}
+                      save={(value) => saveElementProp(element.id, 'src', value)}
+                      className={inputClass}
+                      label={'Set element src'}
+                    />
+                  )
+                  :
+                  undefined
+                }
+              </div>
+            )
+            :
+            undefined
+          }
+          {
+            //Show placeholder input
+            element.type === 'input' ? undefined : undefined
+          }
+          {
 
-        }
+          }
+        </div>
       </div>
     )
   }
@@ -214,7 +238,7 @@ export const BottomToolbar = observer((props) => {
             undefined
           }
           {
-            element.children && element.children.length ? (
+            element.children && element.children.length && isSelected ? (
               <button
                 onClick={e => toggleChildren(element.id)}
                 className='children-toggle'
