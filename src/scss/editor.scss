@@ -20,7 +20,7 @@
     }
     &_header {
       display: flex;
-      background: #2d2d2d;
+      background-color: #2b2c35ad;
       border-top-right-radius: 5px;
       border-top-left-radius: 5px;
       padding: 2px 5px;
@@ -37,6 +37,7 @@
       }
       svg {
         fill: #eeeeee;
+        stroke: none;
         width: 25px;
         margin-left: auto;
         margin-top: 1px;
@@ -180,9 +181,6 @@
         height: calc(100% + 10px);
         border-radius: 4px;
         border: 1px solid #8d92fa8a;
-      }
-      span {
-        line-height: 1.5;
       }
     }
     .section-component.active-drag-target {
@@ -459,7 +457,7 @@
     z-index: 3;
   }
 
-  .options-toggle {
+  .options-toggle, .children-toggle {
     all: unset;
     width: 18px;
     height: 18px;
@@ -477,6 +475,16 @@
       fill: #fff;
       stroke: #3ee3c5;
       stroke-width: 0.5px;
+    }
+  }
+  .children-toggle {
+    margin-right: 30px;
+    svg.inactive {
+
+    }
+    svg.active {
+      stroke: none;
+      transform: rotate(180deg);
     }
   }
   .element-tools {

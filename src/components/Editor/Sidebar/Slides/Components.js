@@ -41,7 +41,7 @@ export const Components = observer((props) => {
     e.preventDefault()
   }
 
-  const getRows = (elem, type) => {
+  const getRows = (elem, type, customStyle = {}) => {
     const copy = [...elem.elements]
     const list = copy.slice(0, 3)
     return (
@@ -51,7 +51,7 @@ export const Components = observer((props) => {
           <div className='component-slide_rows'>
             {
               list.map((item, idx) => {
-                const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {}
+                const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {...customStyle}
                 const imgStyle = item.displayStyle ? item.displayStyle.image : {}
                 if(item.type === 'section'){
                   imgStyle.boxShadow = '0 4px 4px 0 rgba(0,0,0,0.15)'
@@ -94,7 +94,7 @@ export const Components = observer((props) => {
         getExpanded()
       }
       {
-        getRows(sections, 'sections')
+        getRows(sections, 'sections'< { margin: '0 10px' })
       }
       {
         getRows(inputs)

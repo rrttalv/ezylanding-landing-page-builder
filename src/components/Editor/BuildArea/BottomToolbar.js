@@ -3,6 +3,7 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
 import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
 import { ReactComponent as Arrows } from '../../../svg/multi-arrow.svg'
+import { ReactComponent as Caret } from '../../../svg/caret-down.svg'
 import { ReactComponent as GearIcon } from '../../../svg/gear.svg'
 import { PropInput } from './ComponentTools/PropInput'
 
@@ -165,7 +166,12 @@ export const BottomToolbar = observer((props) => {
     app.setElementToolbarMenu(id, status)
   }
 
+  const toggleChildren = (id) => {
+    app.toggleCompChildren(id)
+  }
+
   const getElems = (element, level = 0) => {
+    const { childrenOpen } = element
     const isSelected = app.selectedElement === element.id
     return (
       <div 
@@ -207,6 +213,18 @@ export const BottomToolbar = observer((props) => {
             :
             undefined
           }
+          {
+            element.children && element.children.length ? (
+              <button
+                onClick={e => toggleChildren(element.id)}
+                className='children-toggle'
+              >
+                <Caret className={childrenOpen ? 'active' : 'inactive'} />
+              </button>
+            )
+            :
+            undefined
+          }
         </div>
         {
           element.children && element.children.length ? (
@@ -216,7 +234,7 @@ export const BottomToolbar = observer((props) => {
           undefined
         }
         {
-          element.children && element.children.length ? (
+          element.children && element.children.length && childrenOpen ? (
             element.children.map(child => getElems(child, level))
           )
           :

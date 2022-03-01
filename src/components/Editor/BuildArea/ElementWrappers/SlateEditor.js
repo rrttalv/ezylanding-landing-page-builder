@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { MobXProviderContext, observer } from "mobx-react";
 import { createEditor, Editor, Transforms } from 'slate'
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import { Slate, Editable, withReact, ReactEditor, DefaultElement } from 'slate-react'
 
 export const SlateEditor = observer((props) => {
 
@@ -46,26 +46,39 @@ export const SlateEditor = observer((props) => {
     e.stopPropagation()
   }
 
-  const getStyle = () => {
-    const copy = {...props.style}
-    if(!copy.position){
-      copy.position = 'relative'
+  const { style: customStyle, elem } = props
+
+  const renderLeaf = useCallback(props => {
+    if(elem.type === 'button'){
+      delete customStyle.backgroundColor
     }
-    return copy
-  }
+    const p = {...props, customStyle}
+    return <Leaf {...p} />
+  }, [])
 
   return (
     <div 
-      style={getStyle()}
+      style={{ ...props.editorStyle }}
       onPointerDown={e => handleClick(e)}
       onClick={e => handleClick(e)}
       onDoubleClick={e => app.setActiveTextEditor(null, null)}
       className={`text-editor-wrapper`}
     >
       <Slate editor={editor} value={value} onChange={value => handleChange(value)}>
-        <Editable placeholder="Enter your text" />
+        <Editable placeholder="Enter your text" renderLeaf={renderLeaf} />
       </Slate>
     </div>
   )
 
 })
+
+const Leaf = props => {
+  return (
+    <span
+      {...props.attributes}
+      style={{ ...props.customStyle }}
+    >
+      {props.children}
+    </span>
+  )
+}

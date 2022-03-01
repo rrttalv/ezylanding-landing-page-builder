@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
 import cssParser from 'css'
 import { camelCase, replace, trim } from "lodash";
-import { camelToDash, getFlexKeys } from "../utils";
+import { camelToDash, getFlexKeys, textStyleKeys } from "../utils";
 import bootstrapCSS from '!!raw-loader!../libraries/bootstrap.css';
 
 const initSectionProps = {
@@ -100,6 +100,8 @@ class AppStore {
       isEditing: false
     },
   ]
+
+  //The style keys that are used for editing text elements
 
   activeDrag = null
   activePage = null
@@ -387,6 +389,13 @@ class AppStore {
     }
   }
 
+  toggleCompChildren(id){
+    const element = this.findElement(id)
+    if(element){
+      element.childrenOpen = !element.childrenOpen
+    }
+  }
+
   toggleElementProp(id, propName, status){
     const element = this.findElement(id)
     if(propName === 'editingID' && status){
@@ -600,18 +609,39 @@ class AppStore {
 
   //Id is text ID, parentID is the parent DIV that surrounds the text
   setActiveTextEditor(id, parentId){
-    const frame = document.querySelector('iframe').contentWindow.document
+    const frame = document.querySelector('iframe')
+    const win = frame.contentWindow.window
+    const doc = frame.contentWindow.document
     if(id && id !== this.activeTextEditor && this.activeTextEditor !== null){
-      const el = frame.querySelector(`[data-uuid="${this.activeTextEditor}"]`)
+      const el = doc.querySelector(`[data-uuid="${this.activeTextEditor}"]`)
       const current = this.findElement(this.activeTextEditor)
       el.style.opacity = current.style.opacity ? current.style.opacity : '1'
     }
-    const el = frame.querySelector(`[data-uuid="${id ? id : this.activeTextEditor}"]`)
+    const el = doc.querySelector(`[data-uuid="${id ? id : this.activeTextEditor}"]`)
+    const activeStyleMap = {}
     if(el){
       if(id){
+        const computed = win.getComputedStyle(el)
+        const raw = {}
+        Object.keys(computed).forEach(key => {
+          if(!isNaN(key)){
+            const realKey = computed[key]
+            raw[realKey] = computed[realKey]
+            if(textStyleKeys.indexOf(realKey) > - 1){
+              activeStyleMap[camelCase(realKey)] = computed[realKey]
+            }
+          }
+        })
+        const comp = this.findElement(id)
+        if(comp.type === 'button'){
+          activeStyleMap.display = 'inline-block'
+          activeStyleMap.width = 'auto'
+        }
+        comp.activeStyleMap = activeStyleMap
         el.style.opacity = '0.1'
       }else{
         const component = this.findElement(this.activeTextEditor)
+        delete component.activeStyleMap
         el.style.opacity = component.style.opacity ? component.style.opacity : '1'
       }
     }
@@ -1160,6 +1190,7 @@ class AppStore {
   }
 
   assignStyles(comp, CSSValues){
+    comp.childrenOpen = false
     let selectorPrefix = '.'
     if(!comp.className){
       comp.className = ''

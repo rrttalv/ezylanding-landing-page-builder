@@ -74,60 +74,10 @@ export const Body = observer((props) => {
     }
   }
 
-  const getEditingTextElem = (elem, parentId, style, elemStyle) => {
-    let copy = {...style}
+  const getEditingTextElem = (elem, parentId, style) => {
+    let copy = {...elem.activeStyleMap }
     const { type } = elem
-    if(type === 'text' && elem.tagName.includes('h') && !style.fontWeight){
-      copy.fontWeight = 500
-    }
-    const keys = [
-      'padding',
-      'paddingTop',
-      'paddingLeft',
-      'paddingRight',
-      'paddingBottom',
-      'margin',
-      'marginLeft',
-      'marginRight',
-      'marginTop',
-      'marginBottom',
-      'position',
-      'width',
-      'height',
-      'top',
-      'left',
-      'right',
-      'bottom'
-    ]
-    const realStyle = {...elemStyle}
-    keys.forEach(key => {
-      delete realStyle[key]
-    })
-    copy = {...copy, ...realStyle}
-    if(type === 'button'){
-      copy
-      copy = {
-        ...copy,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }
-      if(copy.textAlign){
-        switch(copy.textAlign){
-          case 'left':
-            copy.justifyContent = 'flex-start'
-            break
-          case 'right':
-            copy.justifyContent = 'flex-end'
-            break
-          default:
-            break
-        }
-      }else{
-        copy.textAlign = 'center'
-      }
-    }
-    return <SlateEditor elem={elem} parentId={parentId} style={copy} area={props.area} />
+    return <SlateEditor elem={elem} parentId={parentId} style={copy} editorStyle={{...style, position: 'relative'}} area={props.area} />
   }
 
   const getElemDimensions = (id) => {
@@ -179,7 +129,7 @@ export const Body = observer((props) => {
   }
 
   const getChildElemBorder = (elem, idx, sectionId) => {
-    const { position, style: elemStyle, id } = elem
+    const { position, id } = elem
     let style = {}
     if(position){
       style = {
@@ -223,7 +173,22 @@ export const Body = observer((props) => {
       case 'button':
       case 'text':
         if(app.activeTextEditor === elem.id){
-          return getEditingTextElem(elem, sectionId, style, elemStyle)
+          const wrapperStyle = {...style, cursor: 'text'}
+          if(elem.type === 'button'){
+            delete wrapperStyle.background
+            const keys = [
+              'backgroundColor',
+              'borderTopLeftRadius',
+              'borderTopRightRadius',
+              'borderBottomLeftRadius',
+              'borderBottomRightRadius',
+            ]
+            wrapperStyle.display = 'block'
+            keys.forEach(k => {
+              wrapperStyle[k] = elem.activeStyleMap[k]
+            })
+          }
+          return getEditingTextElem(elem, sectionId, wrapperStyle)
         }
       default:
         return (
