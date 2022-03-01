@@ -52,6 +52,9 @@ class AppStore {
   ]
   cssSaved = false
 
+  //Debounce the palette CSS string update
+  _paletteBounce = null
+
   //Custom palette that is applied to the current template
   palette = [
     {
@@ -190,10 +193,15 @@ class AppStore {
   editPaletteProp(id, propName, propValue){
     const item = this.palette.find(({ id: pid }) => pid === id)
     item[propName] = propValue
-    const newString = this.compilePaletteStr(this.palette)
-    const mainTab = this.cssTabs.find(({ name }) => name === 'main.css')
-    mainTab.paletteContent = newString
-    this.updateIFramePalette(newString)
+    if(this._paletteBounce){
+      clearTimeout(this._paletteBounce)
+    }
+    this._paletteBounce = setTimeout(() => {
+      const newString = this.compilePaletteStr(this.palette)
+      const mainTab = this.cssTabs.find(({ name }) => name === 'main.css')
+      mainTab.paletteContent = newString
+      this.updateIFramePalette(newString)
+    }, 250)
   }
 
   togglePaletteEditing(id){

@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ReactComponent as Block } from '../../../svg/blocks.svg'
 import { ReactComponent as Code } from '../../../svg/code.svg'
 import { ReactComponent as Link } from '../../../svg/link.svg'
-import { ReactComponent as Palette } from '../../../svg/palette.svg'
 import { ReactComponent as Tools } from '../../../svg/tools.svg'
 import { ReactComponent as Templates } from '../../../svg/tools.svg'
 import { SlideWrapper } from './SlideWrapper'
@@ -17,13 +16,8 @@ export const Sidebar = observer((props) => {
       icon: <Block />
     },
     {
-      label: 'Palette',
-      id: 'palette',
-      icon: <Palette style={{width: '25px'}} />
-    },
-    {
-      label: 'Code',
-      id: 'code',
+      label: 'Customize',
+      id: 'customize',
       icon: <Code />
     },
     {

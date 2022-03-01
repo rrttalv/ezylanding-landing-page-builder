@@ -11,6 +11,7 @@ import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
 import { camelCase as dashToCamel } from 'lodash'
 import { CodeEditorEditable } from 'react-code-editor-editable';
 import 'highlight.js/styles/tomorrow-night-eighties.css';
+import { ChromePicker } from 'react-color'
 
 
 
@@ -98,6 +99,8 @@ export const Code = observer((props) => {
 
   const activeTab = app.cssTabs.find(({ active, selected }) => active && selected)
 
+  const { palette } = app
+
   useEffect(() => {
     setCodeRows(activeTab.content)
   }, [activeTab])
@@ -130,9 +133,73 @@ export const Code = observer((props) => {
     }, 50)
   }
 
+  const handlePaletteChange = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.editPaletteProp(id, e.target.name, e.target.value)
+  }
+
+  const toggleEditing = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.togglePaletteEditing(id)
+  }
+
+  const handleColorChange = (color, id) => {
+    const { rgb: { r, g, b, a } } = color
+    app.editPaletteProp(id, 'value', `rgba(${r}, ${g}, ${b}, ${a})`)
+  }
+
+  const getPaletteItems = () => {
+    return (
+      <div className='palette-items'>
+        {
+          palette.map(item => {
+            const { name, id, var: varName, value, isEditing } = item
+            return (
+              <div key={id} className='palette-item'>
+                <div className='palette-item_color' onClick={e => toggleEditing(e, id)} style={{ background: value }} />
+                {
+                  isEditing ? (
+                    <ChromePicker
+                      styles={{
+                        wrap: {
+                          width: '100%'
+                        }
+                      }}
+                      color={value}
+                      onChangeComplete={color => handleColorChange(color, id)}
+                    />
+                  )
+                  :
+                  undefined
+                }
+                <div className='input-group'>
+                  <label
+                    className='input-group_label'
+                  >
+                    Palette --var value
+                  </label>
+                  <input 
+                    className='input-group_input'
+                    type='text'
+                    name='var'
+                    placeholder='Palette item --var name'
+                    value={varName}
+                    onChange={e => handlePaletteChange(e, id)}
+                  />
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
   return (
     <div 
-      className='code-slide'
+      className='code-slide slide-item'
     >
       <div className='code-slide_wrapper'>
         <h6 className='code-slide_title'>Customize CSS</h6>
@@ -199,6 +266,10 @@ export const Code = observer((props) => {
               Save File
             </button>
           </div>
+        </div>
+        <div className='code-slide_palettes'>
+        <h6 className='code-slide_title'>Customize template palettes</h6>
+          {getPaletteItems()}
         </div>
       </div>
     </div>

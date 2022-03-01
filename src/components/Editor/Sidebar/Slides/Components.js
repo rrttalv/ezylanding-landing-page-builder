@@ -87,7 +87,7 @@ export const Components = observer((props) => {
 
   return (
     <div 
-      className='component-slide'
+      className='component-slide slide-item'
       onPointerUp={() => handleItemDragEnd()}
     >
       {

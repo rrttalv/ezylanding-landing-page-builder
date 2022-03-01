@@ -37,7 +37,7 @@
       color: #252525;
     }
   }
-  &_toggle.code {
+  &_toggle.customize {
     margin-top: 5px;
   }
   &_toggle.active {
@@ -45,7 +45,7 @@
       color: $third;
     }
   }
-  &_toggle.active:not(.code):not(.routes) {
+  &_toggle.active:not(.customize):not(.routes) {
     span {
       color: $third;
     }
@@ -55,7 +55,7 @@
       }
     }
   }
-  &_toggle.active.code, &_toggle.active.routes {
+  &_toggle.active.customize, &_toggle.active.routes {
     svg {
       fill: $third;
       path {
@@ -79,7 +79,9 @@
   z-index: 0;
   padding: 10px;
   padding-top: 0;
-  padding-bottom: 100px;
+  .slide-item {
+    padding-bottom: 50px;
+  }
   &_header {
     border-right: 1px solid rgba(0,0,0,0.1);
     display: flex;
@@ -263,7 +265,7 @@
   &_wrapper {
     margin-top: 2rem;
     &:last-child {
-      margin-bottom: 5rem;
+      margin-bottom: 50px;
     }
   }
   &_list {
@@ -306,32 +308,42 @@
   }
 }
 
-.palette-slide {
-  .palette-items {
-    margin-left: 10px;
-    margin-top: 15px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-    .palette-item {
-      position: relative;
-      .chrome-picker {
-        position: absolute;
-        z-index: 100;
-        width: 100%!important;
-        right: 0;
-      }
-      &_color {
-        &:hover {
-          cursor: pointer;
+//The palette part of the code slide
+.code-slide {
+  &_palettes {
+    margin-top: 50px;
+    background: #fff;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 10px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-left: 1px solid rgba(0,0,0,0.1);
+    .palette-items {
+      margin-left: 10px;
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      grid-auto-rows: minmax(100px, auto);
+      .palette-item {
+        position: relative;
+        .chrome-picker {
+          position: absolute;
+          z-index: 100;
+          width: 100%!important;
+          right: 0;
         }
-        width: 30px;
-        border: 1px solid rgba(0,0,0,0.1);
-        height: 30px;
-        margin: 0 auto;
-        border-radius: 4px;
-        margin-bottom: 5px;
+        &_color {
+          &:hover {
+            cursor: pointer;
+          }
+          width: 30px;
+          border: 1px solid rgba(0,0,0,0.1);
+          height: 30px;
+          margin: 0 auto;
+          border-radius: 4px;
+          margin-bottom: 5px;
+        }
       }
     }
   }
