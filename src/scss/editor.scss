@@ -462,7 +462,7 @@
     z-index: 3;
   }
 
-  .options-toggle, .children-toggle {
+  .options-toggle, .children-toggle, .delete-btn, .duplicate-btn {
     all: unset;
     width: 18px;
     height: 18px;
@@ -482,8 +482,25 @@
       stroke-width: 0.5px;
     }
   }
-  .children-toggle {
+  .delete-btn {
     margin-right: 30px;
+    .trash {
+      stroke: #ff5274;
+    }
+  }
+  .duplicate-btn {
+    margin-right: 54px;
+    svg {
+      width: 15px;
+      height: 15px;
+      fill: rgba(62, 227, 197, 1);
+    }
+  }
+  .children-toggle {
+    position: relative;
+    float: left;
+    margin-right: 0px;
+    margin-top: 1px;
     svg.inactive {
 
     }

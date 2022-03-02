@@ -442,9 +442,9 @@ class AppStore {
   findNestedChild(children, id){
     let target = null
     if(!children){
-      return null
+      return target
     }
-    children.forEach((element, childIdx) => {
+    children.forEach(element => {
       if(!target){
         if(element.id !== id && element.children){
           target = this.findNestedChild(element.children, id)
@@ -454,7 +454,25 @@ class AppStore {
         }
       }
     })
-      return target
+    return target
+  }
+
+  findNestedParent(element, id){
+    let parent = null
+    if(!element.children){
+      return parent
+    }
+    element.children.forEach(child => {
+      if(!parent){
+        if(child.id === id){
+          parent = element
+        }
+        if(child.id !== id && child.children){
+          parent = this.findNestedParent(child, id)
+        }
+      }
+    })
+    return parent
   }
 
   setActivePage(id){
@@ -907,12 +925,8 @@ class AppStore {
   }
 
   assignChildIds(children){
-    const [firstCSSTab] = this.cssTabs
-    const { content } = firstCSSTab
     children.forEach((child) => {
-      if(!child.id){
-        child.id = uuidv4()
-      }
+      child.id = uuidv4()
       if(child.children && child.children.length){
         this.assignChildIds(child.children)
       }
@@ -1121,7 +1135,7 @@ class AppStore {
     }
   }
 
-  compileDomElement(doc, comp){
+  compileDomElement(doc, comp, addStyles = false){
     const domElement = doc.createElement(comp.tagName)
     if(comp.src){
       domElement.src = comp.src
@@ -1134,9 +1148,14 @@ class AppStore {
     }
     domElement.className = comp.className
     domElement.setAttribute('data-uuid', comp.id)
+    if(addStyles && comp.style){
+      Object.keys(comp.style).forEach(key => {
+        domElement.style[camelToDash(key)] = comp.style[key]
+      })
+    }
     if(comp.children && comp.children.length){
       comp.children.forEach(child => {
-        const domChild = this.compileDomElement(doc, child)
+        const domChild = this.compileDomElement(doc, child, addStyles)
         domElement.appendChild(domChild)
       })
     }
@@ -1217,16 +1236,154 @@ class AppStore {
       selector = comp.tagName
     }
     const keys = Object.keys(comp.style)
-    if(!CSSValues.includes(selectorPrefix + selector) && keys.length > 0){
+    const classNames = comp.className.split(' ')
+    let classExists = CSSValues.includes(selectorPrefix + selector)
+    if(classNames.length > 1){
+      classNames.forEach(singleClass => {
+        if(CSSValues.includes(singleClass)){
+          classExists = true
+        }
+      })
+    }
+    if(!classExists && keys.length > 0){
       const CSS = this.getElementCSSString(comp)
       this.cssTabs[0].content += `\n\n${selectorPrefix}${selector} {\n${CSS}\n}`
       comp.style = {}
     }
+    comp.style = {}
+    const newValues = this.cssTabs.map(tab => tab.content).join('\n')
     if(comp.children && comp.children.length){
       comp.children.forEach(child => {
-        this.assignStyles(child, CSSValues)
+        this.assignStyles(child, newValues)
       })
     }
+  }
+
+  duplicateChildren(element){
+    const copy = {
+      ...element,
+      id: uuidv4()
+    }
+    if(element.children){
+      copy.children = []
+    }
+    if(element.children && element.children.length > 0){
+      element.children.forEach(child => {
+        copy.children.push(this.duplicateChildren(child))
+      })
+    }
+    return copy
+  }
+
+  duplicateElement(id){
+    const elements = this.pages[0].elements
+    let parent = null
+    let isParent = null
+    let target = null
+    elements.forEach(el => {
+      if(!parent){
+        parent = this.findNestedParent(el, id)
+        if(el.id === id){
+          isParent = true
+          parent = el
+          target = el
+        }
+      }
+    })
+    if(!target){
+      target = this.findElement(id)
+    }
+    if(target && parent){
+      const element = this.duplicateChildren(target)
+      let pushToParent = true
+      let nextSiblingIndex = 0
+      let insertBefore = null
+      if(!isParent){
+        const targetIdx = parent.children.findIndex(({ id: elid }) => elid === id)
+        if(parent.children[targetIdx + 1]){
+          pushToParent = false
+          insertBefore = parent.children[targetIdx + 1]
+          nextSiblingIndex = targetIdx + 1
+        }
+      }else{
+        const idx = elements.findIndex(({ id: elid }) => elid === id)
+        if(elements[idx + 1]){
+          pushToParent = false
+          insertBefore = elements[idx + 1]
+          nextSiblingIndex = idx + 1
+        }
+      }
+      const frame = document.querySelector('iframe')
+      const doc = frame.contentWindow.document
+      const domElement = this.compileDomElement(doc, element, true)
+      if(pushToParent){
+        //Insert into iframe
+        if(isParent){
+          doc.querySelector('#PAGE-BODY').appendChild(domElement)
+          this.pages[0].elements.push(element)
+        }else{
+          const domParent = doc.querySelector(`[data-uuid="${parent.id}"]`)
+          domParent.appendChild(domElement)
+          parent.children.push(element)
+        }
+      }else{
+        if(isParent){
+          const nextSibling = this.pages[0].elements[nextSiblingIndex]
+          const nextChild = doc.querySelector(`[data-uuid="${nextSibling.id}"]`)
+          doc.querySelector('#PAGE-BODY').insertBefore(domElement, nextChild)
+          this.pages[0].elements.splice(nextSiblingIndex, 0, element)
+        }else{
+          const nextSibling = parent.children[nextSiblingIndex]
+          const nextChild = doc.querySelector(`[data-uuid="${nextSibling.id}"]`)
+          doc.querySelector(`[data-uuid="${parent.id}"]`).insertBefore(domElement, nextChild)
+          parent.children.splice(nextSiblingIndex, 0, element)
+        }
+      }
+    }
+    setTimeout(() => {
+      this.setIframeHeight()
+      this.sizeCalcChange = !this.sizeCalcChange
+      setTimeout(() => {
+        this.recalculateSizes(this.pages[0].elements)
+      }, 100)
+    }, 500)
+  }
+
+  deleteElement(id){
+    const elements = this.pages[0].elements
+    let parent = null
+    let isParent = false
+    elements.forEach(el => {
+      if(!parent){
+        parent = this.findNestedParent(el, id)
+        if(el.id === id){
+          isParent = true
+          parent = el
+        }
+      }
+    })
+    if(parent){
+      if(this.selectedElement === id){
+        this.selectedElement = isParent ? null : parent.id
+      }
+      if(this.cssElement && this.cssElement === id){
+        this.toggleCSSTab(id)
+      }
+      if(isParent){
+        const idx = this.pages[0].elements.findIndex(({ id: eid }) => eid === parent.id)
+        this.pages[0].elements.splice(idx, 1)
+      }else{
+        const childIdx = parent.children.findIndex(({ id: eid }) => eid === id)
+        parent.children.splice(childIdx, 1)
+      }
+      //Remove the element from the IFRAME dom
+      const frame = document.querySelector('iframe')
+      if(frame){
+        const doc = frame.contentDocument
+        doc.querySelector(`[data-uuid="${id}"]`).remove()
+      }
+    }
+    this.handleWindowResize()
   }
 
   insertComponent(e){
@@ -1276,7 +1433,7 @@ class AppStore {
           locked: false,
           id: uuidv4()
         }
-        const stylesheetValues = this.cssTabs.map(tab => tab.content + '\n')
+        const stylesheetValues = this.cssTabs.map(tab => tab.content).join('\n')
         this.assignStyles(comp, stylesheetValues)
         if(comp.children && comp.children.length){
           this.assignChildIds(comp.children)

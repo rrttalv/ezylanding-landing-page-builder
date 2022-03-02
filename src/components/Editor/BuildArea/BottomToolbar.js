@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ComponentBorder } from './ComponentBorder'
 import { ReactComponent as CSSIcon } from '../../../svg/css2.svg'
+import { ReactComponent as Trash } from '../../../svg/trash.svg'
+import { ReactComponent as Duplicate } from '../../../svg/duplicate.svg'
 import { ReactComponent as Arrows } from '../../../svg/multi-arrow.svg'
 import { ReactComponent as Caret } from '../../../svg/caret-down.svg'
 import { ReactComponent as GearIcon } from '../../../svg/gear.svg'
@@ -195,6 +197,14 @@ export const BottomToolbar = observer((props) => {
     app.toggleCompChildren(id)
   }
 
+  const handleDelete = id => {
+    app.deleteElement(id)
+  }
+
+  const duplicateElement = id => {
+    app.duplicateElement(id)
+  }
+
   const getElems = (element, level = 0) => {
     const { childrenOpen } = element
     const isSelected = app.selectedElement === element.id
@@ -227,19 +237,33 @@ export const BottomToolbar = observer((props) => {
           }
           {
             isSelected ? (
-              <button 
-                onClick={e => toggleOptionsMenu(element.id, !element.toolbarOptionsOpen)}
-                className='options-toggle'>
-                {
-                  <GearIcon className={element.toolbarOptionsOpen ? 'active' : 'inactive'} />
-                }
-              </button>
+              <>
+                <button
+                  onClick={e => duplicateElement(element.id)}
+                  className='duplicate-btn'
+                >
+                  <Duplicate className='trash' />
+                </button>
+                <button
+                  onClick={e => handleDelete(element.id)}
+                  className='delete-btn'
+                >
+                  <Trash className='trash' />
+                </button>
+                <button 
+                  onClick={e => toggleOptionsMenu(element.id, !element.toolbarOptionsOpen)}
+                  className='options-toggle'>
+                  {
+                    <GearIcon className={element.toolbarOptionsOpen ? 'active' : 'inactive'} />
+                  }
+                </button>
+              </>
             )
             :
             undefined
           }
           {
-            element.children && element.children.length && isSelected ? (
+            element.children && element.children.length && isSelected && level === 0 ? (
               <button
                 onClick={e => toggleChildren(element.id)}
                 className='children-toggle'

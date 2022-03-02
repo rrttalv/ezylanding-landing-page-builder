@@ -46,7 +46,7 @@ export const flexRow2Col = {
                 {
                   type: 'text',
                   tagName: 'h1',
-                  className: 'two-col section-text',
+                  className: 'text-dark',
                   content: 'The Final Solution',
                   style: {
                     color: 'var(--dark)',
@@ -56,7 +56,7 @@ export const flexRow2Col = {
                 {
                   type: 'text',
                   tagName: 'h1',
-                  className: 'two-col text-main-lead',
+                  className: 'text-main',
                   content: 'To all of your problems!',
                   style: {
                     color: 'var(--main)',
@@ -86,7 +86,7 @@ export const flexRow2Col = {
                     {
                       type: 'button',
                       tagName: 'button',
-                      className: 'btn two-col btn-main',
+                      className: 'btn btn-main',
                       bootstrapClass: 'btn',
                       content: 'Get Started',
                       style: {
@@ -98,7 +98,7 @@ export const flexRow2Col = {
                     {
                       type: 'button',
                       tagName: 'button',
-                      className: 'btn two-col btn-second',
+                      className: 'btn btn-second',
                       bootstrapClass: 'btn',
                       content: 'Get Demo',
                       style: {
@@ -236,7 +236,7 @@ export const largeColumn = {
                 {
                   type: 'text',
                   tagName: 'h1',
-                  className: 'large-col text-main',
+                  className: 'text-white',
                   content: 'The Final Solution',
                   style: {
                     color: 'var(--white)',
@@ -246,7 +246,7 @@ export const largeColumn = {
                 {
                   type: 'text',
                   tagName: 'h1',
-                  className: 'large-col text-main',
+                  className: 'text-white',
                   content: 'To all of your problems!',
                   style: {
                     color: 'var(--white)',
@@ -256,7 +256,7 @@ export const largeColumn = {
                 {
                   type: 'text',
                   tagName: 'p',
-                  className: 'large-col lead-text',
+                  className: 'text-second',
                   content: 'At vero eos et accusamus et iusto odio dignissimos! Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime.',
                   style: {
                     color: 'var(--secondary)',
@@ -277,7 +277,7 @@ export const largeColumn = {
                     {
                       type: 'button',
                       tagName: 'button',
-                      className: 'large-col btn btn-main',
+                      className: 'btn btn-main',
                       bootstrapClass: 'btn',
                       content: 'Get Started',
                       style: {
@@ -289,7 +289,7 @@ export const largeColumn = {
                     {
                       type: 'button',
                       tagName: 'button',
-                      className: 'large-col btn btn-second',
+                      className: 'btn btn-second',
                       bootstrapClass: 'btn',
                       content: 'Get Demo',
                       style: {
@@ -363,7 +363,7 @@ export const features1 = {
               style: {
                 color: 'var(--gray)',
                 maxWidth: '600px',
-                marginTop: '10px',
+                marginTop: '5px',
                 fontWeight: 'normal'
               },
             },
@@ -383,7 +383,7 @@ export const features1 = {
               className: 'feature-wrapper',
               style: {
                 display: 'flex',
-                marginTop: '15px',
+                marginTop: '25px',
               },
               children: [
                 {
@@ -421,7 +421,7 @@ export const features1 = {
                     {
                       type: 'text',
                       tagName: 'h6',
-                      className: 'feature-body-heading',
+                      className: 'text-dark',
                       content: 'Awesome feature #1',
                       style: {
                         color: 'var(--dark)',
@@ -457,7 +457,7 @@ export const features1 = {
               className: 'feature-wrapper',
               style: {
                 display: 'flex',
-                marginTop: '15px',
+                marginTop: '25px',
               },
               children: [
                 {
@@ -495,7 +495,7 @@ export const features1 = {
                     {
                       type: 'text',
                       tagName: 'h6',
-                      className: 'feature-body-heading',
+                      className: 'text-dark',
                       content: 'Awesome feature #2',
                       style: {
                         color: 'var(--dark)',
@@ -531,7 +531,7 @@ export const features1 = {
               className: 'feature-wrapper',
               style: {
                 display: 'flex',
-                marginTop: '15px',
+                marginTop: '25px',
               },
               children: [
                 {
@@ -569,7 +569,7 @@ export const features1 = {
                     {
                       type: 'text',
                       tagName: 'h6',
-                      className: 'feature-body-heading',
+                      className: 'text-dark',
                       content: 'Awesome feature #3',
                       style: {
                         color: 'var(--dark)',
@@ -605,7 +605,7 @@ export const features1 = {
               className: 'feature-wrapper',
               style: {
                 display: 'flex',
-                marginTop: '15px',
+                marginTop: '25px',
               },
               children: [
                 {
@@ -643,7 +643,7 @@ export const features1 = {
                     {
                       type: 'text',
                       tagName: 'h6',
-                      className: 'feature-body-heading',
+                      className: 'text-dark',
                       content: 'Awesome feature #4',
                       style: {
                         color: 'var(--dark)',
