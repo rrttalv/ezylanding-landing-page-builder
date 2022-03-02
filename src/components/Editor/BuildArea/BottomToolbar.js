@@ -74,8 +74,9 @@ export const BottomToolbar = observer((props) => {
     app.toggleCSSTab(id)
   }
 
-  const saveElementProp = (id, propName, propValue) => {
+  const saveElementProp = (id, propName, toggleName, propValue) => {
     app.updateElementProp(id, propName, propValue)
+    app.toggleElementProp(id, toggleName, false)
   }
 
   const toggleProp = (e, id, propName, propStatus) => {
@@ -126,7 +127,7 @@ export const BottomToolbar = observer((props) => {
               element.editingClass ? (
                 <PropInput
                   value={element.className}
-                  save={(value) => saveElementProp(element.id, 'className', value)}
+                  save={(value) => saveElementProp(element.id, 'className', 'editingClass', value)}
                   className={inputClass}
                   label={'Set element className'}
                 />
@@ -141,7 +142,7 @@ export const BottomToolbar = observer((props) => {
               element.editingID ? (
                 <PropInput
                   value={element.domID}
-                  save={(value) => saveElementProp(element.id, 'domID', value)}
+                  save={(value) => saveElementProp(element.id, 'domID', 'editingID', value)}
                   className={inputClass}
                   label={'Set element ID'}
                 />
@@ -161,7 +162,7 @@ export const BottomToolbar = observer((props) => {
                   element.editingSrc ? (
                     <PropInput
                       value={element.src}
-                      save={(value) => saveElementProp(element.id, 'src', value)}
+                      save={(value) => saveElementProp(element.id, 'src', 'editingSrc', value)}
                       className={inputClass}
                       label={'Set element src'}
                     />

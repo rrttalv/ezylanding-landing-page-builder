@@ -7,6 +7,7 @@ class SidebarStore {
   }
   
   activeItem = null
+  focusedComponent = null
   
   toggleItem(id){
     this.appStore.togglePaletteEditing(null)
@@ -16,6 +17,10 @@ class SidebarStore {
   unsetActiveItem(){
     this.appStore.togglePaletteEditing(null)
     this.activeItem = null
+  }
+
+  setFocusedComponent(id){
+    this.focusedComponent = id
   }
 
   

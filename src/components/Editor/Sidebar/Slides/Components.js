@@ -1,12 +1,33 @@
 import { MobXProviderContext, observer } from 'mobx-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import constants from '../../../../config/constants'
+import { SlideMenu } from './SlideMenu'
 
 
 export const Components = observer((props) => {
 
   const [expanded, setExpanded] = useState(false)
   const [expandedClass, setExpandedClass] = useState('hidden')
+  const [sectionList, setSectionList] = useState([
+    {
+      id: 'sections',
+      components: constants.sections,
+      style: {
+        marginRight: '10px'
+      },
+      active: true
+    },
+    {
+      id: 'inputs',
+      components: constants.inputs,
+      active: false
+    },
+    {
+      id: 'text',
+      components: constants.text,
+      active: false
+    },
+  ])
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -14,7 +35,19 @@ export const Components = observer((props) => {
 
   const { store: { sidebar, app } } = getStore()
 
-  const { sections, inputs, text } = constants
+  useEffect(() => {
+    const copy = [...sectionList]
+    const activeItem = copy.find(({ id }) => id === sidebar.focusedComponent)
+    if(activeItem){
+      copy.forEach(item => {
+        item.active = false
+        if(item.id === sidebar.focusedComponent){
+          item.active = true
+        }
+      })
+    }
+    setSectionList(copy)
+  }, [sidebar.focusedComponent])
 
   const getExpanded = () => {
     return (
@@ -46,7 +79,6 @@ export const Components = observer((props) => {
     const list = copy.slice(0, 3)
     return (
       <div className='component-slide_wrapper' key={elem.id}>
-        <h6 className='component-slide_title'>{elem.title}</h6>
         <div className='component-slide_list'>
           <div className='component-slide_rows'>
             {
@@ -85,22 +117,24 @@ export const Components = observer((props) => {
     )
   }
 
+  const handleMenuItemClick = id => {
+    sidebar.setFocusedComponent(id)
+  }
+
+  const active = sectionList.find(({ active }) => active)
+
   return (
     <div 
       className='component-slide slide-item'
       onPointerUp={() => handleItemDragEnd()}
     >
+      <SlideMenu
+        className='component-slide_menu'
+        onClick={handleMenuItemClick}
+        menuItems={sectionList}
+      />
       {
-        getExpanded()
-      }
-      {
-        getRows(sections, 'sections'< { margin: '0 10px' })
-      }
-      {
-        getRows(inputs)
-      }
-      {
-        getRows(text)
+        getRows(active.components, active.id, active.style ? active.style : {})
       }
     </div>
   )
