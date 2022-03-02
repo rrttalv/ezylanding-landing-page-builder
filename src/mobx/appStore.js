@@ -364,14 +364,24 @@ class AppStore {
       const doc = frame.contentWindow.document
       element[propName] = propValue
       const domElement = doc.querySelector(`[data-uuid="${id}"]`)
-      if(propName === 'className'){
-        domElement.className = propValue
-      }
-      if(propName === 'domID'){
-        domElement.id = propValue
-      }
-      if(propName === 'src'){
-        domElement.setAttribute('src', propValue)
+      //Custom flow for SVG elements
+      if(element.tagName === 'svg'){
+        if(propName === 'className'){
+          domElement.setAttribute('class', propValue)
+        }
+        if(propName === 'domID'){
+          domElement.setAttribute('id', propValue)
+        }
+      }else{
+        if(propName === 'className'){
+          domElement.className = propValue
+        }
+        if(propName === 'domID'){
+          domElement.id = propValue
+        }
+        if(propName === 'src'){
+          domElement.setAttribute('src', propValue)
+        }
       }
     }
     setTimeout(() => {
@@ -1135,8 +1145,30 @@ class AppStore {
     }
   }
 
+  compileSVG(doc, comp){
+    const div = doc.createElement('div')
+    div.innerHTML = comp.content
+    const svg = div.firstChild
+    Object.keys(comp.style).forEach(key => {
+      svg.style[key] = comp.style[key]
+    })
+    if(comp.className){
+      svg.setAttribute('class', comp.className)
+    }
+    if(comp.domID){
+      svg.setAttribute('id', comp.domID)
+    }
+    svg.setAttribute('data-uuid', comp.id)
+    svg.setAttribute('key', comp.id)
+    return div
+  }
+
   compileDomElement(doc, comp, addStyles = false){
-    const domElement = doc.createElement(comp.tagName)
+    let domElement = doc.createElement(comp.tagName)
+    if(comp.tagName === 'svg'){
+      domElement = this.compileSVG(doc, comp)
+      return domElement.firstChild
+    }
     if(comp.src){
       domElement.src = comp.src
     }
@@ -1245,12 +1277,13 @@ class AppStore {
         }
       })
     }
-    if(!classExists && keys.length > 0){
+    if(!classExists && keys.length > 0 && !comp.inlineStyles){
       const CSS = this.getElementCSSString(comp)
       this.cssTabs[0].content += `\n\n${selectorPrefix}${selector} {\n${CSS}\n}`
+    }
+    if(!comp.inlineStyles){
       comp.style = {}
     }
-    comp.style = {}
     const newValues = this.cssTabs.map(tab => tab.content).join('\n')
     if(comp.children && comp.children.length){
       comp.children.forEach(child => {

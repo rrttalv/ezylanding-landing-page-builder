@@ -1,6 +1,7 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
 import ReactDOMServer from 'react-dom/server'
+import parse from 'html-react-parser'
 
 export const IFrame = observer((props) => {
 
@@ -59,6 +60,24 @@ export const IFrame = observer((props) => {
     }
   }
 
+  const getSVG = (element) => {
+    const div = document.createElement('div')
+    div.innerHTML = element.content
+    const svg = div.firstChild
+    Object.keys(element.style).forEach(key => {
+      svg.style[key] = element.style[key]
+    })
+    if(element.className){
+      svg.setAttribute('className', element.className)
+    }
+    if(element.domID){
+      svg.setAttribute('id', element.domID)
+    }
+    svg.setAttribute('data-uuid', element.id)
+    svg.setAttribute('key', element.id)
+    return parse(div.innerHTML)
+  }
+
   const getCorrectElement = (elem, isSectionChild) => {
     const { position, style: elemStyle } = elem
     let elemPositionStyle = {}
@@ -110,6 +129,8 @@ export const IFrame = observer((props) => {
         return <input key={elem.id} placeholder={elem.placeHolder} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
       case 'img':
         return <img key={elem.id} data-uuid={elem.id} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
+      case 'svg':
+        return getSVG(elem)
       case 'style':
         return <style key={elem.id} data-uuid={elem.id} type="text/css">{elem.content}</style>
       default:
