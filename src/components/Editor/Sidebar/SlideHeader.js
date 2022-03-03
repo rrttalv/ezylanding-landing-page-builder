@@ -16,6 +16,10 @@ export const SlideHeader = ((props) => {
       icon: <Code style={{ marginTop: '5px' }} />,
       title: 'Customize template'
     },
+    'routes': {
+      icon: <Link style={{ marginTop: '2px', paddingBottom: '2px' }} />,
+      title: 'Set up routing'
+    },
   })
 
   const data = titleList[props.id]

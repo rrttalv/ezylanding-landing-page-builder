@@ -136,7 +136,7 @@ export const flexRow2Col = {
                 {
                   type: 'img',
                   tagName: 'img',
-                  className: 'two-col large-image',
+                  className: 'rounded large-image',
                   src: 'http://localhost:3000/images/static/office-worker.jpeg',
                   style: {
                     width: '95%',

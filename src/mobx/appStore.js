@@ -135,6 +135,12 @@ class AppStore {
   pages = [
     {
       route: '/',
+      routeMeta: {
+        metaDescription: '',
+        metaTitle: '',
+        metaImage: '',
+        detailsOpen: false,
+      },
       id: uuidv4(),
       elements: [],
       elementsHeight: 500,

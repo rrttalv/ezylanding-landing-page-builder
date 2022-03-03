@@ -1,0 +1,30 @@
+.slide-wrapper {
+  .route-slide {
+    .route-list {
+      margin-top: 10px;
+      border-radius: 4px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+      &_header {
+        padding: 5px 12px;
+        &_title {
+          font-size: 18px;
+        }
+        .btn-none {
+          width: 100%;
+        }
+        svg {
+          width: 18px;
+          float: right;
+          height: 18px;
+          fill: #3ee3c5;
+          margin-top: 3px;
+        }
+      }
+      &_prefrences {
+        border-top: 1px solid #eee;
+        padding: 10px 10px;
+      }
+    }
+  }
+}

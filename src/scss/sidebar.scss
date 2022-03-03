@@ -87,7 +87,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: calc(100% + 20px);
+    width: calc(100%);
     margin-left: -10px;
     padding: 10px;
     background: #fff;
@@ -121,49 +121,6 @@
 
 #css-grid {
 
-  /*
-  .ReactVirtualized__Grid.ReactVirtualized__List {
-    overflow-x: scroll!important;
-    .row-wrapper {
-      height: 20px;
-    }
-    .row-index {
-      color: #fff;
-      display: block;
-      margin-right: 10px;
-      font-size: 12px;
-      padding-top: 4px;
-      font-weight: 300;
-    }
-  }
-  .ReactVirtualized__Grid__innerScrollContainer {
-    overflow-x: visible!important;
-    min-height: 100%;
-  }
-  code {
-    white-space: pre-wrap;
-    white-space: pre;
-  }
-  .row-input {
-    all: unset;
-    position: absolute;
-    left: 0;
-    background: transparent;
-    color: black;
-    -webkit-text-fill-color: transparent;
-    caret-color: red;
-    z-index: 5;
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace !important;
-    direction: ltr;
-    padding: 0;
-    white-space: pre;
-    margin: 0;
-    border: none;
-    outline: none;
-    overflow: hidden;
-    resize: none;
-  }
-  */
 }
 
 .slide-wrapper.visible {
@@ -202,7 +159,7 @@
   }
 }
 
-.code-slide {
+.code-slide, .route-slide {
   &_wrapper {
     margin-top: 1.5rem;
   }

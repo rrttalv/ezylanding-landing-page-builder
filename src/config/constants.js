@@ -52,78 +52,28 @@ const constants = {
     title: 'Inputs',
     elements: [
       {
-        title: 'Text input',
-        type: 'input',
-        dragProps: {
-          rawWidth: 300,
-          rawHeight: 100,
-          width: '80%',
-        },
-        inputType: 'textarea',
-        tagName: 'textarea',
-        className: 'form-control',
-        domID: '',
-        labelData: {
-          content: 'Text area label',
-          style: {
-            marginBottom: '10px',
-            fontSize: '12px'
-          }
-        },
-        displayStyle: {
-          wrapper: {
-            width: '100%',
-            height: '100px'
-          },
-          image: {
-            width: '250px'
-          }
-        },
-        thumb: '/images/inputs/text-area.svg',
-        style: {
-          'borderRadius': '4px',
-          width: '80%',
-          height: '100px',
-          margin: '0 auto',
-          display: 'block',
-          border: '1px solid rgba(0,0,0,0.175)'
-        }
-      },
-      {
         title: 'Rounded button',
         type: 'button',
         domID: '',
-        className: 'btn',
+        dragProps: {
+          rawWidth: 100,
+          rawHeight: 30,
+          width: '100px',
+          height: '30px'
+        },
+        className: 'btn btn-main',
         tagName: 'button',
         content: 'Click me!',
         thumb: '/images/inputs/regular-btn.svg',
         style: {
           'borderRadius': '4px',
-          width: '100px',
           display: 'block',
-          background: '#3E41DC',
-          color: '#fff',
-          height: '35px',
+          background: 'var(--main)',
+          color: `var(--white)`,
           fontSize: '14px',
           border: '1px solid rgba(0,0,0,0.175)'
         }
-      },
-      {
-        title: 'Box-shadow button',
-        type: 'button',
-        className: 'btn',
-        domID: '',
-        tagName: 'button',
-        content: 'Click me!',
-        thumb: '/images/inputs/box-shadow-btn.svg',
-        style: {
-          'borderRadius': '4px',
-          width: '100px',
-          height: '50px',
-          display: 'block',
-          border: '1px solid rgba(0,0,0,0.175)'
-        }
-      },
+      }
     ]
   },
   text: {

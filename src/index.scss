@@ -124,6 +124,7 @@ input {
   }
   &_input {
     background-color: #ffffff;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,0.05);
     color: #252525;
     border-radius: 5px;
     display: inline-block;
@@ -134,6 +135,13 @@ input {
     &:focus {
       border-color: #3ee3c5;
     }
+  }
+}
+
+.btn-none {
+  all: unset;
+  &:hover {
+    cursor: pointer;
   }
 }
 
