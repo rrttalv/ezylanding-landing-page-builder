@@ -612,7 +612,6 @@ class AppStore {
         const xMid = (width / 2) + x
         const yMid = (height / 2) + y
         const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
-        console.log(x < rawX, rawX < xMid, y < rawY, rawY < yMid)
         if(isBefore){
           this.dragMetaData.before = true
         }
@@ -1519,9 +1518,9 @@ class AppStore {
           }
         }
         setTimeout(() => {
-          this.recalculateSizes(this.pages[0].elements)
           this.setIframeHeight()
           this.sizeCalcChange = !this.sizeCalcChange
+          this.recalculateSizes(this.pages[0].elements)
         }, 300)
       }
     }catch(err){

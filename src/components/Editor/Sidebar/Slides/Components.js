@@ -75,8 +75,7 @@ export const Components = observer((props) => {
   }
 
   const getRows = (elem, type, customStyle = {}) => {
-    const copy = [...elem.elements]
-    const list = copy.slice(0, 3)
+    const list = [...elem.elements]
     return (
       <div className='component-slide_wrapper' key={elem.id}>
         <div className='component-slide_list'>
