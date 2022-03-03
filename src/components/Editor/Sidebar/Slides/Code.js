@@ -157,7 +157,7 @@ export const Code = observer((props) => {
   const getPaletteItems = () => {
     const editingItem = palette.find(({ isEditing }) => isEditing)
     return (
-      <div className='palette-items' style={{ paddingBottom: editingItem ? '200px' : '50px' }}>
+      <div className='palette-items' style={{ paddingBottom: editingItem ? '200px' : '25px' }}>
         {
           palette.map((item, idx) => {
             const { name, id, var: varName, value, isEditing } = item

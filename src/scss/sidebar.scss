@@ -9,7 +9,7 @@
     height: 100%;
     flex-direction: column;
     padding: 5px;
-    padding-top: 10px;
+    padding-top: 0;
     position: fixed;
     background-color: #f8f8f8;
     z-index: 1;
@@ -17,6 +17,7 @@
     align-items: center;
   }
   &_toggle {
+    transition: ease-in-out 0.25s;
     border: none;
     outline: none;
     box-shadow: none;
@@ -26,40 +27,43 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 10px;
-    margin-bottom: 20px;
+    padding: 15px 0;
+    margin-bottom: 10px;
     &:hover {
       cursor: pointer;
     }
     span {
       font-size: 12px;
-      margin-top: 5px;
+      margin-top: 10px;
       color: #252525;
     }
   }
-  &_toggle.customize {
-    margin-top: 5px;
-  }
   &_toggle.active {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: -1px;
+    background: #7176ec;
     span {
-      color: $third;
+      color: #fff;
+      font-weight: 600;
     }
+    width: 100px;
   }
   &_toggle.active:not(.customize):not(.routes) {
     span {
-      color: $third;
+      color: #fff;
     }
     svg {
       path {
-        stroke: $third;
+        stroke: #fff;
       }
     }
   }
   &_toggle.active.customize, &_toggle.active.routes {
     svg {
-      fill: $third;
+      fill: #fff;
       path {
-        fill: $third;
+        fill: #fff;
       }
     }
   }
@@ -109,12 +113,11 @@
   &_palettes {
     margin-left: -10px;
     margin-right: -10px;
-    margin-top: 25px;
+    margin-top: 5px;
     padding: 10px;
     .palette-items {
       margin-left: 10px;
       margin-top: 15px;
-      padding-bottom: 100px;
       display: grid;
       grid-template-columns: repeat(3, auto);
       gap: 5px;
@@ -175,7 +178,7 @@
         color: #fff;
         font-weight: 500;
         border-radius: 4px;
-        background-color: #8d92fa;
+        background-color: #7176ec;
         border: 1px solid rgba(0,0,0,0.1);
         &:disabled {
           background-color: #bec0ec;
@@ -349,7 +352,7 @@
       font-size: 14px;
     }
     &_title.active {
-      color: #8d92fa;
+      color: #7176ec;
       font-weight: 500;
     }
   }
