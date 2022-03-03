@@ -269,14 +269,14 @@ export const Body = observer((props) => {
                   }}
                 >
                   {
-                    idx === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                    idx === dragIndex && activeDrag && (app.parentElements.includes(activeDrag.type) || activeDrag.parent) ? (
                       <div className='build-area_insert-preview insert-above' />
                     )
                     :
                     undefined
                   }
                   {
-                    activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && app.parentElements.includes(activeDrag.type) ? (
+                    activePage.elements.length - 1 === idx && idx + 1 === dragIndex && activeDrag && (app.parentElements.includes(activeDrag.type) || activeDrag.parent) ? (
                       <div className='build-area_insert-preview insert-below' />
                     )
                     :
@@ -290,9 +290,15 @@ export const Body = observer((props) => {
                     undefined
                   }
                 </div>
-                  {mapAllElements(elem.children, elem.id).map((child, idx) => (
-                    getChildElemBorder(child, idx, elem.id)
-                  ))}
+                  {
+                    elem.children ? (
+                      mapAllElements(elem.children, elem.id).map((child, idx) => (
+                      getChildElemBorder(child, idx, elem.id)
+                      ))
+                    )
+                    :
+                    undefined
+                  }
               </React.Fragment>
             )
           })

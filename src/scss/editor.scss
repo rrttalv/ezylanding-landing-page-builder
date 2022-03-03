@@ -580,13 +580,17 @@
   }
 }
 
-
 .layer-toolbar-list.visible {
   z-index: 1000;
   padding-top: 2.5px;
   max-height: 400px;
+  min-height: 400px;
   overflow-y: auto;
   display: block;
+}
+
+.layer-toolbar-list.empty {
+  min-height: 0;
 }
 
 .layer-toolbar-list.hidden {

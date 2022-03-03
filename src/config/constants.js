@@ -1,6 +1,45 @@
 import { cardSection, singleCard } from "./cards"
 import { features1, features2, flexRow2Col, largeColumn } from "./sections"
 
+const div = {
+  title: 'Empty div',
+  thumb: '/images/sections/flex-row-2.svg',
+  dragProps: {
+    rawWidth: 500,
+    rawHeight: 300,
+    width: '50%',
+    height: '300px'
+  },
+  type: 'div',
+  tagName: 'div',
+  className: '',
+  inlineStyles: true,
+  style: {
+    minHeight: '100px'
+  },
+  children: []
+}
+
+const section = {
+  title: 'Empty section',
+  thumb: '/images/sections/flex-row-2.svg',
+  dragProps: {
+    rawWidth: 500,
+    rawHeight: 300,
+    width: '50%',
+    height: '300px'
+  },
+  type: 'section',
+  tagName: 'section',
+  className: '',
+  inlineStyles: true,
+  style: {
+    minHeight: '100px'
+  },
+  children: []
+}
+
+
 const constants = {
   headers: {
     id: 'headers',
@@ -45,7 +84,9 @@ const constants = {
       {...flexRow2Col},
       {...largeColumn},
       {...features1},
-      {...features2}
+      {...features2},
+      div,
+      section
     ]
   },
   inputs: {
@@ -67,12 +108,10 @@ const constants = {
         content: 'Click me!',
         thumb: '/images/inputs/regular-btn.svg',
         style: {
-          'borderRadius': '4px',
           display: 'block',
           background: 'var(--main)',
           color: `var(--white)`,
-          fontSize: '14px',
-          border: '1px solid rgba(0,0,0,0.175)'
+          fontWeight: 600,
         }
       }
     ]
@@ -173,7 +212,7 @@ const constants = {
         }
       },
     ]
-  }
+  },
 }
 
 export const scripts = [

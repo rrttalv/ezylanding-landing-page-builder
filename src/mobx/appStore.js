@@ -618,6 +618,12 @@ class AppStore {
         if(!isBefore){
           this.dragMetaData.after = true
         }
+        this.activeDrag.parent = false
+        delete this.activeDrag.children
+      }else{
+        this.activeDrag.parent = true
+        this.activeDrag.children = []
+        this.checkDragIndex(rawX, rawY)
       }
       this.dragTarget = target
     }else{
@@ -1196,7 +1202,9 @@ class AppStore {
     if(comp.inputType){
       domElement.type = comp.inputType
     }
-    domElement.className = comp.className
+    if(comp.className){
+      domElement.className = comp.className
+    }
     domElement.setAttribute('data-uuid', comp.id)
     if(addStyles && comp.style){
       Object.keys(comp.style).forEach(key => {
@@ -1212,25 +1220,30 @@ class AppStore {
     return domElement
   }
 
-  insertElementIntoIframe(comp, targetElement, insertBefore = null, push = false, insertAsFirst = false){
+  insertElementIntoIframe(comp, targetElement, insertBefore = null, push = false, insertAsFirst = false, pushToBody = false){
     const frame = document.querySelector('iframe')
     if(frame){
       const doc = frame.contentWindow.document
-      const parent = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
-      const domElement = this.compileDomElement(doc, comp)
-      if(insertBefore){
-        const child = doc.querySelector(`[data-uuid="${insertBefore}"]`)
-        if(child){
-          parent.insertBefore(domElement, child)
-        }else{
+      const domElement = this.compileDomElement(doc, comp, pushToBody)
+      if(pushToBody){
+        const pageBody = doc.querySelector('#PAGE-BODY')
+        pageBody.appendChild(domElement)
+      }else{
+        const parent = doc.querySelector(`[data-uuid="${targetElement.id}"]`)
+        if(insertBefore){
+          const child = doc.querySelector(`[data-uuid="${insertBefore}"]`)
+          if(child){
+            parent.insertBefore(domElement, child)
+          }else{
+            parent.appendChild(domElement)
+          }
+        }
+        if(push){
           parent.appendChild(domElement)
         }
-      }
-      if(push){
-        parent.appendChild(domElement)
-      }
-      if(insertAsFirst){
-        parent.insertBefore(domElement, parent.firstChild)
+        if(insertAsFirst){
+          parent.insertBefore(domElement, parent.firstChild)
+        }
       }
       const inserted = doc.querySelector(`[data-uuid="${comp.id}"]`)
       if(inserted){
@@ -1515,6 +1528,12 @@ class AppStore {
               this.insertElementIntoIframe(comp, targetParent, null, false, true)
             }
             this.elementLen += 1
+            this.setSelectedElement(comp.id, null)
+          }else{
+            this.insertElementIntoIframe(comp, null, null, null, null, true)
+            this.pages[0].elements.push(comp)
+            this.elementLen += 1
+            this.setSelectedElement(comp.id, null)
           }
         }
         setTimeout(() => {
@@ -1525,6 +1544,8 @@ class AppStore {
       }
     }catch(err){
       this.activeDrag = null
+    }finally{
+      this.dragMetaData = {...initDragMeta}
     }
   }
 
