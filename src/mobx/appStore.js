@@ -13,9 +13,8 @@ const initSectionProps = {
 }
 
 const initDragMeta = {
-  insertAfter: null,
-  insertBefore: null,
-  parent: null
+  before: false,
+  after: false
 }
 
 
@@ -33,9 +32,8 @@ class AppStore {
   activeTextEditor = null
 
   dragMetaData = {
-    insertAfter: null,
-    insertBefore: null,
-    parent: null
+    before: false,
+    after: false
   }
 
   cssTabs = [
@@ -608,6 +606,20 @@ class AppStore {
           }
         }
       })
+      let metaFound = false
+      if(target){
+        const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
+        const xMid = (width / 2) + x
+        const yMid = (height / 2) + y
+        const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
+        console.log(x < rawX, rawX < xMid, y < rawY, rawY < yMid)
+        if(isBefore){
+          this.dragMetaData.before = true
+        }
+        if(!isBefore){
+          this.dragMetaData.after = true
+        }
+      }
       this.dragTarget = target
     }else{
       this.checkDragIndex(rawX, rawY)
@@ -623,6 +635,7 @@ class AppStore {
   setMouseUp(){
     this.mouseStartX = 0
     this.mouseStartY = 0
+    this.dragMetaData = {...initDragMeta}
     this.toggleActiveMouseEvent(null, false)
   }
 

@@ -103,8 +103,19 @@ export const Body = observer((props) => {
     if(isSection){
       className += ' section-tools'
     }
+    const { before, after } = app.dragMetaData
     return (
       <>
+        {
+          indicatorOnly ? (
+            <>
+            {before ? <div className='element-tools_insert before' /> : undefined}
+            {after ? <div className='element-tools_insert after' /> : undefined}
+            </>
+          )
+          :
+          undefined
+        }
         <div className={className}>
           <div className='element-tools_toolbar'>
             <ElementIndicator 

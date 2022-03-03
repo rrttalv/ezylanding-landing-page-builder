@@ -16,6 +16,10 @@ body {
   background: #f8f8f8;
 }
 
+:root {
+  --insert-bg: rgba(62, 227, 197, 0.6);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
