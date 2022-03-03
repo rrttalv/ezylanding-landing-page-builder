@@ -155,13 +155,14 @@ export const Code = observer((props) => {
   }
 
   const getPaletteItems = () => {
+    const editingItem = palette.find(({ isEditing }) => isEditing)
     return (
-      <div className='palette-items'>
+      <div className='palette-items' style={{ paddingBottom: editingItem ? '200px' : '50px' }}>
         {
-          palette.map(item => {
+          palette.map((item, idx) => {
             const { name, id, var: varName, value, isEditing } = item
             return (
-              <div key={id} className='palette-item'>
+              <div key={id} className={`palette-item${idx + 1 === 1 || (idx + 1) % 4 === 0 ? ' first-grid-item' : ''}`}>
                 <div className='palette-item_color' onClick={e => toggleEditing(e, id)} style={{ background: value }} />
                 {
                   isEditing ? (
@@ -178,21 +179,8 @@ export const Code = observer((props) => {
                   :
                   undefined
                 }
-                <div className='input-group'>
-                  <label
-                    className='input-group_label'
-                  >
-                    Palette --var value
-                  </label>
-                  <input 
-                    className='input-group_input'
-                    type='text'
-                    name='var'
-                    placeholder='Palette item --var name'
-                    value={varName}
-                    onChange={e => handlePaletteChange(e, id)}
-                  />
-                </div>
+                <span className='palette-item_text'>{varName}</span>
+                <span className='palette-item_value'>{value}</span>
               </div>
             )
           })
@@ -263,7 +251,6 @@ export const Code = observer((props) => {
           />
           <div className='code-slide_css-editor_save'>
             <button 
-              className='btn'
               disabled={hasActiveChanges()}
               onClick={e => handleSave()}
             >
@@ -271,8 +258,8 @@ export const Code = observer((props) => {
             </button>
           </div>
         </div>
+        <h6 className='code-slide_title' style={{ marginTop: '40px' }}>Customize template palettes</h6>
         <div className='code-slide_palettes'>
-        <h6 className='code-slide_title'>Customize template palettes</h6>
           {getPaletteItems()}
         </div>
       </div>

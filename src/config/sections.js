@@ -199,40 +199,10 @@ export const largeColumn = {
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'column',
+                background: 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(http://localhost:3000/images/static/office-worker.jpeg)',
+                borderRadius: '10px',
               },
               children: [
-                {
-                  type: 'div',
-                  tagName: 'div',
-                  className: 'content-bg',
-                  style: {
-                    background: 'url(http://localhost:3000/images/static/office-worker.jpeg)',
-                    borderRadius: '10px',
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    width: '100%',
-                    height: '100%',
-                    zIndex: '-2',
-                  },
-                  children: [
-                    {
-                      type: 'div',
-                      tagName: 'div',
-                      className: 'content-background-overlay',
-                      style: {
-                        zIndex: '-1',
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        borderRadius: '10px',
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                      }
-                    }
-                  ]
-                },
                 {
                   type: 'text',
                   tagName: 'h1',

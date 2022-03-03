@@ -101,26 +101,94 @@
       margin-left: 5px;
     }
   }
-  .code-slide {
-    &_css-editor {
-      &_save {
-        display: flex;
-        width: 100%;
-        justify-content: flex-end;
-        padding-top: 5px;
-        .btn {
-          margin-right: 5px;
-          &:disabled {
-            background-color: #bec0ec;
+}
+
+
+//The palette part of the code slide
+.code-slide {
+  &_palettes {
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: 25px;
+    padding: 10px;
+    .palette-items {
+      margin-left: 10px;
+      margin-top: 15px;
+      padding-bottom: 100px;
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 5px;
+      grid-auto-rows: minmax(125px, auto);
+      .palette-item {
+        position: relative;
+        .chrome-picker {
+          position: absolute;
+          z-index: 100;
+          right: 0;
+        }
+        &_color {
+          &:hover {
+            cursor: pointer;
           }
+          width: 30px;
+          border: 1px solid rgba(0,0,0,0.1);
+          height: 30px;
+          margin: 0 auto;
+          border-radius: 50%;
+          margin-bottom: 5px;
+        }
+        &_text, &_value {
+          display: block;
+          font-size: 14px;
+          text-align: center;
+        }
+        &_text {
+          margin-top: 8px;
+          font-weight: 600;
+        }
+        &_value {
+          margin-top: 8px;
+          font-size: 12px;
+        }
+      }
+      .palette-item.first-grid-item {
+        .chrome-picker {
+          position: absolute;
+          z-index: 100;
+          left: 0;
         }
       }
     }
   }
-}
-
-#css-grid {
-
+  &_css-editor {
+    &_save {
+      display: flex;
+      width: 100%;
+      justify-content: flex-end;
+      padding-top: 10px;
+      button {
+        all: unset;
+        width: 100%;
+        text-align: center;
+        padding: 0.55rem 0.5rem;
+        font-size: 16px;
+        color: #fff;
+        font-weight: 500;
+        border-radius: 4px;
+        background-color: #8d92fa;
+        border: 1px solid rgba(0,0,0,0.1);
+        &:disabled {
+          background-color: #bec0ec;
+          &:hover {
+            cursor: default;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }
 
 .slide-wrapper.visible {
@@ -210,10 +278,6 @@
   &_tab.inactive {
     color: #b2bab6;
   }
-  #css-grid {
-    .ReactVirtualized__Grid.ReactVirtualized__List {
-    }
-  }
 }
 
 .component-slide {
@@ -254,47 +318,6 @@
       font-weight: 500;
       display: block;
       text-align: center;
-    }
-  }
-}
-
-//The palette part of the code slide
-.code-slide {
-  &_palettes {
-    margin-top: 50px;
-    background: #fff;
-    margin-left: -10px;
-    margin-right: -10px;
-    padding: 10px;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    border-left: 1px solid rgba(0,0,0,0.1);
-    .palette-items {
-      margin-left: 10px;
-      margin-top: 15px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      grid-auto-rows: minmax(100px, auto);
-      .palette-item {
-        position: relative;
-        .chrome-picker {
-          position: absolute;
-          z-index: 100;
-          width: 100%!important;
-          right: 0;
-        }
-        &_color {
-          &:hover {
-            cursor: pointer;
-          }
-          width: 30px;
-          border: 1px solid rgba(0,0,0,0.1);
-          height: 30px;
-          margin: 0 auto;
-          border-radius: 4px;
-          margin-bottom: 5px;
-        }
-      }
     }
   }
 }
