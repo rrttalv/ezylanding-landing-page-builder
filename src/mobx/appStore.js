@@ -12,6 +12,12 @@ const initSectionProps = {
   sectionId: null
 }
 
+const initToolbarTarget = {
+  id: null,
+  before: false,
+  after: false
+}
+
 const initDragMeta = {
   before: false,
   after: false
@@ -30,6 +36,15 @@ class AppStore {
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
+
+  //The element currently being moved in the toolbar
+  movingElement = null
+  //The toolbar element ID that is currently targeted
+  toolbarDropTarget = {
+    id: null,
+    before: false,
+    after: false
+  }
 
   dragMetaData = {
     before: false,
@@ -100,7 +115,6 @@ class AppStore {
   ]
 
   //The style keys that are used for editing text elements
-
   activeDrag = null
   activePage = null
   selectedElement = null
@@ -163,6 +177,75 @@ class AppStore {
     })
     str += '\n}'
     return str
+  }
+
+  getChildIDs(element){
+    const ids = [element.id]
+    if(element.children && element.children.length){
+      element.children.forEach(child => {
+        ids.push(...this.getChildIDs(child))
+      })
+    }
+    return ids
+  }
+
+  setMovingElement(id, x, y){
+    this.movingElement = id ? { id, xPos: x, yPos: y } : null
+    if(id){
+      const element = this.findElement(id)
+      this.movingElement.idList = this.getChildIDs(element)
+    }else{
+      this.toolbarDropParent = null
+      this.toolbarDropTarget = {...initToolbarTarget}
+    }
+    this.mouseStartX = x
+    this.mouseStartY = y
+  }
+
+  handleElementMove(x, y, rawX, rawY){
+    const dx = x - this.mouseStartX
+    const dy = y - this.mouseStartY
+    this.movingElement.xPos += dx
+    this.movingElement.yPos += dy
+    this.mouseStartX = x
+    this.mouseStartY = y
+    //Check the cordinates of other elements in the toolbar
+    const { idList } = this.movingElement
+    const posList = document.elementsFromPoint(rawX, rawY)
+    let target = null
+    posList.forEach((item, idx) => {
+      if(!target){
+        const attr = item.getAttribute('data-metauuid')
+        if(attr){
+          target = attr
+        }
+      }
+    })
+    if(target){
+      if(idList.includes(target)){
+        this.toolbarDropParent = null
+        this.toolbarDropTarget = { ...initToolbarTarget }
+        return
+      }
+      const targetElement = this.findElement(target)
+      if(targetElement.children){
+        this.toolbarDropParent = target
+        this.toolbarDropTarget = {...initToolbarTarget}
+      }else{
+        const parent = this.findParentElementByChildID(this.pages[0].elements, target)
+        const { y: elemY, height } = document.querySelector(`[data-metauuid="${target}"]`).getBoundingClientRect()
+        const before = (elemY + height / 2) > rawY
+        this.toolbarDropParent = parent.id
+        this.toolbarDropTarget = {
+          before,
+          after: !before,
+          id: target
+        }
+      }
+    }else{
+      this.toolbarDropParent = null
+      this.toolbarDropTarget = { ...initToolbarTarget }
+    }
   }
 
   syncPalette(){
@@ -608,18 +691,27 @@ class AppStore {
       })
       let metaFound = false
       if(target){
-        const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
-        const xMid = (width / 2) + x
-        const yMid = (height / 2) + y
-        const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
-        if(isBefore){
-          this.dragMetaData.before = true
+        const isMainParent = this.pages[0].elements.find(({ id }) => id === target)
+        const targetElement = this.findElement(target)
+        if(!isMainParent){
+          const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
+          const xMid = (width / 2) + x
+          const yMid = (height / 2) + y
+          const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
+          if(isBefore){
+            this.dragMetaData.before = true
+          }
+          if(!isBefore){
+            this.dragMetaData.after = true
+          }
         }
-        if(!isBefore){
-          this.dragMetaData.after = true
+        const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section'
+        if(insertable && !targetElement.children){
+          targetElement.children = []
+        }else{
+          this.activeDrag.parent = false
+          delete this.activeDrag.children
         }
-        this.activeDrag.parent = false
-        delete this.activeDrag.children
       }else{
         this.activeDrag.parent = true
         this.activeDrag.children = []
@@ -1225,6 +1317,7 @@ class AppStore {
     if(frame){
       const doc = frame.contentWindow.document
       const domElement = this.compileDomElement(doc, comp, pushToBody)
+      console.log(domElement)
       if(pushToBody){
         const pageBody = doc.querySelector('#PAGE-BODY')
         pageBody.appendChild(domElement)
@@ -1279,6 +1372,9 @@ class AppStore {
     if(comp.tagName === 'img'){
       comp.editingSrc = false
     }
+    if(!comp.style){
+      comp.style = {}
+    }
     if(comp.type === 'input'){
       comp.editingPlaceholder = false
     }
@@ -1301,6 +1397,7 @@ class AppStore {
     const keys = Object.keys(comp.style)
     const classNames = comp.className.split(' ')
     let classExists = CSSValues.includes(selectorPrefix + selector)
+    /*
     if(classNames.length > 1){
       classNames.forEach(singleClass => {
         if(CSSValues.includes(singleClass)){
@@ -1308,6 +1405,7 @@ class AppStore {
         }
       })
     }
+    */
     if(!classExists && keys.length > 0 && !comp.inlineStyles){
       const CSS = this.getElementCSSString(comp)
       this.cssTabs[0].content += `\n\n${selectorPrefix}${selector} {\n${CSS}\n}`
@@ -1498,7 +1596,9 @@ class AppStore {
           id: uuidv4()
         }
         const stylesheetValues = this.cssTabs.map(tab => tab.content).join('\n')
+        console.log(comp, targetParent)
         this.assignStyles(comp, stylesheetValues)
+        console.log('here')
         if(comp.children && comp.children.length){
           this.assignChildIds(comp.children)
         }

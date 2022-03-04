@@ -124,9 +124,11 @@ export const IFrame = observer((props) => {
         if(app.activeTextEditor === elem.id){
           styleCopy.opacity = '0.25'
         }
-        return <button key={elem.id} data-uuid={elem.id} style={styleCopy} className={elem.className}>{elem.content}</button>
+        return <button key={elem.id} data-uuid={elem.id} style={styleCopy} className={elem.className || elem.tagName}>{elem.content}</button>
       case 'input':
-        return <input key={elem.id} placeholder={elem.placeHolder} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
+        return <input key={elem.id} placeholder={elem.placeholder} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
+      case 'textarea':
+        return <textarea key={elem.id} placeholder={elem.placeholder} data-uuid={elem.id} className={elem.className} style={style}></textarea>
       case 'img':
         return <img key={elem.id} data-uuid={elem.id} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
       case 'svg':

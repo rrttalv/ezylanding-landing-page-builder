@@ -39,6 +39,106 @@ const section = {
   children: []
 }
 
+const span = {
+  title: 'Span element',
+  type: 'text',
+  tagName: 'span',
+  content: 'Span element',
+  thumb: '/images/text/body.svg',
+  dragProps: {
+    rawWidth: 300,
+    rawHeight: 25,
+  },
+  displayStyle: {
+    wrapper: {
+      width: '100%',
+      height: '30px',
+      marginBottom: '40px'
+    },
+    image: {
+      height: '20px'
+    }
+  },
+  style: {}
+}
+
+const label = {
+  title: 'Label element',
+  type: 'text',
+  tagName: 'label',
+  content: 'Label element',
+  thumb: '/images/text/body.svg',
+  dragProps: {
+    rawWidth: 300,
+    rawHeight: 25,
+  },
+  displayStyle: {
+    wrapper: {
+      width: '100%',
+      height: '30px',
+      marginBottom: '40px'
+    },
+    image: {
+      height: '20px'
+    }
+  },
+  style: {}
+}
+
+const p = {
+  title: 'Paragraph element',
+  type: 'text',
+  tagName: 'p',
+  content: 'Paragraph element',
+  thumb: '/images/text/body.svg',
+  dragProps: {
+    rawWidth: 300,
+    rawHeight: 25,
+  },
+  displayStyle: {
+    wrapper: {
+      width: '100%',
+      height: '30px',
+      marginBottom: '40px'
+    },
+    image: {
+      height: '20px'
+    }
+  },
+  style: {}
+}
+
+const textInput = {
+  title: 'Text input',
+  type: 'input',
+  inputType: 'text',
+  tagName: 'input',
+  className: 'form-control',
+  bootstrapClass: 'form-control',
+  thumb: '/images/inputs/regular-btn.svg',
+  placeholder: 'Write something here...',
+  dragProps: {
+    rawWidth: 200,
+    rawHeight: 50,
+  },
+  style: {}
+}
+
+const textarea = {
+  title: 'Textarea',
+  type: 'textarea',
+  tagName: 'textarea',
+  className: 'form-control',
+  bootstrapClass: 'form-control',
+  thumb: '/images/inputs/regular-btn.svg',
+  placeholder: 'Write something here...',
+  dragProps: {
+    rawWidth: 200,
+    rawHeight: 100,
+  },
+  style: {}
+}
+
 
 const constants = {
   headers: {
@@ -113,7 +213,9 @@ const constants = {
           color: `var(--white)`,
           fontWeight: 600,
         }
-      }
+      },
+      textInput,
+      textarea
     ]
   },
   text: {
@@ -211,6 +313,9 @@ const constants = {
           display: 'block',
         }
       },
+      p,
+      span,
+      label
     ]
   },
 }

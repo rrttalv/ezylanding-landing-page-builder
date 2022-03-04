@@ -7,6 +7,7 @@ import { ReactComponent as Duplicate } from '../../../svg/duplicate.svg'
 import { ReactComponent as Arrows } from '../../../svg/multi-arrow.svg'
 import { ReactComponent as Caret } from '../../../svg/caret-down.svg'
 import { ReactComponent as GearIcon } from '../../../svg/gear.svg'
+import { ReactComponent as Move } from '../../../svg/move.svg'
 import { PropInput } from './ComponentTools/PropInput'
 
 export const BottomToolbar = observer((props) => {
@@ -105,7 +106,7 @@ export const BottomToolbar = observer((props) => {
     const { y } = parent.getBoundingClientRect()
     let className = `element-options`
     let inputClass = `element-options_prop-input`
-    if((y - offsetY) <= 60){
+    if((y - offsetY) <= 80){
       className += ' bottom'
       inputClass += ' bottom'
     }else{
@@ -205,12 +206,26 @@ export const BottomToolbar = observer((props) => {
     app.duplicateElement(id)
   }
 
+  const handleMouseEvent = (e, id, start) => {
+    const { clientX, clientY } = e
+    e.preventDefault()
+    if(start){
+      const { y: py } = document.querySelector('.layer-toolbar-list').getBoundingClientRect()
+      const { x } = document.querySelector('.layer-toolbar-list .selected .move-btn').getBoundingClientRect()
+      app.setMovingElement(id, clientX - x, clientY - py - 10)
+    }else{
+      app.setMovingElement(null, 0, 0)
+    }
+  }
+
   const getElems = (element, level = 0) => {
     const { childrenOpen } = element
     const isSelected = app.selectedElement === element.id
+    const { id } = element
     return (
       <div 
-        className={`layer-toolbar-list-item${isSelected ? ' selected' : ''}${level > 1 ? ' is-child' : ''}`}
+        data-metaID={element.id}
+        className={`layer-toolbar-list-item${isSelected ? ' selected' : ''} is-child ${app.toolbarDropParent === id ? ' drop-target' : ''}${app.toolbarDropTarget.id === id ? app.toolbarDropTarget.before ? ' target before' : ' target after' : '' }`}
         style={{
           marginLeft: level * 1.5 + 'px'
         }}
@@ -221,48 +236,60 @@ export const BottomToolbar = observer((props) => {
           data-metauuid={element.id}
           onClick={e => selectElement(element.id)}
         >
-          <span className='elem-tag'>{element.tagName}</span>
+          <div className='elem-meta_data'>
+            <span className='elem-tag'>{element.tagName}</span>
+            {
+              element.className ? <span className='elem-class'>.{element.className.split(' ').join('.')}</span> : undefined
+            }
+            {
+              element.domID ? <span className='elem-domID'>#{element.domID}</span> : undefined
+            }
+          </div>
+          <div className='elem-meta_tools'>
+            {
+              element.toolbarOptionsOpen && isSelected ? (
+                getOptionsMenu(element)
+              )
+              :
+              undefined
+            }
+            {
+              isSelected ? (
+                <>
+                  <button
+                    onMouseDown={e => handleMouseEvent(e, element.id, true)}
+                    onMouseUp={e => handleMouseEvent(e, element.id, false)}
+                    className='move-btn'
+                  >
+                    <Move className='move' />
+                  </button>
+                  <button
+                    onClick={e => duplicateElement(element.id)}
+                    className='duplicate-btn'
+                  >
+                    <Duplicate className='trash' />
+                  </button>
+                  <button
+                    onClick={e => handleDelete(element.id)}
+                    className='delete-btn'
+                  >
+                    <Trash className='trash' />
+                  </button>
+                  <button 
+                    onClick={e => toggleOptionsMenu(element.id, !element.toolbarOptionsOpen)}
+                    className='options-toggle'>
+                    {
+                      <GearIcon className={element.toolbarOptionsOpen ? 'active' : 'inactive'} />
+                    }
+                  </button>
+                </>
+              )
+              :
+              undefined
+            }
+          </div>
           {
-            element.className ? <span className='elem-class'>.{element.className.split(' ').join('.')}</span> : undefined
-          }
-          {
-            element.domID ? <span className='elem-domID'>#{element.domID}</span> : undefined
-          }
-          {
-            element.toolbarOptionsOpen && isSelected ? (
-              getOptionsMenu(element)
-            )
-            :
-            undefined
-          }
-          {
-            isSelected ? (
-              <>
-                <button
-                  onClick={e => duplicateElement(element.id)}
-                  className='duplicate-btn'
-                >
-                  <Duplicate className='trash' />
-                </button>
-                <button
-                  onClick={e => handleDelete(element.id)}
-                  className='delete-btn'
-                >
-                  <Trash className='trash' />
-                </button>
-                <button 
-                  onClick={e => toggleOptionsMenu(element.id, !element.toolbarOptionsOpen)}
-                  className='options-toggle'>
-                  {
-                    <GearIcon className={element.toolbarOptionsOpen ? 'active' : 'inactive'} />
-                  }
-                </button>
-              </>
-            )
-            :
-            undefined
-          }
-          {
+          /*
             element.children && element.children.length && isSelected && level === 0 ? (
               <button
                 onClick={e => toggleChildren(element.id)}
@@ -273,6 +300,7 @@ export const BottomToolbar = observer((props) => {
             )
             :
             undefined
+          */
           }
         </div>
         {
@@ -313,6 +341,23 @@ export const BottomToolbar = observer((props) => {
     app.toggleLayerToolbar()
   }
 
+  const getMovingElement = () => {
+    if(app.movingElement){
+      const { xPos, yPos } = app.movingElement
+      return (
+        <div 
+          className='floating-meta-element' 
+          style={{
+            position: 'absolute',
+            transform: `translate(${xPos}px, ${yPos}px)`
+          }}
+        />
+      )
+    }else{
+      return <div />
+    }
+  }
+
   return (
     <div className={`layer-toolbar ${toolbarClass}`}>
       <div 
@@ -325,6 +370,7 @@ export const BottomToolbar = observer((props) => {
       <div 
         className={`layer-toolbar-list ` + wrapperClass}
       >
+        {getMovingElement()}
         {getLayerItems()}
       </div>
     </div>

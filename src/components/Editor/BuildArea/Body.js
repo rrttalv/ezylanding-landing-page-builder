@@ -226,12 +226,10 @@ export const Body = observer((props) => {
   const { dragIndex, activeDrag, } = app
 
   return (
-    //${app.activeFramework ? ' ' + app.activeFramework.parentClass : ''}
     <>
       <div 
         className={`build-area_body`}
         style={{
-          top: props.top,
           height: props.height,
           width: '100%'
         }}

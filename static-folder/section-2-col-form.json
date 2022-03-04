@@ -1,0 +1,147 @@
+{
+  "title": "2 Column form",
+  "type": "section",
+  "tagName": "section",
+  "className": "section",
+  "domID": "",
+  "thumb": "/images/sections/flex-row-2.svg",
+  "dragProps": {
+    "rawWidth": 500,
+    "rawHeight": 300,
+    "width": "100%",
+    "height": "300px"
+  },
+  "style": {},
+  "children": [
+    {
+      "type": "div",
+      "tagName": "div",
+      "className": "row",
+      "bootstrapClass": "row",
+      "style": {},
+      "children": [
+        {
+          "type": "div",
+          "tagName": "div",
+          "className": "col-md-12 col-lg-6 col-xl-5",
+          "bootstrapClass": "col-md-12 col-lg-6 col-xl-5",
+          "style": {},
+          "children": [
+            {
+              "type": "div",
+              "tagName": "div",
+              "className": "content-wrapper",
+              "style": {},
+              "children": [
+                {
+                  "type": "text",
+                  "tagName": "h1",
+                  "className": "text-dark",
+                  "content": "The Final Solution",
+                  "style": {},
+                  "domID": ""
+                },
+                {
+                  "type": "text",
+                  "tagName": "h1",
+                  "className": "text-main",
+                  "content": "To all of your problems!"
+                },
+                {
+                  "type": "text",
+                  "tagName": "p",
+                  "className": "lead-text",
+                  "content": "At vero eos et accusamus et iusto odio dignissimos! Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime.",
+                  "style": {}
+                },
+                {
+                  "type": "div",
+                  "tagName": "div",
+                  "className": "form-group",
+                  "bootstrapClass": "form-group",
+                  "style": {
+                    "display": "flex",
+                    "paddingTop": "10px",
+                    "flexFlow": "wrap"
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "tagName": "label",
+                      "content": "Get notified when we launch!",
+                      "style": {
+                        "display": "block",
+                        "width": "100%",
+                        "marginBottom": "10px",
+                        "color": "var(--gray)",
+                        "fontSize": "15px",
+                        "fontWeight": "600"
+                      },
+                      "className": "email-label",
+                      "domID": "",
+                      "id": "d9df47d9-6685-41e9-b2c6-058e3a860520",
+                      "childrenOpen": true
+                    },
+                    {
+                      "type": "input",
+                      "inputType": "text",
+                      "tagName": "input",
+                      "className": "section-form form-control",
+                      "bootstrapClass": "form-control",
+                      "style": {
+                        "padding": "20px 10px",
+                        "border": "1px solid rgba(0,0,0,0.15)",
+                        "marginRight": "5px",
+                        "width": "74%",
+                        "maxWidth": "350px",
+                        "flex": "1"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "domID": "",
+                      "className": "btn btn-main",
+                      "tagName": "button",
+                      "content": "Notify me!",
+                      "thumb": "/images/inputs/regular-btn.svg",
+                      "style": {
+                        "background": "var(--dark)",
+                        "fontSize": "14px"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "div",
+          "tagName": "div",
+          "className": "col-md-12 col-lg-6 col-xl-7",
+          "bootstrapClass": "col-md-12 col-lg-6 col-xl-7",
+          "style": {},
+          "children": [
+            {
+              "type": "div",
+              "tagName": "div",
+              "className": "content-wrapper",
+              "style": {},
+              "children": [
+                {
+                  "type": "img",
+                  "tagName": "img",
+                  "className": "rounded large-image",
+                  "src": "http://localhost:3000/images/static/office-worker.jpeg",
+                  "style": {},
+                  "domID": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "domID": ""
+    }
+  ]
+}
