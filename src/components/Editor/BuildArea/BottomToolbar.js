@@ -235,14 +235,17 @@ export const BottomToolbar = observer((props) => {
           className='elem-meta'
           data-metauuid={element.id}
           onClick={e => selectElement(element.id)}
+          onDoubleClick={e => toggleChildren(id)}
         >
           <div className='elem-meta_data'>
-            <span className='elem-tag'>{element.tagName}</span>
+            <button className='btn-none'>
+              <span className='elem-tag'>{element.tagName}</span>
+            </button>
             {
-              element.className ? <span className='elem-class'>.{element.className.split(' ').join('.')}</span> : undefined
+              element.className ? <button className='btn-none'><span className='elem-class'>.{element.className.split(' ').join('.')}</span></button> : undefined
             }
             {
-              element.domID ? <span className='elem-domID'>#{element.domID}</span> : undefined
+              element.domID ? <button className='btn-none'><span className='elem-domID'>#{element.domID}</span></button> : undefined
             }
           </div>
           <div className='elem-meta_tools'>

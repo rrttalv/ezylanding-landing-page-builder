@@ -38,7 +38,7 @@ export const Body = observer((props) => {
     }
     e.stopPropagation()
     e.preventDefault()
-    if(elem.type === 'text' || elem.type === 'button'){
+    if(elem.type === 'text' || elem.type === 'button' || elem.type === 'link'){
       let id = null
       let section = null
       if(app.activeTextEditor !== elem.id){
@@ -183,6 +183,7 @@ export const Body = observer((props) => {
         </div>
       case 'button':
       case 'text':
+      case 'link':
         if(app.activeTextEditor === elem.id){
           const wrapperStyle = {...style, cursor: 'text'}
           if(elem.type === 'button'){

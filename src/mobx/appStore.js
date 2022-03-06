@@ -453,7 +453,7 @@ class AppStore {
   }
 
   changeElementProp(id, elementType, propName, propValue){
-    if(elementType === 'text' || elementType === 'button'){
+    if(elementType === 'text' || elementType === 'button' || elementType === 'link'){
       const { parentId } = this.activeElementMeta
       const keys = propName.split('|')
       const elements = this.pages[0].elements
@@ -739,6 +739,11 @@ class AppStore {
           if(!targetElement.children){
             targetElement.children = []
           }
+          const insertable = this.activeDrag.tagName === 'div' || this.activeDrag.tagName === 'section'
+          if(this.activeDrag.parent && this.activeDrag.children && !this.activeDrag.children.length && !insertable){
+            delete this.activeDrag.children
+            this.activeDrag.parent = false
+          }
         }else{
           if(!isMainParent){
             const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
@@ -755,12 +760,13 @@ class AppStore {
           const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section'
           if(insertable && !targetElement.children){
             targetElement.children = []
-          }else{
+          }
+          /*else{
             this.activeDrag.parent = false
             if(this.activeDrag.children && !this.activeDrag.children.length){
               delete this.activeDrag.children
             }
-          }
+          }*/
         }
         this.displayInsert = false
         this.dragIndex = 0
