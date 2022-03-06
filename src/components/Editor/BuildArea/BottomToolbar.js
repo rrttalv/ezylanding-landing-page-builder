@@ -183,7 +183,25 @@ export const BottomToolbar = observer((props) => {
             element.type === 'input' ? undefined : undefined
           }
           {
-
+            element.type === 'link' ? (
+              <div className='option-wrapper'>
+                {getPropToggle(element, 'editingHref', 'href', element.editingHref)}
+                {
+                  element.editingHref ? (
+                    <PropInput
+                      value={element.href}
+                      save={(value) => saveElementProp(element.id, 'href', 'editingHref', value)}
+                      className={inputClass}
+                      label={'Set element href'}
+                    />
+                  )
+                  :
+                  undefined
+                }
+              </div>
+            )
+            :
+            undefined
           }
         </div>
       </div>
@@ -291,20 +309,6 @@ export const BottomToolbar = observer((props) => {
               undefined
             }
           </div>
-          {
-          /*
-            element.children && element.children.length && isSelected && level === 0 ? (
-              <button
-                onClick={e => toggleChildren(element.id)}
-                className='children-toggle'
-              >
-                <Caret className={childrenOpen ? 'active' : 'inactive'} />
-              </button>
-            )
-            :
-            undefined
-          */
-          }
         </div>
         {
           element.children && element.children.length ? (

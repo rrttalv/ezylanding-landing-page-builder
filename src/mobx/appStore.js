@@ -32,6 +32,8 @@ class AppStore {
   mouseStartX = 0
   mouseStartY = 0
 
+  //Drag move timer that will toggle the insert point if the mouse has not been moved
+  _dragMoveTimer = null
   dragIndex = 0
   //The boolean value that will be set if the drag index is calculated for the element
   displayInsert = false
@@ -678,7 +680,7 @@ class AppStore {
         if(clientY > yTopBound && clientY < yMidBound){
           this.dragIndex = idx
         }
-        if(clientY > yMidBound && clientY < yBottomBound){
+        if((clientY > yMidBound && clientY < yBottomBound) || ((elements.length - 1 === idx) && (y + height) < clientY)){
           this.dragIndex = idx + 1
         }
       }
@@ -690,7 +692,15 @@ class AppStore {
     }
   }
 
-  handleItemDragMove(clientX, clientY, rawX, rawY){
+  changeElementInsertType(clientX, clientY, rawX, rawY){
+    if(!this.activeDrag){
+      return
+    }
+    this.activeDrag.insertAsParent = !this.activeDrag.insertAsParent
+    this.handleItemDragMove(clientX, clientY, rawX, rawY, true)
+  }
+
+  handleItemDragMove(clientX, clientY, rawX, rawY, timerCall = false){
     if(!this.activeDrag){
       return
     }
@@ -708,6 +718,14 @@ class AppStore {
     this.mouseStartY = clientY
     //The component has an active insert target parent so we should display a box
     const isSection = this.parentElements.includes(this.activeDrag.type)
+    if(!timerCall){
+      if(this._dragMoveTimer){
+        clearTimeout(this._dragMoveTimer)
+      }
+      this._dragMoveTimer = setTimeout(() => {
+        this.changeElementInsertType(clientX, clientY, rawX, rawY)
+      }, 1250)
+    }
     if(!isSection){
       this.dragMetaData = {
         ...initDragMeta
@@ -732,7 +750,8 @@ class AppStore {
         }
       })
       let metaFound = false
-      if(target){
+      console.log(this.activeDrag.insertAsParent)
+      if(target && !this.activeDrag.insertAsParent){
         const isMainParent = this.pages[0].elements.find(({ id }) => id === target)
         const targetElement = this.findElement(target)
         if(targetElement.tagName === 'div'){
@@ -773,9 +792,7 @@ class AppStore {
       }else{
         this.activeDrag.parent = true
         this.checkDragIndex(rawX, rawY)
-        if(this.activeDrag.children && this.activeDrag.children.length){
-          this.checkDragIndex(rawX, rawY)
-        }else{
+        if(!this.activeDrag.children){
           this.activeDrag.children = []
         }
       }
@@ -1440,6 +1457,10 @@ class AppStore {
     if(comp.type === 'input'){
       comp.editingPlaceholder = false
     }
+    if(comp.type === 'link'){
+      comp.editingHref = false
+      comp.href = '#'
+    }
     let selectorPrefix = '.'
     if(!comp.className){
       comp.className = ''
@@ -1658,14 +1679,12 @@ class AppStore {
           id: uuidv4()
         }
         const stylesheetValues = this.cssTabs.map(tab => tab.content).join('\n')
-        console.log(comp, targetParent)
         this.assignStyles(comp, stylesheetValues)
-        console.log('here')
         if(comp.children && comp.children.length){
           this.assignChildIds(comp.children)
         }
         //If the parent element is a section
-        if(this.parentElements.includes(this.activeDrag.type) && !targetParent){
+        if((this.parentElements.includes(this.activeDrag.type) && !targetParent) || this.activeDrag.insertAsParent){
           comp.position.xPos -= editorX
           comp.position.yPos -= editorY
           page.elements.splice(this.dragIndex, 0, comp)

@@ -575,7 +575,11 @@
     &_toolbar {
       position: absolute;
       top: calc(100% + 7.5px);
-      left: calc(100% - 50px);
+      background: rgba(43, 44, 53, 0.75);
+      padding: 2.5px 5px;
+      padding-right: 10px;
+      border-radius: 4px;
+      left: 5px;
       .element-indicator {
         span {
           display: block;
@@ -586,10 +590,23 @@
         }
         &_tag {
           margin-bottom: 0px;
+          font-weight: 700;
         }
         &_class {
           padding-top: 0;
+          font-weight: 700;
         }
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 3px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid rgba(43, 44, 53, 0.75);
+        top: -5px;
       }
     }
     &_insert.before {
@@ -637,7 +654,22 @@
     .element-tools_toolbar {
       position: absolute;
       top: calc(100% + 7.5px);
-      left: calc(100% - 75px);
+      left: 2.5px;
+      background: rgba(43, 44, 53, 0.75);
+      padding: 2.5px 5px;
+      padding-right: 10px;
+      border-radius: 4px;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 3px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid rgba(43, 44, 53, 0.75);
+        top: -5px;
+      }
     }
   }
 }

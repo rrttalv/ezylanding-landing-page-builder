@@ -1,4 +1,4 @@
-{
+export const regularNav = {
   "title": "Light navbar",
   "thumb": "/images/sections/flex-row-2.svg",
   "dragProps": {
@@ -16,8 +16,7 @@
   },
   "children": [
     {
-      "title": "Link element",
-      "type": "text",
+      "type": "link",
       "tagName": "a",
       "content": "Mybrand.co",
       "href": "#",
@@ -80,6 +79,7 @@
               ]
             },
             {
+              "type": "listItem",
               "tagName": "li",
               "content": "Item #2",
               "className": "nav-item",
@@ -99,6 +99,7 @@
               ]
             },
             {
+              "type": "listItem",
               "tagName": "li",
               "content": "Item #3",
               "className": "nav-item",

@@ -1,4 +1,5 @@
 import { cardSection, singleCard } from "./cards"
+import { regularNav } from "./navs"
 import { features1, features2, flexRow2Col, largeColumn } from "./sections"
 
 const div = {
@@ -300,6 +301,7 @@ const constants = {
       {...largeColumn},
       {...features1},
       {...features2},
+      {...regularNav},
       div,
       section
     ]
