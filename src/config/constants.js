@@ -108,6 +108,30 @@ const p = {
   style: {}
 }
 
+const a = {
+  title: 'Link element',
+  type: 'text',
+  tagName: 'a',
+  content: 'Link somewhere',
+  href: '#',
+  thumb: '/images/text/body.svg',
+  dragProps: {
+    rawWidth: 100,
+    rawHeight: 25,
+  },
+  displayStyle: {
+    wrapper: {
+      width: '100%',
+      height: '30px',
+      marginBottom: '40px'
+    },
+    image: {
+      height: '20px'
+    }
+  },
+  style: {}
+}
+
 const textInput = {
   title: 'Text input',
   type: 'input',
@@ -137,6 +161,97 @@ const textarea = {
     rawHeight: 100,
   },
   style: {}
+}
+
+const list = {
+  title: 'Horizontal <ul>',
+  type: 'list',
+  tagName: 'ul',
+  className: 'list-group horizontal-list',
+  bootstrapClass: 'list-group',
+  thumb: '/images/sections/flex-row-2.svg',
+  dragProps: {
+    rawWidth: 200,
+    rawHeight: 50
+  },
+  style: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  children: [
+    {
+      type: 'listItem',
+      tagName: 'li',
+      content: 'Item #1',
+      className: 'list-group-item',
+      bootstrapClass: 'list-group-item',
+      style: {},
+      children: [
+        {
+          type: 'link',
+          tagName: 'a',
+          content: 'Link #1',
+          className: '',
+          href: '#',
+          style: {}
+        }
+      ]
+    },
+    {
+      type: 'listItem',
+      tagName: 'li',
+      content: 'Item #2',
+      className: 'list-group-item',
+      bootstrapClass: 'list-group-item',
+      style: {},
+      children: [
+        {
+          type: 'link',
+          tagName: 'a',
+          content: 'Link #2',
+          className: '',
+          href: '#',
+          style: {}
+        }
+      ]
+    },
+    {
+      type: 'listItem',
+      tagName: 'li',
+      content: 'Item #3',
+      className: 'list-group-item',
+      bootstrapClass: 'list-group-item',
+      style: {},
+      children: [
+        {
+          type: 'link',
+          tagName: 'a',
+          content: 'Link #3',
+          className: '',
+          href: '#',
+          style: {}
+        }
+      ]
+    },
+    {
+      type: 'listItem',
+      tagName: 'li',
+      content: 'Link #4',
+      className: 'list-group-item',
+      bootstrapClass: 'list-group-item',
+      style: {},
+      children: [
+        {
+          type: 'link',
+          tagName: 'a',
+          content: 'Link #4',
+          className: '',
+          href: '#',
+          style: {}
+        }
+      ]
+    },
+  ]
 }
 
 
@@ -315,9 +430,52 @@ const constants = {
       },
       p,
       span,
-      label
+      label,
+      a,
+      list
     ]
   },
+  media: {
+    id: 'media',
+    title: 'Media',
+    elements: [
+      {
+        title: 'Vertical image',
+        type: 'img',
+        tagName: 'img',
+        className: 'img-vertical',
+        domID: '',
+        thumb: '/images/sections/flex-row-2.svg',
+        dragProps: {
+          rawWidth: 250,
+          rawHeight: 500,
+        },
+        recommendVertical: true,
+        style: {
+          width: '100%',
+          display: 'block'
+        },
+        src: "https://images.pexels.com/photos/1181673/pexels-photo-1181673.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      },
+      {
+        title: 'Landscape image',
+        type: 'img',
+        tagName: 'img',
+        className: 'img-landscape',
+        domID: '',
+        thumb: '/images/sections/flex-row-2.svg',
+        dragProps: {
+          rawWidth: 500,
+          rawHeight: 250,
+        },
+        style: {
+          width: '100%',
+          display: 'block'
+        },
+        src: "http://localhost:3000/images/static/office-worker.jpeg"
+      }
+    ]
+  }
 }
 
 export const scripts = [

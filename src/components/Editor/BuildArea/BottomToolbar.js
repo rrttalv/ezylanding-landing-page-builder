@@ -224,7 +224,7 @@ export const BottomToolbar = observer((props) => {
     const { id } = element
     return (
       <div 
-        data-metaID={element.id}
+        data-metaid={element.id}
         className={`layer-toolbar-list-item${isSelected ? ' selected' : ''} is-child ${app.toolbarDropParent === id ? ' drop-target' : ''}${app.toolbarDropTarget.id === id ? app.toolbarDropTarget.before ? ' target before' : ' target after' : '' }`}
         style={{
           marginLeft: level * 1.5 + 'px'

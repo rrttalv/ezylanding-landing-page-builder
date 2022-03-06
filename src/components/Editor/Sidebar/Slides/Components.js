@@ -27,6 +27,11 @@ export const Components = observer((props) => {
       components: constants.text,
       active: false
     },
+    {
+      id: 'media',
+      components: constants.media,
+      active: false
+    }
   ])
 
   const getStore = () => {

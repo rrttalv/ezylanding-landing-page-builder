@@ -33,6 +33,9 @@ class AppStore {
   mouseStartY = 0
 
   dragIndex = 0
+  //The boolean value that will be set if the drag index is calculated for the element
+  displayInsert = false
+
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
@@ -190,13 +193,51 @@ class AppStore {
   }
 
   setMovingElement(id, x, y){
-    this.movingElement = id ? { id, xPos: x, yPos: y } : null
-    if(id){
-      const element = this.findElement(id)
-      this.movingElement.idList = this.getChildIDs(element)
-    }else{
+    if(!id){
+      const { id: targetId, before } = this.toolbarDropTarget
+      //If the element will be inserted into the parent element only
+      if(this.toolbarDropParent || targetId){
+        const element = this.findElement(this.movingElement.id)
+        const parent = this.findElement(this.toolbarDropParent)
+        const copy = this.duplicateChildren(element)
+        this.deleteElement(this.movingElement.id)
+        const frame = document.querySelector('iframe')
+        const doc = frame.contentWindow.document
+        const parentDomNode = doc.querySelector(`[data-uuid="${parent.id}"]`)
+        const domElem = this.compileDomElement(doc, copy, true)
+        if(!targetId){
+          parentDomNode.appendChild(domElem)
+          parent.children.push(copy)
+        }
+        //If the element will be inserted before or after a target element
+        if(targetId){
+          const childIdx = parent.children.findIndex(({ id: cid }) => cid === targetId)
+          if(before){
+            const insertTarget = doc.querySelector(`[data-uuid="${targetId}"]`)
+            parentDomNode.insertBefore(domElem, insertTarget)
+            parent.children.splice(childIdx, 0, copy)
+          }else{
+            //Append or push after
+            const nextChild = parent.children[childIdx + 1]
+            if(nextChild){
+              const insertTarget = doc.querySelector(`[data-uuid="${nextChild.id}"]`)
+              parentDomNode.insertBefore(domElem, insertTarget)
+              parent.children.splice(childIdx + 1, 0, copy)
+            }else{
+              parentDomNode.appendChild(domElem)
+              parent.children.push(copy)
+            }
+          }
+        }
+      }
       this.toolbarDropParent = null
       this.toolbarDropTarget = {...initToolbarTarget}
+      this.movingElement = null
+      this.handleWindowResize()
+    }else{
+      const element = this.findElement(id)
+      this.movingElement = { id, xPos: x, yPos: y }
+      this.movingElement.idList = this.getChildIDs(element)
     }
     this.mouseStartX = x
     this.mouseStartY = y
@@ -642,6 +683,7 @@ class AppStore {
         }
       }
     })
+    this.displayInsert = true
     if(elements.length === 0){
       this.dragIndex = 0
       return
@@ -693,29 +735,43 @@ class AppStore {
       if(target){
         const isMainParent = this.pages[0].elements.find(({ id }) => id === target)
         const targetElement = this.findElement(target)
-        if(!isMainParent){
-          const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
-          const xMid = (width / 2) + x
-          const yMid = (height / 2) + y
-          const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
-          if(isBefore){
-            this.dragMetaData.before = true
+        if(targetElement.tagName === 'div'){
+          if(!targetElement.children){
+            targetElement.children = []
           }
-          if(!isBefore){
-            this.dragMetaData.after = true
-          }
-        }
-        const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section'
-        if(insertable && !targetElement.children){
-          targetElement.children = []
         }else{
-          this.activeDrag.parent = false
-          delete this.activeDrag.children
+          if(!isMainParent){
+            const { x, y, width, height } = document.querySelector(`[data-uuid="${target}"]`).getBoundingClientRect()
+            const xMid = (width / 2) + x
+            const yMid = (height / 2) + y
+            const isBefore = x < rawX && rawX < xMid && y < rawY && rawY < yMid
+            if(isBefore){
+              this.dragMetaData.before = true
+            }
+            if(!isBefore){
+              this.dragMetaData.after = true
+            }
+          }
+          const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section'
+          if(insertable && !targetElement.children){
+            targetElement.children = []
+          }else{
+            this.activeDrag.parent = false
+            if(this.activeDrag.children && !this.activeDrag.children.length){
+              delete this.activeDrag.children
+            }
+          }
         }
+        this.displayInsert = false
+        this.dragIndex = 0
       }else{
         this.activeDrag.parent = true
-        this.activeDrag.children = []
         this.checkDragIndex(rawX, rawY)
+        if(this.activeDrag.children && this.activeDrag.children.length){
+          this.checkDragIndex(rawX, rawY)
+        }else{
+          this.activeDrag.children = []
+        }
       }
       this.dragTarget = target
     }else{
