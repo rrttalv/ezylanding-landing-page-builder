@@ -236,6 +236,25 @@ export const BottomToolbar = observer((props) => {
     }
   }
 
+  const getParentClassPartial = (id) => {
+    let className = ''
+    if(!app.movingElement){
+      return className
+    }
+    if(app.toolbarDropParent.id === id){
+      className += 'drop-target'
+      if(app.movingElement.allowBeforeParent){
+        className = ''
+        if(app.toolbarDropParent.before){
+          className += ' before-parent'
+        }else{
+          className += ' after-parent'
+        }
+      }
+    }
+    return className
+  }
+  
   const getElems = (element, level = 0) => {
     const { childrenOpen } = element
     const isSelected = app.selectedElement === element.id
@@ -243,9 +262,9 @@ export const BottomToolbar = observer((props) => {
     return (
       <div 
         data-metaid={element.id}
-        className={`layer-toolbar-list-item${isSelected ? ' selected' : ''} is-child ${app.toolbarDropParent === id ? ' drop-target' : ''}${app.toolbarDropTarget.id === id ? app.toolbarDropTarget.before ? ' target before' : ' target after' : '' }`}
+        className={`layer-toolbar-list-item${isSelected ? ' selected' : ''} is-child ${getParentClassPartial(id)}${app.toolbarDropTarget.id === id ? app.toolbarDropTarget.before && !app.toolbarDropTarget.allowBeforeParent ? ' target before' : ' target after' : '' }`}
         style={{
-          marginLeft: level * 1.5 + 'px'
+          marginLeft: level * 1.5 + 'px',
         }}
         key={element.id}
       >

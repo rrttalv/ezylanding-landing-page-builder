@@ -18,6 +18,12 @@ const initToolbarTarget = {
   after: false
 }
 
+const initToolbarParent = {
+  id: null,
+  before: false,
+  after: false
+}
+
 const initDragMeta = {
   before: false,
   after: false
@@ -42,10 +48,18 @@ class AppStore {
   elementLen = 0
   activeTextEditor = null
 
+  //Toolbar drag move timer which defines if the element will be inserted before parent or not
+  _toolbarMoveTimer = null
   //The element currently being moved in the toolbar
   movingElement = null
   //The toolbar element ID that is currently targeted
   toolbarDropTarget = {
+    id: null,
+    before: false,
+    after: false
+  }
+
+  toolbarDropParent = {
     id: null,
     before: false,
     after: false
@@ -197,10 +211,12 @@ class AppStore {
   setMovingElement(id, x, y){
     if(!id){
       const { id: targetId, before } = this.toolbarDropTarget
+      const { id: dropParentId, before: parentBefore } = this.toolbarDropParent
+      const { allowBeforeParent } = this.movingElement
       //If the element will be inserted into the parent element only
-      if(this.toolbarDropParent || targetId){
+      if(dropParentId || targetId){
         const element = this.findElement(this.movingElement.id)
-        const parent = this.findElement(this.toolbarDropParent)
+        const parent = this.findElement(dropParentId)
         const copy = this.duplicateChildren(element)
         this.deleteElement(this.movingElement.id)
         const frame = document.querySelector('iframe')
@@ -208,8 +224,50 @@ class AppStore {
         const parentDomNode = doc.querySelector(`[data-uuid="${parent.id}"]`)
         const domElem = this.compileDomElement(doc, copy, true)
         if(!targetId){
-          parentDomNode.appendChild(domElem)
-          parent.children.push(copy)
+          if(allowBeforeParent){
+            const higherParent = this.findParentElementByChildID(this.pages[0].elements, dropParentId)
+            //Insert the element into the elements array on the page itself
+            if(!higherParent){
+              const parentIndex = this.pages[0].elements.findIndex(({ id: topParentId }) => topParentId === dropParentId)
+              const docBody = doc.querySelector('#PAGE-BODY')
+              if(this.toolbarDropParent.before){
+                const parentNode = doc.querySelector(`[data-uuid="${dropParentId}"]`)
+                docBody.insertBefore(domElem, parentNode)
+                this.pages[0].elements.splice(parentIndex, 0, copy)
+              }else{
+                const nextParent = this.pages[0].elements[parentIndex + 1]
+                if(nextParent){
+                  const nextParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
+                  docBody.insertBefore(domElem, nextParent)
+                  this.pages[0].elements.splice(parentIndex + 1, 0, copy)
+                }else{
+                  docBody.appendChild(domElem)
+                  this.pages[0].elements.push(copy)
+                }
+              }
+            }else{
+              const parentIndex = higherParent.children.findIndex(({ id: pid }) => pid === dropParentId)
+              const nextParent = higherParent.children[parentIndex + 1]
+              const higherParentNode = doc.querySelector(`[data-uuid="${higherParent.id}"]`)
+              if(this.toolbarDropParent.before){
+                higherParent.children.splice(parentIndex, 0, copy)
+                higherParentNode.insertBefore(domElem, parentDomNode)
+              }else{
+                //Insert before the next parent otherwise push to previous parent
+                if(nextParent){
+                  const nextParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
+                  higherParentNode.insertBefore(domElem, nextParent)
+                  higherParent.children.splice(parentIndex + 1, 0, copy)
+                }else{
+                  higherParent.children.push(copy)
+                  higherParentNode.appendChild(domElem)
+                }
+              }
+            }
+          }else{
+            parentDomNode.appendChild(domElem)
+            parent.children.push(copy)
+          }
         }
         //If the element will be inserted before or after a target element
         if(targetId){
@@ -232,20 +290,31 @@ class AppStore {
           }
         }
       }
-      this.toolbarDropParent = null
+      this.toolbarDropParent = {...initToolbarParent}
       this.toolbarDropTarget = {...initToolbarTarget}
       this.movingElement = null
-      this.handleWindowResize()
+      setTimeout(() => {
+        this.handleWindowResize()
+      }, 100)
     }else{
       const element = this.findElement(id)
-      this.movingElement = { id, xPos: x, yPos: y }
+      this.movingElement = { id, xPos: x, yPos: y, allowBeforeParent: false }
       this.movingElement.idList = this.getChildIDs(element)
     }
     this.mouseStartX = x
     this.mouseStartY = y
   }
 
-  handleElementMove(x, y, rawX, rawY){
+  handleToolbarMoveTimer(x, y, rawX, rawY){
+    if(!this.movingElement){
+      return
+    }
+    this.movingElement.allowBeforeParent = !this.movingElement.allowBeforeParent
+    this.handleElementMove(x, y, rawX, rawY, true)
+  }
+
+
+  handleElementMove(x, y, rawX, rawY, timerCall = false){
     const dx = x - this.mouseStartX
     const dy = y - this.mouseStartY
     this.movingElement.xPos += dx
@@ -256,6 +325,17 @@ class AppStore {
     const { idList } = this.movingElement
     const posList = document.elementsFromPoint(rawX, rawY)
     let target = null
+    if(timerCall){
+      clearTimeout(this._toolbarMoveTimer)
+    }
+    if(!timerCall){
+      if(this._toolbarMoveTimer){
+        clearTimeout(this._toolbarMoveTimer)
+      }
+      this._toolbarMoveTimer = setTimeout(() => {
+        this.handleToolbarMoveTimer(x, y, rawX, rawY)
+      }, 1500)
+    }
     posList.forEach((item, idx) => {
       if(!target){
         const attr = item.getAttribute('data-metauuid')
@@ -266,19 +346,26 @@ class AppStore {
     })
     if(target){
       if(idList.includes(target)){
-        this.toolbarDropParent = null
+        this.toolbarDropParent = { ...initToolbarParent }
         this.toolbarDropTarget = { ...initToolbarTarget }
         return
       }
       const targetElement = this.findElement(target)
       if(targetElement.children){
-        this.toolbarDropParent = target
-        this.toolbarDropTarget = {...initToolbarTarget}
+        this.toolbarDropParent = { ...initToolbarParent, id: target }
+        if(!this.movingElement.allowBeforeParent){
+          this.toolbarDropParent = { ...initToolbarParent, id: target }
+        }else{
+          const { y: elemY, height } = document.querySelector(`[data-metauuid="${target}"]`).getBoundingClientRect()
+          const before = (elemY + height / 2) > rawY
+          this.toolbarDropParent = { ...initToolbarParent, id: target, before }
+          this.toolbarDropTarget = {...initToolbarTarget}
+        }
       }else{
         const parent = this.findParentElementByChildID(this.pages[0].elements, target)
         const { y: elemY, height } = document.querySelector(`[data-metauuid="${target}"]`).getBoundingClientRect()
         const before = (elemY + height / 2) > rawY
-        this.toolbarDropParent = parent.id
+        this.toolbarDropParent = { ...initToolbarParent, id: parent.id }
         this.toolbarDropTarget = {
           before,
           after: !before,
@@ -286,7 +373,7 @@ class AppStore {
         }
       }
     }else{
-      this.toolbarDropParent = null
+      this.toolbarDropParent = { ...initToolbarParent }
       this.toolbarDropTarget = { ...initToolbarTarget }
     }
   }
@@ -718,6 +805,9 @@ class AppStore {
     this.mouseStartY = clientY
     //The component has an active insert target parent so we should display a box
     const isSection = this.parentElements.includes(this.activeDrag.type)
+    if(timerCall){
+      clearTimeout(this._dragMoveTimer)
+    }
     if(!timerCall){
       if(this._dragMoveTimer){
         clearTimeout(this._dragMoveTimer)
@@ -750,7 +840,6 @@ class AppStore {
         }
       })
       let metaFound = false
-      console.log(this.activeDrag.insertAsParent)
       if(target && !this.activeDrag.insertAsParent){
         const isMainParent = this.pages[0].elements.find(({ id }) => id === target)
         const targetElement = this.findElement(target)
@@ -1396,7 +1485,6 @@ class AppStore {
     if(frame){
       const doc = frame.contentWindow.document
       const domElement = this.compileDomElement(doc, comp, pushToBody)
-      console.log(domElement)
       if(pushToBody){
         const pageBody = doc.querySelector('#PAGE-BODY')
         pageBody.appendChild(domElement)
