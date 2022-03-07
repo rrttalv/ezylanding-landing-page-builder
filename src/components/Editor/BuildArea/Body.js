@@ -139,6 +139,31 @@ export const Body = observer((props) => {
     return children
   }
 
+  const getTextEditor = (elem, style, sectionId) => {
+    const wrapperStyle = {...style, cursor: 'text'}
+    if(elem.type === 'button'){
+      delete wrapperStyle.background
+      const keys = [
+        'backgroundColor',
+        'borderTopLeftRadius',
+        'borderTopRightRadius',
+        'borderBottomLeftRadius',
+        'borderBottomRightRadius',
+      ]
+      wrapperStyle.display = 'block'
+      keys.forEach(k => {
+        wrapperStyle[k] = elem.activeStyleMap[k]
+      })
+    }else{
+      const vals = ['flex', 'block', 'grid']
+      if(!vals.includes(elem.activeStyleMap.display)){
+        elem.activeStyleMap.display = 'block'
+      }
+      elem.activeStyleMap.whiteSpace = 'pre'
+    }
+    return getEditingTextElem(elem, sectionId, wrapperStyle)
+  }
+
   const getChildElemBorder = (elem, idx, sectionId) => {
     const { position, id } = elem
     let style = {}
@@ -185,28 +210,7 @@ export const Body = observer((props) => {
       case 'text':
       case 'link':
         if(app.activeTextEditor === elem.id){
-          const wrapperStyle = {...style, cursor: 'text'}
-          if(elem.type === 'button'){
-            delete wrapperStyle.background
-            const keys = [
-              'backgroundColor',
-              'borderTopLeftRadius',
-              'borderTopRightRadius',
-              'borderBottomLeftRadius',
-              'borderBottomRightRadius',
-            ]
-            wrapperStyle.display = 'block'
-            keys.forEach(k => {
-              wrapperStyle[k] = elem.activeStyleMap[k]
-            })
-          }else{
-            const vals = ['flex', 'block', 'grid']
-            if(!vals.includes(elem.activeStyleMap.display)){
-              elem.activeStyleMap.display = 'block'
-            }
-            elem.activeStyleMap.whiteSpace = 'pre'
-          }
-          return getEditingTextElem(elem, sectionId, wrapperStyle)
+          return getTextEditor(elem, style, sectionId)
         }
       default:
         return (
@@ -248,6 +252,10 @@ export const Body = observer((props) => {
             const tempStyle = {
               width: position.width,
               height: position.height,
+              position: 'absolute',
+              top: elem.position.y,
+              left: elem.position.x,
+              zIndex: 0,
             }
             let className = `section-component`
             if(isSelected){
@@ -265,14 +273,13 @@ export const Body = observer((props) => {
                   onClick={e => selectComponent(e, id, null, true)}
                   data-uuid={elem.id}
                   className={className}
-                  style={{
-                    ...tempStyle,
-                    position: 'absolute',
-                    top: elem.position.y,
-                    left: elem.position.x,
-                    zIndex: 0,
-                  }}
+                  onDoubleClick={e => handleDoubleClick(e, elem, null)}
+                  style={tempStyle}
                 >
+                  {
+                    //Need to fix the text editing prop stuff in appStore for this to work
+                    //app.activeTextEditor === elem.id ? getTextEditor(elem, tempStyle, null) : undefined
+                  }
                   {
                     idx === dragIndex && activeDrag && displayInsert && (app.parentElements.includes(activeDrag.type) || activeDrag.parent) ? (
                       <div className='build-area_insert-preview insert-above' />

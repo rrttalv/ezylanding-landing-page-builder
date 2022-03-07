@@ -111,7 +111,7 @@ const p = {
 
 const a = {
   title: 'Link element',
-  type: 'text',
+  type: 'link',
   tagName: 'a',
   content: 'Link somewhere',
   href: '#',
