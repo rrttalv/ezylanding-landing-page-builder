@@ -148,6 +148,10 @@ textarea {
   }
 }
 
+.no-border {
+  border: none!important
+}
+
 .btn-none {
   all: unset;
   &:hover {

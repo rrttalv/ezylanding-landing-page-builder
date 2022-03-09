@@ -82,21 +82,22 @@ export const Components = observer((props) => {
   const getRows = (elem, type, customStyle = {}) => {
     const list = [...elem.elements]
     return (
-      <div className='component-slide_wrapper' key={elem.id}>
+      <div className={`component-slide_wrapper`} key={elem.id}>
         <div className='component-slide_list'>
           <div className='component-slide_rows'>
             {
               list.map((item, idx) => {
+                const listClass = item.title.toLowerCase().split(' ').join('-')
                 const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {...customStyle}
-                const imgStyle = item.displayStyle ? item.displayStyle.image : {}
+                const imgStyle = item.displayStyle && item.displayStyle.image ? item.displayStyle.image : {}
                 if(item.type === 'section'){
-                  imgStyle.boxShadow = '0 4px 4px 0 rgba(0,0,0,0.15)'
-                  imgStyle.border = '1px solid #3EE3C5'
+                  imgStyle.boxShadow = '0px 1px 3px 2px rgba(0, 0, 0, 0.065)'
+                  imgStyle.border = '1px solid rgba(62, 227, 197, 0.125)'
                 }
                 return (
                   <div 
                     key={item.type + idx}
-                    className='component-preview'
+                    className={`component-preview ${listClass}`}
                     draggable
                     style={{...displayStyle}}
                     onClick={e => insertItem(e, item)}
@@ -109,7 +110,14 @@ export const Components = observer((props) => {
                         className="component-img" 
                         style={{...imgStyle}}
                       />
-                    ) : <div style={{ width: '50px', height: '50px', background: 'red' }} />}
+                      ) : (
+                        <div className='empty-component'>
+                          <span className='component-name'>
+                            {`<`}{item.tagName} {`/>`}
+                          </span>
+                        </div>
+                      )
+                    }
                     <span className='component-title' style={{userSelect: 'none'}}>{item.title}</span>
                   </div>
                 )
@@ -129,7 +137,7 @@ export const Components = observer((props) => {
 
   return (
     <div 
-      className='component-slide slide-item'
+      className={`component-slide slide-item ${active.id}`}
       onPointerUp={() => handleItemDragEnd()}
     >
       <SlideMenu

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { BottomToolbar } from './BuildArea/BottomToolbar'
 import { BuildArea } from './BuildArea/BuildArea'
 import { Element } from './BuildArea/Element'
+import io from 'socket.io-client';
 import { Sidebar } from './Sidebar/Sidebar'
 
 export const Editor = observer((props) => {
@@ -12,7 +13,7 @@ export const Editor = observer((props) => {
     return React.useContext(MobXProviderContext)
   }
 
-  const { store: { app, sidebar } } = getStore()
+  const { store: { app, sidebar, socket } } = getStore()
 
   
   const shouldCloseSidebar = e => {
@@ -75,6 +76,12 @@ export const Editor = observer((props) => {
     return function cleanup() {
       window.removeEventListener('resize', resizeHandler)
     }
+  }, [])
+
+  useEffect(() => {
+    const newSocket = io(`http://${window.location.hostname}:4000`)
+    socket.setSocket(newSocket)
+    return () => newSocket.close();
   }, [])
 
   return (

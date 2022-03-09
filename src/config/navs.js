@@ -1,6 +1,6 @@
 export const regularNav = {
   "title": "Light navbar",
-  "thumb": "/images/sections/flex-row-2.svg",
+  thumb: '/images/components/sections/light-nav.jpg',
   "dragProps": {
     "rawWidth": 500,
     "rawHeight": 100,

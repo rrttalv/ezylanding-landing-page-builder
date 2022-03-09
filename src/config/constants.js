@@ -4,7 +4,6 @@ import { features1, features2, flexRow2Col, largeColumn } from "./sections"
 
 const div = {
   title: 'Empty div',
-  thumb: '/images/sections/flex-row-2.svg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
@@ -23,7 +22,6 @@ const div = {
 
 const section = {
   title: 'Empty section',
-  thumb: '/images/sections/flex-row-2.svg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
@@ -40,26 +38,25 @@ const section = {
   children: []
 }
 
+const textDisplay = {
+  wrapper: {
+  },
+  image: {
+    height: '60px'
+  }
+}
+
 const span = {
   title: 'Span element',
   type: 'text',
   tagName: 'span',
-  content: 'Span element',
-  thumb: '/images/text/body.svg',
+  content: 'Span',
+  thumb: '/images/components/text/span.svg',
   dragProps: {
     rawWidth: 300,
     rawHeight: 25,
   },
-  displayStyle: {
-    wrapper: {
-      width: '100%',
-      height: '30px',
-      marginBottom: '40px'
-    },
-    image: {
-      height: '20px'
-    }
-  },
+  displayStyle: textDisplay,
   style: {}
 }
 
@@ -67,22 +64,13 @@ const label = {
   title: 'Label element',
   type: 'text',
   tagName: 'label',
-  content: 'Label element',
-  thumb: '/images/text/body.svg',
+  content: 'Label',
+  thumb: '/images/components/text/label.svg',
   dragProps: {
     rawWidth: 300,
     rawHeight: 25,
   },
-  displayStyle: {
-    wrapper: {
-      width: '100%',
-      height: '30px',
-      marginBottom: '40px'
-    },
-    image: {
-      height: '20px'
-    }
-  },
+  displayStyle: textDisplay,
   style: {}
 }
 
@@ -90,46 +78,28 @@ const p = {
   title: 'Paragraph element',
   type: 'text',
   tagName: 'p',
-  content: 'Paragraph element',
-  thumb: '/images/text/body.svg',
+  content: 'Paragraph',
+  thumb: '/images/components/text/paragraph.svg',
   dragProps: {
     rawWidth: 300,
     rawHeight: 25,
   },
-  displayStyle: {
-    wrapper: {
-      width: '100%',
-      height: '30px',
-      marginBottom: '40px'
-    },
-    image: {
-      height: '20px'
-    }
-  },
+  displayStyle: textDisplay,
   style: {}
 }
 
 const a = {
-  title: 'Link element',
+  title: 'Link',
   type: 'link',
   tagName: 'a',
   content: 'Link somewhere',
   href: '#',
-  thumb: '/images/text/body.svg',
+  thumb: '/images/components/text/a.svg',
   dragProps: {
     rawWidth: 100,
     rawHeight: 25,
   },
-  displayStyle: {
-    wrapper: {
-      width: '100%',
-      height: '30px',
-      marginBottom: '40px'
-    },
-    image: {
-      height: '20px'
-    }
-  },
+  displayStyle: textDisplay,
   style: {}
 }
 
@@ -140,7 +110,7 @@ const textInput = {
   tagName: 'input',
   className: 'form-control',
   bootstrapClass: 'form-control',
-  thumb: '/images/inputs/regular-btn.svg',
+  thumb: '/images/components/inputs/text-input.svg',
   placeholder: 'Write something here...',
   dragProps: {
     rawWidth: 200,
@@ -155,7 +125,7 @@ const textarea = {
   tagName: 'textarea',
   className: 'form-control',
   bootstrapClass: 'form-control',
-  thumb: '/images/inputs/regular-btn.svg',
+  thumb: '/images/components/inputs/textarea.svg',
   placeholder: 'Write something here...',
   dragProps: {
     rawWidth: 200,
@@ -165,12 +135,12 @@ const textarea = {
 }
 
 const list = {
-  title: 'Horizontal <ul>',
+  title: 'Horizontal unordered list',
   type: 'list',
   tagName: 'ul',
   className: 'list-group horizontal-list',
   bootstrapClass: 'list-group',
-  thumb: '/images/sections/flex-row-2.svg',
+  thumb: '/images/components/text/horizontal-list.svg',
   dragProps: {
     rawWidth: 200,
     rawHeight: 50
@@ -340,68 +310,37 @@ const constants = {
     title: 'Text',
     elements: [
       {
-        title: 'Semibold H1 Heading',
+        title: 'H1 heading',
         type: 'text',
         tagName: 'h1',
         domID: '',
         className: '',
         content: 'H1 Heading',
-        thumb: '/images/text/Heading-1.svg',
+        thumb: '/images/components/text/h1.svg',
         dragProps: {
           rawWidth: 300,
           rawHeight: 50,
           width: '100%',
         },
-        displayStyle: {
-          wrapper: {
-            width: '100%',
-            height: '100px'
-          },
-          image: {
-            width: '250px'
-          }
-        },
-        style: {
-          width: '100%',
-          marginTop: '0',
-          marginBottom: '10px',
-          fontSize: '32px',
-          lineHeight: 'normal',
-          display: 'block',
-        }
+        displayStyle: textDisplay,
       },
       {
-        title: 'Semibold H2 Heading',
+        title: 'H2 heading',
         type: 'text',
         tagName: 'h2',
         domID: '',
         className: '',
         content: 'H2 Heading',
-        thumb: '/images/text/Heading-2.svg',
+        thumb: '/images/components/text/h2.svg',
         dragProps: {
           rawWidth: 300,
           rawHeight: 50,
           width: '100%',
         },
-        displayStyle: {
-          wrapper: {
-            width: '100%',
-            height: '100px'
-          },
-          image: {
-            width: '187px'
-          }
-        },
-        style: {
-          width: '100%',
-          marginTop: '0',
-          marginBottom: '10px',
-          fontSize: '24px',
-          display: 'block',
-        }
+        displayStyle: textDisplay,
       },
       {
-        title: 'Semibold H3 Heading',
+        title: 'H3 Heading',
         type: 'text',
         domID: '',
         className: '',
@@ -412,23 +351,8 @@ const constants = {
           width: '100%',
         },
         content: 'H3 Heading',
-        thumb: '/images/text/Heading-3.svg',
-        displayStyle: {
-          wrapper: {
-            width: '100%',
-            height: '100px'
-          },
-          image: {
-            width: '144px'
-          }
-        },
-        style: {
-          width: '100%',
-          marginTop: '0',
-          marginBottom: '10px',
-          fontSize: '18.5px',
-          display: 'block',
-        }
+        thumb: '/images/components/text/h3.svg',
+        displayStyle: textDisplay,
       },
       p,
       span,
@@ -447,7 +371,7 @@ const constants = {
         tagName: 'img',
         className: 'img-vertical',
         domID: '',
-        thumb: '/images/sections/flex-row-2.svg',
+        thumb: '/images/components/media/portrait-image.jpg',
         dragProps: {
           rawWidth: 250,
           rawHeight: 500,
@@ -465,7 +389,7 @@ const constants = {
         tagName: 'img',
         className: 'img-landscape',
         domID: '',
-        thumb: '/images/sections/flex-row-2.svg',
+        thumb: '/images/components/media/landscape-image.jpg',
         dragProps: {
           rawWidth: 500,
           rawHeight: 250,

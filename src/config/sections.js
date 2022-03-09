@@ -1,11 +1,13 @@
 
+//C:\Users\Rico\Documents\ezylanding\ezylanding-app\public\images\components\sections
+
 export const flexRow2Col = {
   title: '2 Columns',
   type: 'section',
   tagName: 'section',
   className: 'section',
   domID: '',
-  thumb: '/images/sections/flex-row-2.svg',
+  thumb: '/images/components/sections/2-part-section.jpg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
@@ -160,7 +162,7 @@ export const largeColumn = {
   tagName: 'section',
   className: 'section',
   domID: '',
-  thumb: '/images/sections/flex-row-2.svg',
+  thumb: '/images/components/sections/large-section.jpg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
@@ -286,7 +288,7 @@ export const features1 = {
   tagName: 'section',
   className: 'features',
   domID: '',
-  thumb: '/images/sections/flex-row-2.svg',
+  thumb: '/images/components/sections/features-1.jpg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
@@ -658,7 +660,7 @@ export const features2 = {
   tagName: 'section',
   className: 'features',
   domID: '',
-  thumb: '/images/sections/flex-row-2.svg',
+  thumb: '/images/components/sections/features-2.jpg',
   dragProps: {
     rawWidth: 500,
     rawHeight: 300,
