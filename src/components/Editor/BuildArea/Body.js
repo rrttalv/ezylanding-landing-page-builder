@@ -104,6 +104,7 @@ export const Body = observer((props) => {
       className += ' section-tools'
     }
     const { before, after } = app.dragMetaData
+    const { tagName, position: { width, height } } = elem
     return (
       <>
         {
@@ -119,7 +120,9 @@ export const Body = observer((props) => {
         <div className={className}>
           <div className='element-tools_toolbar'>
             <ElementIndicator 
-              elementTag={elem.tagName}
+              elementTag={tagName}
+              width={width}
+              height={height}
               elementClass={elem.className}
             />
           </div>
@@ -149,6 +152,7 @@ export const Body = observer((props) => {
         'borderTopRightRadius',
         'borderBottomLeftRadius',
         'borderBottomRightRadius',
+        'textAlign'
       ]
       wrapperStyle.display = 'block'
       keys.forEach(k => {
@@ -159,7 +163,7 @@ export const Body = observer((props) => {
       if(!vals.includes(elem.activeStyleMap.display)){
         elem.activeStyleMap.display = 'block'
       }
-      elem.activeStyleMap.whiteSpace = 'pre'
+      //elem.activeStyleMap.whiteSpace = 'pre'
     }
     return getEditingTextElem(elem, sectionId, wrapperStyle)
   }

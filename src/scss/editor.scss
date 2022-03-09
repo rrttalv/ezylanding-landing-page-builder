@@ -612,13 +612,12 @@
           padding-bottom: 0;
           white-space: nowrap;
         }
-        &_tag {
+        &_tag, &_size, &_class {
           margin-bottom: 0px;
           font-weight: 700;
         }
-        &_class {
-          padding-top: 0;
-          font-weight: 700;
+        &_size {
+          margin-bottom: 2px;
         }
       }
       &::after {

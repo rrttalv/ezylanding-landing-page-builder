@@ -1595,7 +1595,16 @@ class AppStore {
   duplicateChildren(element){
     const copy = {
       ...element,
+      style: {},
       id: uuidv4()
+    }
+    const styleKeys = Object.keys(element.style)
+    const styleCopy = {}
+    if(styleKeys.length){
+      styleKeys.forEach(key => {
+        styleCopy[key] = element.style[key]
+      })
+      copy.style = styleCopy
     }
     if(element.children){
       copy.children = []

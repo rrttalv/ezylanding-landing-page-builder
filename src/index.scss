@@ -142,6 +142,12 @@ input {
   }
 }
 
+textarea {
+  &:focus-visible {
+    outline: none;
+  }
+}
+
 .btn-none {
   all: unset;
   &:hover {

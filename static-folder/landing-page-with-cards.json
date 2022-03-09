@@ -1,0 +1,2028 @@
+[
+  {
+    "title": "Empty section",
+    "thumb": "/images/sections/flex-row-2.svg",
+    "dragProps": {
+      "rawWidth": 500,
+      "rawHeight": 300,
+      "width": "50%",
+      "height": "300px"
+    },
+    "type": "section",
+    "tagName": "section",
+    "className": "",
+    "inlineStyles": true,
+    "style": {
+      "height": "fit-content",
+      "padding": "50px 0"
+    },
+    "children": [
+      {
+        "title": "Empty div",
+        "thumb": "/images/sections/flex-row-2.svg",
+        "dragProps": {
+          "rawWidth": 500,
+          "rawHeight": 300,
+          "width": "50%",
+          "height": "300px"
+        },
+        "type": "div",
+        "tagName": "div",
+        "className": "row no-gutters",
+        "inlineStyles": true,
+        "style": {},
+        "children": [
+          {
+            "title": "Empty div",
+            "thumb": "/images/sections/flex-row-2.svg",
+            "dragProps": {
+              "rawWidth": 500,
+              "rawHeight": 300,
+              "width": "50%",
+              "height": "300px"
+            },
+            "type": "div",
+            "tagName": "div",
+            "className": "col-md-10 offset-md-1 col-sm-12 offset-0",
+            "inlineStyles": true,
+            "style": {
+              "padding": "25px 0px"
+            },
+            "children": [
+              {
+                "title": "Empty div",
+                "thumb": "/images/sections/flex-row-2.svg",
+                "dragProps": {
+                  "rawWidth": 500,
+                  "rawHeight": 300,
+                  "width": "50%",
+                  "height": "300px"
+                },
+                "type": "div",
+                "tagName": "div",
+                "className": "row cards-row",
+                "inlineStyles": true,
+                "style": {},
+                "children": [
+                  {
+                    "title": "Empty div",
+                    "thumb": "/images/sections/flex-row-2.svg",
+                    "dragProps": {
+                      "rawWidth": 500,
+                      "rawHeight": 300,
+                      "width": "50%",
+                      "height": "300px"
+                    },
+                    "type": "div",
+                    "tagName": "div",
+                    "className": "col-md-12 col-lg-7 card-col",
+                    "inlineStyles": true,
+                    "style": {},
+                    "children": [
+                      {
+                        "title": "Empty div",
+                        "thumb": "/images/sections/flex-row-2.svg",
+                        "dragProps": {
+                          "rawWidth": 500,
+                          "rawHeight": 300,
+                          "width": "50%",
+                          "height": "300px"
+                        },
+                        "type": "div",
+                        "tagName": "div",
+                        "className": "large-card bg-second rounded-card",
+                        "inlineStyles": true,
+                        "style": {
+                          "background": "var(--secondary)"
+                        },
+                        "children": [
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-left card-item",
+                            "inlineStyles": true,
+                            "style": {
+                              "width": "62.5%"
+                            },
+                            "children": [
+                              {
+                                "title": "Semibold H1 Heading",
+                                "type": "text",
+                                "tagName": "h1",
+                                "domID": "",
+                                "className": "color-main card-title",
+                                "content": "Download our demo application",
+                                "thumb": "/images/text/Heading-1.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 50,
+                                  "width": "100%"
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "100px"
+                                  },
+                                  "image": {
+                                    "width": "250px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 375.390625,
+                                  "height": 76.78125,
+                                  "x": 143.25,
+                                  "y": 116,
+                                  "margin": "0px 0px 20px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "parent": false,
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "05967191-f4cc-486c-8155-f00577c1d2cd",
+                                "childrenOpen": false
+                              },
+                              {
+                                "title": "Paragraph element",
+                                "type": "text",
+                                "tagName": "p",
+                                "content": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint mollit anim id.",
+                                "thumb": "/images/text/body.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 25
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "30px",
+                                    "marginBottom": "40px"
+                                  },
+                                  "image": {
+                                    "height": "20px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 300,
+                                  "height": 96,
+                                  "x": 143.25,
+                                  "y": 212.78125,
+                                  "margin": "0px 0px 25px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "parent": false,
+                                "className": "card-lead",
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": false,
+                                "locked": false,
+                                "id": "55ede5a8-f1be-4f5b-8fda-f214a6ed1da5",
+                                "childrenOpen": false
+                              },
+                              {
+                                "title": "Empty div",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 500,
+                                  "rawHeight": 300,
+                                  "width": "50%",
+                                  "height": "300px"
+                                },
+                                "type": "div",
+                                "tagName": "div",
+                                "className": "card-btn-wrapper",
+                                "inlineStyles": true,
+                                "style": {},
+                                "children": [
+                                  {
+                                    "title": "Rounded button",
+                                    "type": "button",
+                                    "domID": "",
+                                    "dragProps": {
+                                      "rawWidth": 100,
+                                      "rawHeight": 30,
+                                      "width": "100px",
+                                      "height": "30px"
+                                    },
+                                    "className": "btn btn-main card-button",
+                                    "tagName": "button",
+                                    "content": "Get Demo",
+                                    "thumb": "/images/inputs/regular-btn.svg",
+                                    "style": {
+                                      "height": "fit-content"
+                                    },
+                                    "position": {
+                                      "width": 300,
+                                      "height": 42.765625,
+                                      "x": 143.25,
+                                      "y": 393.234375,
+                                      "margin": "0px 0px 0px 0px",
+                                      "padding": "7.2px 0px 7.2px 0px",
+                                      "flexProps": {
+                                        "display": "block",
+                                        "flexDirection": "row",
+                                        "flexWrap": "nowrap",
+                                        "flexFlow": "row nowrap",
+                                        "justifyContent": "normal",
+                                        "alignItems": "flex-start",
+                                        "alignContent": "normal",
+                                        "alignSelf": "auto",
+                                        "flex": "0 1 auto",
+                                        "flexBasis": "auto",
+                                        "flexGrow": "0",
+                                        "flexShrink": "1",
+                                        "order": "0"
+                                      }
+                                    },
+                                    "cssOpen": false,
+                                    "editingClass": false,
+                                    "editingID": false,
+                                    "toolbarOptionsOpen": true,
+                                    "locked": false,
+                                    "id": "6e3ab787-e509-4613-9fc2-2c166869a1a7",
+                                    "childrenOpen": true
+                                  }
+                                ],
+                                "position": {
+                                  "width": 375.390625,
+                                  "height": 92.21875,
+                                  "x": 143.25,
+                                  "y": 343.78125,
+                                  "margin": "10px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "flex",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "flex-end",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "8ef2a6af-9be6-4c90-b575-0656b99c9031",
+                                "childrenOpen": true
+                              }
+                            ],
+                            "position": {
+                              "width": 375.390625,
+                              "height": 320,
+                              "x": 143.25,
+                              "y": 116,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "0px 0px 0px 0px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "column nowrap",
+                                "justifyContent": "normal",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "parent": true,
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "dca105c4-65e6-4f30-a647-f2c1d13861a8",
+                            "childrenOpen": true
+                          },
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-right",
+                            "inlineStyles": true,
+                            "style": {
+                              "width": "37.5%",
+                              "height": "100%",
+                              "justifyContent": "center",
+                              "padding": "10px 25px",
+                              "display": "flex"
+                            },
+                            "children": [
+                              {
+                                "title": "Vertical image",
+                                "type": "img",
+                                "tagName": "img",
+                                "className": "img-vertical",
+                                "domID": "",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 250,
+                                  "rawHeight": 500
+                                },
+                                "recommendVertical": true,
+                                "style": {
+                                  "height": "300px",
+                                  "width": "auto",
+                                  "transform": "translate(0, 100px)"
+                                },
+                                "src": "https://images01.nicepage.com/c461c07a441a5d220e8feb1a/479ec6b0d7b05909ae00cb3c/dsd-min.png",
+                                "position": {
+                                  "width": 269.21875,
+                                  "height": 300,
+                                  "x": 496.65625,
+                                  "y": 226,
+                                  "margin": "0px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "32285307-ff2a-4d70-9843-02dd3c9aae61",
+                                "childrenOpen": false,
+                                "editingSrc": false
+                              }
+                            ],
+                            "position": {
+                              "width": 225.234375,
+                              "height": 320,
+                              "x": 518.640625,
+                              "y": 116,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "10px 25px 10px 25px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "row",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "row nowrap",
+                                "justifyContent": "center",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "parent": true,
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "acde289a-c22e-4f38-a265-b133301a67a2",
+                            "childrenOpen": true
+                          }
+                        ],
+                        "position": {
+                          "width": 630.625,
+                          "height": 370,
+                          "x": 128.25,
+                          "y": 91,
+                          "margin": "0px 0px 0px 0px",
+                          "padding": "25px 15px 25px 15px",
+                          "flexProps": {
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "flexWrap": "nowrap",
+                            "flexFlow": "row nowrap",
+                            "justifyContent": "center",
+                            "alignItems": "normal",
+                            "alignContent": "normal",
+                            "alignSelf": "auto",
+                            "flex": "0 1 auto",
+                            "flexBasis": "auto",
+                            "flexGrow": "0",
+                            "flexShrink": "1",
+                            "order": "0"
+                          }
+                        },
+                        "parent": true,
+                        "domID": "",
+                        "cssOpen": false,
+                        "editingClass": false,
+                        "editingID": false,
+                        "toolbarOptionsOpen": true,
+                        "locked": false,
+                        "id": "2b738956-decb-4036-8775-b38d0a0bab51",
+                        "childrenOpen": true
+                      }
+                    ],
+                    "position": {
+                      "width": 660.625,
+                      "height": 370,
+                      "x": 113.25,
+                      "y": 91,
+                      "margin": "16px 0px 0px 0px",
+                      "padding": "0px 15px 0px 15px",
+                      "flexProps": {
+                        "display": "block",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "flexFlow": "row nowrap",
+                        "justifyContent": "normal",
+                        "alignItems": "normal",
+                        "alignContent": "normal",
+                        "alignSelf": "auto",
+                        "flex": "0 0 58.3333%",
+                        "flexBasis": "58.3333%",
+                        "flexGrow": "0",
+                        "flexShrink": "0",
+                        "order": "0"
+                      }
+                    },
+                    "parent": true,
+                    "domID": "",
+                    "cssOpen": false,
+                    "editingClass": false,
+                    "editingID": false,
+                    "toolbarOptionsOpen": true,
+                    "locked": false,
+                    "id": "bfc045e6-e340-4f17-8b9f-c316cc4d7f04",
+                    "childrenOpen": true
+                  },
+                  {
+                    "title": "Empty div",
+                    "thumb": "/images/sections/flex-row-2.svg",
+                    "dragProps": {
+                      "rawWidth": 500,
+                      "rawHeight": 300,
+                      "width": "50%",
+                      "height": "300px"
+                    },
+                    "type": "div",
+                    "tagName": "div",
+                    "className": "col-md-12 col-lg-5 card-col",
+                    "inlineStyles": true,
+                    "style": {
+                      "minHeight": "100px"
+                    },
+                    "children": [
+                      {
+                        "title": "Empty div",
+                        "thumb": "/images/sections/flex-row-2.svg",
+                        "dragProps": {
+                          "rawWidth": 500,
+                          "rawHeight": 300,
+                          "width": "50%",
+                          "height": "300px"
+                        },
+                        "type": "div",
+                        "tagName": "div",
+                        "className": "rounded-card medium-card bg-third",
+                        "inlineStyles": true,
+                        "style": {
+                          "backgroundColor": "#b3e9cb"
+                        },
+                        "children": [
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-full card-item",
+                            "inlineStyles": true,
+                            "style": {
+                              "width": "100%"
+                            },
+                            "children": [
+                              {
+                                "title": "Semibold H1 Heading",
+                                "type": "text",
+                                "tagName": "h1",
+                                "domID": "",
+                                "className": "card-title color-main",
+                                "content": "Here are some cool facts about our app!",
+                                "thumb": "/images/text/Heading-1.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 50,
+                                  "width": "100%"
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "100px"
+                                  },
+                                  "image": {
+                                    "width": "250px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 411.875,
+                                  "height": 76.78125,
+                                  "x": 803.875,
+                                  "y": 116,
+                                  "margin": "0px 0px 20px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "daad9268-90d5-4901-95dc-82d3c63cfb6c",
+                                "childrenOpen": true
+                              },
+                              {
+                                "title": "Paragraph element",
+                                "type": "text",
+                                "tagName": "p",
+                                "content": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum! pariat Interdum velit euismod in",
+                                "thumb": "/images/text/body.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 25
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "30px",
+                                    "marginBottom": "40px"
+                                  },
+                                  "image": {
+                                    "height": "20px"
+                                  }
+                                },
+                                "style": {
+                                  "maxWidth": "350px"
+                                },
+                                "position": {
+                                  "width": 350,
+                                  "height": 72,
+                                  "x": 803.875,
+                                  "y": 212.78125,
+                                  "margin": "0px 0px 25px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "parent": false,
+                                "className": "card-lead",
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "214d8f41-a534-4f9e-8920-feddb489ded3",
+                                "childrenOpen": true
+                              },
+                              {
+                                "title": "Empty div",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 500,
+                                  "rawHeight": 300,
+                                  "width": "50%",
+                                  "height": "300px"
+                                },
+                                "type": "div",
+                                "tagName": "div",
+                                "className": "card-btn-wrapper",
+                                "inlineStyles": true,
+                                "style": {},
+                                "children": [
+                                  {
+                                    "title": "Rounded button",
+                                    "type": "button",
+                                    "domID": "",
+                                    "dragProps": {
+                                      "rawWidth": 100,
+                                      "rawHeight": 30,
+                                      "width": "100px",
+                                      "height": "30px"
+                                    },
+                                    "className": "btn btn-main card-button",
+                                    "tagName": "button",
+                                    "content": "Read More!",
+                                    "thumb": "/images/inputs/regular-btn.svg",
+                                    "style": {
+                                      "height": "fit-content"
+                                    },
+                                    "position": {
+                                      "width": 300,
+                                      "height": 42.765625,
+                                      "x": 803.875,
+                                      "y": 393.234375,
+                                      "margin": "0px 0px 0px 0px",
+                                      "padding": "7.2px 0px 7.2px 0px",
+                                      "flexProps": {
+                                        "display": "block",
+                                        "flexDirection": "row",
+                                        "flexWrap": "nowrap",
+                                        "flexFlow": "row nowrap",
+                                        "justifyContent": "normal",
+                                        "alignItems": "flex-start",
+                                        "alignContent": "normal",
+                                        "alignSelf": "auto",
+                                        "flex": "0 1 auto",
+                                        "flexBasis": "auto",
+                                        "flexGrow": "0",
+                                        "flexShrink": "1",
+                                        "order": "0"
+                                      }
+                                    },
+                                    "cssOpen": false,
+                                    "editingClass": false,
+                                    "editingID": false,
+                                    "toolbarOptionsOpen": true,
+                                    "locked": false,
+                                    "id": "500cb330-1c1b-4a72-9f9e-3d6f78e79382",
+                                    "childrenOpen": true
+                                  }
+                                ],
+                                "position": {
+                                  "width": 411.875,
+                                  "height": 116.21875,
+                                  "x": 803.875,
+                                  "y": 319.78125,
+                                  "margin": "10px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "flex",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "flex-end",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "2b5a21bc-ab50-4342-a79b-b89cf5df34da",
+                                "childrenOpen": true
+                              }
+                            ],
+                            "position": {
+                              "width": 411.875,
+                              "height": 320,
+                              "x": 803.875,
+                              "y": 116,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "0px 0px 0px 0px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "column nowrap",
+                                "justifyContent": "normal",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "5c53cf2b-b6c4-4af9-8853-eaea6f7e060a",
+                            "childrenOpen": true
+                          }
+                        ],
+                        "position": {
+                          "width": 441.875,
+                          "height": 370,
+                          "x": 788.875,
+                          "y": 91,
+                          "margin": "0px 0px 0px 0px",
+                          "padding": "25px 15px 25px 15px",
+                          "flexProps": {
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "flexWrap": "nowrap",
+                            "flexFlow": "row nowrap",
+                            "justifyContent": "center",
+                            "alignItems": "normal",
+                            "alignContent": "normal",
+                            "alignSelf": "auto",
+                            "flex": "0 1 auto",
+                            "flexBasis": "auto",
+                            "flexGrow": "0",
+                            "flexShrink": "1",
+                            "order": "0"
+                          }
+                        },
+                        "domID": "",
+                        "cssOpen": false,
+                        "editingClass": false,
+                        "editingID": false,
+                        "toolbarOptionsOpen": true,
+                        "locked": false,
+                        "id": "d2fee6a9-c7b4-4e23-bc62-88ac516095ac",
+                        "childrenOpen": true
+                      }
+                    ],
+                    "position": {
+                      "width": 471.875,
+                      "height": 370,
+                      "x": 773.875,
+                      "y": 91,
+                      "margin": "16px 0px 0px 0px",
+                      "padding": "0px 15px 0px 15px",
+                      "flexProps": {
+                        "display": "block",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "flexFlow": "row nowrap",
+                        "justifyContent": "normal",
+                        "alignItems": "normal",
+                        "alignContent": "normal",
+                        "alignSelf": "auto",
+                        "flex": "0 0 41.6667%",
+                        "flexBasis": "41.6667%",
+                        "flexGrow": "0",
+                        "flexShrink": "0",
+                        "order": "0"
+                      }
+                    },
+                    "parent": true,
+                    "domID": "",
+                    "cssOpen": false,
+                    "editingClass": false,
+                    "editingID": false,
+                    "toolbarOptionsOpen": true,
+                    "locked": false,
+                    "id": "38b4e2f7-d5a8-41a9-9b96-effdb07b18c8",
+                    "childrenOpen": true
+                  }
+                ],
+                "position": {
+                  "width": 1132.5,
+                  "height": 386,
+                  "x": 113.25,
+                  "y": 75,
+                  "margin": "0px 0px 0px 0px",
+                  "padding": "0px 0px 0px 0px",
+                  "flexProps": {
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "flexWrap": "wrap",
+                    "flexFlow": "row wrap",
+                    "justifyContent": "center",
+                    "alignItems": "normal",
+                    "alignContent": "normal",
+                    "alignSelf": "auto",
+                    "flex": "0 1 auto",
+                    "flexBasis": "auto",
+                    "flexGrow": "0",
+                    "flexShrink": "1",
+                    "order": "0"
+                  }
+                },
+                "parent": true,
+                "domID": "",
+                "cssOpen": false,
+                "editingClass": false,
+                "editingID": false,
+                "toolbarOptionsOpen": true,
+                "locked": false,
+                "id": "9864bf36-ad09-444c-b647-70bea6795895",
+                "childrenOpen": true
+              }
+            ],
+            "position": {
+              "width": 1132.5,
+              "height": 436,
+              "x": 113.25,
+              "y": 50,
+              "margin": "0px 0px 0px 113.25px",
+              "padding": "25px 0px 25px 0px",
+              "flexProps": {
+                "display": "block",
+                "flexDirection": "row",
+                "flexWrap": "nowrap",
+                "flexFlow": "row nowrap",
+                "justifyContent": "normal",
+                "alignItems": "normal",
+                "alignContent": "normal",
+                "alignSelf": "auto",
+                "flex": "0 0 83.3333%",
+                "flexBasis": "83.3333%",
+                "flexGrow": "0",
+                "flexShrink": "0",
+                "order": "0"
+              }
+            },
+            "parent": true,
+            "domID": "",
+            "cssOpen": false,
+            "editingClass": false,
+            "editingID": false,
+            "toolbarOptionsOpen": true,
+            "locked": false,
+            "id": "59abaabd-15ef-4ac0-8a58-f031be9c9770",
+            "childrenOpen": true
+          },
+          {
+            "title": "Empty div",
+            "thumb": "/images/sections/flex-row-2.svg",
+            "dragProps": {
+              "rawWidth": 500,
+              "rawHeight": 300,
+              "width": "50%",
+              "height": "300px"
+            },
+            "type": "div",
+            "tagName": "div",
+            "className": "col-md-10 offset-md-1 col-sm-12 offset-0",
+            "inlineStyles": true,
+            "style": {
+              "minHeight": "100px"
+            },
+            "children": [
+              {
+                "title": "Empty div",
+                "thumb": "/images/sections/flex-row-2.svg",
+                "dragProps": {
+                  "rawWidth": 500,
+                  "rawHeight": 300,
+                  "width": "50%",
+                  "height": "300px"
+                },
+                "type": "div",
+                "tagName": "div",
+                "className": "row cards-row",
+                "inlineStyles": true,
+                "style": {
+                  "minHeight": "100px"
+                },
+                "children": [
+                  {
+                    "title": "Empty div",
+                    "thumb": "/images/sections/flex-row-2.svg",
+                    "dragProps": {
+                      "rawWidth": 500,
+                      "rawHeight": 300,
+                      "width": "50%",
+                      "height": "300px"
+                    },
+                    "type": "div",
+                    "tagName": "div",
+                    "className": "col-lg-4 col-md-12 card-col",
+                    "inlineStyles": true,
+                    "style": {},
+                    "children": [
+                      {
+                        "title": "Empty div",
+                        "thumb": "/images/sections/flex-row-2.svg",
+                        "dragProps": {
+                          "rawWidth": 500,
+                          "rawHeight": 300,
+                          "width": "50%",
+                          "height": "300px"
+                        },
+                        "type": "div",
+                        "tagName": "div",
+                        "className": "small-card rounded-card bg-second",
+                        "inlineStyles": true,
+                        "style": {
+                          "background": "#ffddab"
+                        },
+                        "children": [
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-item card-top",
+                            "inlineStyles": true,
+                            "style": {},
+                            "children": [
+                              {
+                                "title": "Vertical image",
+                                "type": "img",
+                                "tagName": "img",
+                                "className": "card-img",
+                                "domID": "",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 250,
+                                  "rawHeight": 500
+                                },
+                                "recommendVertical": true,
+                                "style": {},
+                                "src": "https://pics.freeicons.io/uploads/icons/png/18456842401537856854-512.png",
+                                "position": {
+                                  "width": 50,
+                                  "height": 50,
+                                  "x": 277,
+                                  "y": 527,
+                                  "margin": "0px 133.75px 16px 133.75px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "d4d7afd4-9411-474a-b3a9-159fed5102ea",
+                                "childrenOpen": false,
+                                "editingSrc": false
+                              },
+                              {
+                                "title": "Semibold H1 Heading",
+                                "type": "text",
+                                "tagName": "h1",
+                                "domID": "",
+                                "className": "card-title color-main",
+                                "content": "Cool fact #1",
+                                "thumb": "/images/text/Heading-1.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 50,
+                                  "width": "100%"
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "100px"
+                                  },
+                                  "image": {
+                                    "width": "250px"
+                                  }
+                                },
+                                "style": {
+                                  "color": "var(--third)"
+                                },
+                                "position": {
+                                  "width": 317.5,
+                                  "height": 38.390625,
+                                  "x": 143.25,
+                                  "y": 593,
+                                  "margin": "0px 0px 20px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "15f3e108-dd20-4d6d-a08b-011579fa037d",
+                                "childrenOpen": true
+                              },
+                              {
+                                "title": "Paragraph element",
+                                "type": "text",
+                                "tagName": "p",
+                                "content": "Mauris sodales lorem vitae nunc pharetra, ac sodales dui gravida. Vestibulum blandit, magna in tempor laoreet, lorem nulla accumsan enim.",
+                                "thumb": "/images/text/body.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 25
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "30px",
+                                    "marginBottom": "40px"
+                                  },
+                                  "image": {
+                                    "height": "20px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 300,
+                                  "height": 96,
+                                  "x": 143.25,
+                                  "y": 651.390625,
+                                  "margin": "0px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "className": "card-lead",
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "7fb95386-e803-4f7a-8593-ad850a01ef9f",
+                                "childrenOpen": true
+                              }
+                            ],
+                            "position": {
+                              "width": 317.5,
+                              "height": 220.390625,
+                              "x": 143.25,
+                              "y": 527,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "0px 0px 0px 0px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "column nowrap",
+                                "justifyContent": "normal",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "0af0d41f-8895-4ba5-8906-c87f48d971da",
+                            "childrenOpen": true
+                          }
+                        ],
+                        "position": {
+                          "width": 347.5,
+                          "height": 270.390625,
+                          "x": 128.25,
+                          "y": 502,
+                          "margin": "0px 0px 0px 0px",
+                          "padding": "25px 15px 25px 15px",
+                          "flexProps": {
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "flexWrap": "nowrap",
+                            "flexFlow": "row nowrap",
+                            "justifyContent": "center",
+                            "alignItems": "normal",
+                            "alignContent": "normal",
+                            "alignSelf": "auto",
+                            "flex": "0 1 auto",
+                            "flexBasis": "auto",
+                            "flexGrow": "0",
+                            "flexShrink": "1",
+                            "order": "0"
+                          }
+                        },
+                        "domID": "",
+                        "cssOpen": false,
+                        "editingClass": false,
+                        "editingID": false,
+                        "toolbarOptionsOpen": true,
+                        "locked": false,
+                        "id": "e981462b-820e-4eee-8a2a-d04f064a4251",
+                        "childrenOpen": true
+                      }
+                    ],
+                    "position": {
+                      "width": 377.5,
+                      "height": 270.390625,
+                      "x": 113.25,
+                      "y": 502,
+                      "margin": "16px 0px 0px 0px",
+                      "padding": "0px 15px 0px 15px",
+                      "flexProps": {
+                        "display": "block",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "flexFlow": "row nowrap",
+                        "justifyContent": "normal",
+                        "alignItems": "normal",
+                        "alignContent": "normal",
+                        "alignSelf": "auto",
+                        "flex": "0 0 33.3333%",
+                        "flexBasis": "33.3333%",
+                        "flexGrow": "0",
+                        "flexShrink": "0",
+                        "order": "0"
+                      }
+                    },
+                    "domID": "",
+                    "cssOpen": false,
+                    "editingClass": false,
+                    "editingID": false,
+                    "toolbarOptionsOpen": true,
+                    "locked": false,
+                    "id": "d32d13a7-8dd4-47ca-9613-dc27b5bcbe24",
+                    "childrenOpen": true
+                  },
+                  {
+                    "title": "Empty div",
+                    "thumb": "/images/sections/flex-row-2.svg",
+                    "dragProps": {
+                      "rawWidth": 500,
+                      "rawHeight": 300,
+                      "width": "50%",
+                      "height": "300px"
+                    },
+                    "type": "div",
+                    "tagName": "div",
+                    "className": "col-lg-4 col-md-12 card-col",
+                    "inlineStyles": true,
+                    "style": {},
+                    "children": [
+                      {
+                        "title": "Empty div",
+                        "thumb": "/images/sections/flex-row-2.svg",
+                        "dragProps": {
+                          "rawWidth": 500,
+                          "rawHeight": 300,
+                          "width": "50%",
+                          "height": "300px"
+                        },
+                        "type": "div",
+                        "tagName": "div",
+                        "className": "small-card rounded-card bg-second",
+                        "inlineStyles": true,
+                        "style": {
+                          "background": "#ffddab"
+                        },
+                        "children": [
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-item card-top",
+                            "inlineStyles": true,
+                            "style": {},
+                            "children": [
+                              {
+                                "title": "Vertical image",
+                                "type": "img",
+                                "tagName": "img",
+                                "className": "card-img",
+                                "domID": "",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 250,
+                                  "rawHeight": 500
+                                },
+                                "recommendVertical": true,
+                                "style": {},
+                                "src": "https://pics.freeicons.io/uploads/icons/png/18456842401537856854-512.png",
+                                "position": {
+                                  "width": 50,
+                                  "height": 50,
+                                  "x": 654.5,
+                                  "y": 527,
+                                  "margin": "0px 133.75px 16px 133.75px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "bc6172d5-fd36-4c1d-af0f-5cf5d8fbceba",
+                                "childrenOpen": false,
+                                "editingSrc": false
+                              },
+                              {
+                                "title": "Semibold H1 Heading",
+                                "type": "text",
+                                "tagName": "h1",
+                                "domID": "",
+                                "className": "card-title color-main",
+                                "content": "Cool fact #2",
+                                "thumb": "/images/text/Heading-1.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 50,
+                                  "width": "100%"
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "100px"
+                                  },
+                                  "image": {
+                                    "width": "250px"
+                                  }
+                                },
+                                "style": {
+                                  "color": "var(--third)"
+                                },
+                                "position": {
+                                  "width": 317.5,
+                                  "height": 38.390625,
+                                  "x": 520.75,
+                                  "y": 593,
+                                  "margin": "0px 0px 20px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "18d3a4db-11be-4ed0-a5c0-400faf1f8cb4",
+                                "childrenOpen": true
+                              },
+                              {
+                                "title": "Paragraph element",
+                                "type": "text",
+                                "tagName": "p",
+                                "content": "Mauris sodales lorem vitae nunc pharetra, ac sodales dui gravida. Vestibulum blandit, magna in tempor laoreet, lorem nulla accumsan enim.",
+                                "thumb": "/images/text/body.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 25
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "30px",
+                                    "marginBottom": "40px"
+                                  },
+                                  "image": {
+                                    "height": "20px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 300,
+                                  "height": 96,
+                                  "x": 520.75,
+                                  "y": 651.390625,
+                                  "margin": "0px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "className": "card-lead",
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "da9ad67e-fd39-48d2-8661-dee2d83907fe",
+                                "childrenOpen": true
+                              }
+                            ],
+                            "position": {
+                              "width": 317.5,
+                              "height": 220.390625,
+                              "x": 520.75,
+                              "y": 527,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "0px 0px 0px 0px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "column nowrap",
+                                "justifyContent": "normal",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "620012d0-bc09-43dc-b410-72b65a078393",
+                            "childrenOpen": true
+                          }
+                        ],
+                        "position": {
+                          "width": 347.5,
+                          "height": 270.390625,
+                          "x": 505.75,
+                          "y": 502,
+                          "margin": "0px 0px 0px 0px",
+                          "padding": "25px 15px 25px 15px",
+                          "flexProps": {
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "flexWrap": "nowrap",
+                            "flexFlow": "row nowrap",
+                            "justifyContent": "center",
+                            "alignItems": "normal",
+                            "alignContent": "normal",
+                            "alignSelf": "auto",
+                            "flex": "0 1 auto",
+                            "flexBasis": "auto",
+                            "flexGrow": "0",
+                            "flexShrink": "1",
+                            "order": "0"
+                          }
+                        },
+                        "domID": "",
+                        "cssOpen": false,
+                        "editingClass": false,
+                        "editingID": false,
+                        "toolbarOptionsOpen": true,
+                        "locked": false,
+                        "id": "f4f3b6f3-1cd8-46a6-b660-eabf0aa5ba6b",
+                        "childrenOpen": true
+                      }
+                    ],
+                    "position": {
+                      "width": 377.5,
+                      "height": 270.390625,
+                      "x": 490.75,
+                      "y": 502,
+                      "margin": "16px 0px 0px 0px",
+                      "padding": "0px 15px 0px 15px",
+                      "flexProps": {
+                        "display": "block",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "flexFlow": "row nowrap",
+                        "justifyContent": "normal",
+                        "alignItems": "normal",
+                        "alignContent": "normal",
+                        "alignSelf": "auto",
+                        "flex": "0 0 33.3333%",
+                        "flexBasis": "33.3333%",
+                        "flexGrow": "0",
+                        "flexShrink": "0",
+                        "order": "0"
+                      }
+                    },
+                    "domID": "",
+                    "cssOpen": false,
+                    "editingClass": false,
+                    "editingID": false,
+                    "toolbarOptionsOpen": true,
+                    "locked": false,
+                    "id": "5b9af08d-a02d-462b-88ac-b7292a10dbec",
+                    "childrenOpen": false
+                  },
+                  {
+                    "title": "Empty div",
+                    "thumb": "/images/sections/flex-row-2.svg",
+                    "dragProps": {
+                      "rawWidth": 500,
+                      "rawHeight": 300,
+                      "width": "50%",
+                      "height": "300px"
+                    },
+                    "type": "div",
+                    "tagName": "div",
+                    "className": "col-lg-4 col-md-12 card-col",
+                    "inlineStyles": true,
+                    "style": {},
+                    "children": [
+                      {
+                        "title": "Empty div",
+                        "thumb": "/images/sections/flex-row-2.svg",
+                        "dragProps": {
+                          "rawWidth": 500,
+                          "rawHeight": 300,
+                          "width": "50%",
+                          "height": "300px"
+                        },
+                        "type": "div",
+                        "tagName": "div",
+                        "className": "small-card rounded-card bg-second",
+                        "inlineStyles": true,
+                        "style": {
+                          "background": "#ffddab"
+                        },
+                        "children": [
+                          {
+                            "title": "Empty div",
+                            "thumb": "/images/sections/flex-row-2.svg",
+                            "dragProps": {
+                              "rawWidth": 500,
+                              "rawHeight": 300,
+                              "width": "50%",
+                              "height": "300px"
+                            },
+                            "type": "div",
+                            "tagName": "div",
+                            "className": "card-item card-top",
+                            "inlineStyles": true,
+                            "style": {},
+                            "children": [
+                              {
+                                "title": "Vertical image",
+                                "type": "img",
+                                "tagName": "img",
+                                "className": "card-img",
+                                "domID": "",
+                                "thumb": "/images/sections/flex-row-2.svg",
+                                "dragProps": {
+                                  "rawWidth": 250,
+                                  "rawHeight": 500
+                                },
+                                "recommendVertical": true,
+                                "style": {},
+                                "src": "https://pics.freeicons.io/uploads/icons/png/18456842401537856854-512.png",
+                                "position": {
+                                  "width": 50,
+                                  "height": 50,
+                                  "x": 1032,
+                                  "y": 527,
+                                  "margin": "0px 133.75px 16px 133.75px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "d680e1ac-b057-4293-8ebd-59c1432acd9c",
+                                "childrenOpen": false,
+                                "editingSrc": false
+                              },
+                              {
+                                "title": "Semibold H1 Heading",
+                                "type": "text",
+                                "tagName": "h1",
+                                "domID": "",
+                                "className": "card-title color-main",
+                                "content": "Cool fact #3",
+                                "thumb": "/images/text/Heading-1.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 50,
+                                  "width": "100%"
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "100px"
+                                  },
+                                  "image": {
+                                    "width": "250px"
+                                  }
+                                },
+                                "style": {
+                                  "color": "var(--third)"
+                                },
+                                "position": {
+                                  "width": 317.5,
+                                  "height": 38.390625,
+                                  "x": 898.25,
+                                  "y": 593,
+                                  "margin": "0px 0px 20px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "ac9d2587-10a9-42e9-a5d2-7c34cee509af",
+                                "childrenOpen": true
+                              },
+                              {
+                                "title": "Paragraph element",
+                                "type": "text",
+                                "tagName": "p",
+                                "content": "Mauris sodales lorem vitae nunc pharetra, ac sodales dui gravida. Vestibulum blandit, magna in tempor laoreet, lorem nulla accumsan enim.",
+                                "thumb": "/images/text/body.svg",
+                                "dragProps": {
+                                  "rawWidth": 300,
+                                  "rawHeight": 25
+                                },
+                                "displayStyle": {
+                                  "wrapper": {
+                                    "width": "100%",
+                                    "height": "30px",
+                                    "marginBottom": "40px"
+                                  },
+                                  "image": {
+                                    "height": "20px"
+                                  }
+                                },
+                                "style": {},
+                                "position": {
+                                  "width": 300,
+                                  "height": 96,
+                                  "x": 898.25,
+                                  "y": 651.390625,
+                                  "margin": "0px 0px 0px 0px",
+                                  "padding": "0px 0px 0px 0px",
+                                  "flexProps": {
+                                    "display": "block",
+                                    "flexDirection": "row",
+                                    "flexWrap": "nowrap",
+                                    "flexFlow": "row nowrap",
+                                    "justifyContent": "normal",
+                                    "alignItems": "normal",
+                                    "alignContent": "normal",
+                                    "alignSelf": "auto",
+                                    "flex": "0 1 auto",
+                                    "flexBasis": "auto",
+                                    "flexGrow": "0",
+                                    "flexShrink": "1",
+                                    "order": "0"
+                                  }
+                                },
+                                "className": "card-lead",
+                                "domID": "",
+                                "cssOpen": false,
+                                "editingClass": false,
+                                "editingID": false,
+                                "toolbarOptionsOpen": true,
+                                "locked": false,
+                                "id": "e0c38ff9-4c36-49c0-bd16-1e56335698ee",
+                                "childrenOpen": true
+                              }
+                            ],
+                            "position": {
+                              "width": 317.5,
+                              "height": 220.390625,
+                              "x": 898.25,
+                              "y": 527,
+                              "margin": "0px 0px 0px 0px",
+                              "padding": "0px 0px 0px 0px",
+                              "flexProps": {
+                                "display": "flex",
+                                "flexDirection": "column",
+                                "flexWrap": "nowrap",
+                                "flexFlow": "column nowrap",
+                                "justifyContent": "normal",
+                                "alignItems": "normal",
+                                "alignContent": "normal",
+                                "alignSelf": "auto",
+                                "flex": "0 1 auto",
+                                "flexBasis": "auto",
+                                "flexGrow": "0",
+                                "flexShrink": "1",
+                                "order": "0"
+                              }
+                            },
+                            "domID": "",
+                            "cssOpen": false,
+                            "editingClass": false,
+                            "editingID": false,
+                            "toolbarOptionsOpen": true,
+                            "locked": false,
+                            "id": "4ff34785-b92b-4998-a513-276815de1313",
+                            "childrenOpen": true
+                          }
+                        ],
+                        "position": {
+                          "width": 347.5,
+                          "height": 270.390625,
+                          "x": 883.25,
+                          "y": 502,
+                          "margin": "0px 0px 0px 0px",
+                          "padding": "25px 15px 25px 15px",
+                          "flexProps": {
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "flexWrap": "nowrap",
+                            "flexFlow": "row nowrap",
+                            "justifyContent": "center",
+                            "alignItems": "normal",
+                            "alignContent": "normal",
+                            "alignSelf": "auto",
+                            "flex": "0 1 auto",
+                            "flexBasis": "auto",
+                            "flexGrow": "0",
+                            "flexShrink": "1",
+                            "order": "0"
+                          }
+                        },
+                        "domID": "",
+                        "cssOpen": false,
+                        "editingClass": false,
+                        "editingID": false,
+                        "toolbarOptionsOpen": true,
+                        "locked": false,
+                        "id": "4efc5919-3711-4764-a529-fa89880efcac",
+                        "childrenOpen": true
+                      }
+                    ],
+                    "position": {
+                      "width": 377.5,
+                      "height": 270.390625,
+                      "x": 868.25,
+                      "y": 502,
+                      "margin": "16px 0px 0px 0px",
+                      "padding": "0px 15px 0px 15px",
+                      "flexProps": {
+                        "display": "block",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "flexFlow": "row nowrap",
+                        "justifyContent": "normal",
+                        "alignItems": "normal",
+                        "alignContent": "normal",
+                        "alignSelf": "auto",
+                        "flex": "0 0 33.3333%",
+                        "flexBasis": "33.3333%",
+                        "flexGrow": "0",
+                        "flexShrink": "0",
+                        "order": "0"
+                      }
+                    },
+                    "domID": "",
+                    "cssOpen": false,
+                    "editingClass": false,
+                    "editingID": false,
+                    "toolbarOptionsOpen": true,
+                    "locked": false,
+                    "id": "2c239fbd-c96f-457e-8832-eeaaaab14913",
+                    "childrenOpen": false
+                  }
+                ],
+                "position": {
+                  "width": 1132.5,
+                  "height": 286.390625,
+                  "x": 113.25,
+                  "y": 486,
+                  "margin": "0px 0px 0px 0px",
+                  "padding": "0px 0px 0px 0px",
+                  "flexProps": {
+                    "display": "flex",
+                    "flexDirection": "row",
+                    "flexWrap": "wrap",
+                    "flexFlow": "row wrap",
+                    "justifyContent": "center",
+                    "alignItems": "normal",
+                    "alignContent": "normal",
+                    "alignSelf": "auto",
+                    "flex": "0 1 auto",
+                    "flexBasis": "auto",
+                    "flexGrow": "0",
+                    "flexShrink": "1",
+                    "order": "0"
+                  }
+                },
+                "domID": "",
+                "cssOpen": false,
+                "editingClass": false,
+                "editingID": false,
+                "toolbarOptionsOpen": true,
+                "locked": false,
+                "id": "6e45c03b-e695-490d-a8d8-e4e9910f2d2c",
+                "childrenOpen": true
+              }
+            ],
+            "position": {
+              "width": 1132.5,
+              "height": 286.390625,
+              "x": 113.25,
+              "y": 486,
+              "margin": "0px 0px 0px 113.25px",
+              "padding": "0px 0px 0px 0px",
+              "flexProps": {
+                "display": "block",
+                "flexDirection": "row",
+                "flexWrap": "nowrap",
+                "flexFlow": "row nowrap",
+                "justifyContent": "normal",
+                "alignItems": "normal",
+                "alignContent": "normal",
+                "alignSelf": "auto",
+                "flex": "0 0 83.3333%",
+                "flexBasis": "83.3333%",
+                "flexGrow": "0",
+                "flexShrink": "0",
+                "order": "0"
+              }
+            },
+            "domID": "",
+            "cssOpen": false,
+            "editingClass": false,
+            "editingID": false,
+            "toolbarOptionsOpen": true,
+            "locked": false,
+            "id": "343586cc-1ebd-4505-bc28-d0f87e47ba2c",
+            "childrenOpen": true
+          }
+        ],
+        "position": {
+          "width": 1359,
+          "height": 722.390625,
+          "x": 0,
+          "y": 50,
+          "margin": "0px 0px 0px 0px",
+          "padding": "0px 0px 0px 0px",
+          "flexProps": {
+            "display": "flex",
+            "flexDirection": "row",
+            "flexWrap": "wrap",
+            "flexFlow": "row wrap",
+            "justifyContent": "normal",
+            "alignItems": "normal",
+            "alignContent": "normal",
+            "alignSelf": "auto",
+            "flex": "0 1 auto",
+            "flexBasis": "auto",
+            "flexGrow": "0",
+            "flexShrink": "1",
+            "order": "0"
+          }
+        },
+        "parent": true,
+        "domID": "",
+        "cssOpen": false,
+        "editingClass": false,
+        "editingID": false,
+        "toolbarOptionsOpen": true,
+        "locked": false,
+        "id": "f113cbcb-8d3a-444c-b723-fc2b0125563a",
+        "childrenOpen": true
+      }
+    ],
+    "position": {
+      "width": 1359,
+      "height": 822.390625,
+      "x": 0,
+      "y": 0,
+      "margin": "0px 0px 0px 0px",
+      "padding": "50px 0px 50px 0px",
+      "flexProps": {
+        "display": "block",
+        "flexDirection": "row",
+        "flexWrap": "nowrap",
+        "flexFlow": "row nowrap",
+        "justifyContent": "normal",
+        "alignItems": "normal",
+        "alignContent": "normal",
+        "alignSelf": "auto",
+        "flex": "0 1 auto",
+        "flexBasis": "auto",
+        "flexGrow": "0",
+        "flexShrink": "1",
+        "order": "0"
+      }
+    },
+    "domID": "",
+    "cssOpen": false,
+    "editingClass": false,
+    "editingID": false,
+    "toolbarOptionsOpen": true,
+    "locked": false,
+    "id": "454b9869-1a2b-4640-8101-e9605846a7f1",
+    "childrenOpen": true
+  }
+]

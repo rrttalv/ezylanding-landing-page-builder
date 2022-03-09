@@ -45,8 +45,37 @@ export const Routes = observer((props) => {
             onChange={e => handleChange(e, id)}
           />
         </div>
+        <div className='input-group'>
+          <label className='input-group_label'>
+            Path
+          </label>
+          <input
+            className='input-group_input'
+            name={'route'}
+            value={route}
+            onChange={e => handleChange(e, id)}
+          />
+        </div>
+        <div className='input-group full-width'>
+          <label className='input-group_label'>
+            Meta description
+          </label>
+          <textarea
+            className='input-group_input'
+            name={'metaDescription'}
+            value={metaDescription}
+            onChange={e => handleChange(e, id)}
+          >
+          </textarea>
+        </div>
       </div>
     )
+  }
+
+  const addRoute = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    //Add a new page
   }
 
   const renderRouteList = () => {
@@ -81,6 +110,15 @@ export const Routes = observer((props) => {
             )
           })
         }
+        <div className='route-list_add'>
+          <button 
+            className='btn-none'
+            onClick={e => addRoute(e)}
+          >
+            <span>Add new route</span>
+            <PlusIcon />
+          </button>
+        </div>
       </div>
     )
   }

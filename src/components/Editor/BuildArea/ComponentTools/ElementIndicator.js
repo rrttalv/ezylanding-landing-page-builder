@@ -13,7 +13,7 @@ export const ElementIndicator = observer((props) => {
     'section': '#d7ba7d',
   }
 
-  const { elementTag, elementClass } = props
+  const { elementTag, elementClass, width, height } = props
 
   const getStyle = () => {
     let color = colorMap[elementTag]
@@ -42,6 +42,14 @@ export const ElementIndicator = observer((props) => {
         }}
       >
         .{elementClass}
+      </span>
+      <span
+        className='element-indicator_size'
+        style={{
+          color: 'rgb(224, 231, 255)'
+        }}
+      >
+        {Math.round(width)}px x {Math.round(height)}px
       </span>
     </div>
   )

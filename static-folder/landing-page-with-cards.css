@@ -1,0 +1,122 @@
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.color-third {
+  color: var(--third);
+}
+
+.color-main {
+  color: var(--main);
+}
+
+.cards-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.card-img {
+  width: 50px;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+.card-col {
+  margin-top: 1rem;
+}
+
+.card-button {
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  padding: 0.45rem 0;
+  border-radius: 40px;
+  font-size: 1.1rem;
+}
+
+.card-lead {
+  font-weight: 600;
+  max-width: 300px;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.img-vertical {
+  width: 100%;
+  display: block;
+}
+
+.btn.btn-main {
+  display: block;
+  background: var(--main);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.rounded-card {
+  border-radius: 25px;
+  height: 100%;
+  padding: 25px 15px;
+}
+
+.card-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.card-item.card-top {
+  margin-bottom: 0;
+}
+
+.card-btn-wrapper {
+  display: flex;
+  align-items: flex-end;
+  margin-top: 10px;
+  height: 100%;
+}
+
+.small-card .card-item {
+  margin-top: 0;
+}
+
+.small-card, .large-card, .medium-card {
+  display: flex;
+  flex-direction: row;
+  border-radius: 25px;
+  overflow: hidden;
+  justify-content: center;
+  max-width: 1000px;
+}
+
+.small-card {
+  max-width: 350px;
+  margin-left: auto;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.small-card .card-lead {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 992px){
+  .small-card {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
