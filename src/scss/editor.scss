@@ -135,9 +135,11 @@
       &-item {
         .elem-meta {
           display: flex;
-          &_data {
-            word-break: break-all;
-            flex: 1;
+          &_data {    
+            word-break: keep-all;
+            flex: 1 1;
+            white-space: nowrap;
+            overflow-x: hidden;
           } 
           &_tools {
             width: 92px;

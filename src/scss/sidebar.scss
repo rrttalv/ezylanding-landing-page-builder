@@ -49,6 +49,11 @@
     }
     width: 100px;
   }
+  &_toggle.templates {
+    svg {
+      stroke: #000;
+    }
+  }
   &_toggle.active:not(.customize):not(.routes) {
     span {
       color: #fff;

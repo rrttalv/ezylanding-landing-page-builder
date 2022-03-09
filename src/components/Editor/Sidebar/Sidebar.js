@@ -4,7 +4,7 @@ import { ReactComponent as Block } from '../../../svg/blocks.svg'
 import { ReactComponent as Code } from '../../../svg/code.svg'
 import { ReactComponent as Link } from '../../../svg/link.svg'
 import { ReactComponent as Tools } from '../../../svg/tools.svg'
-import { ReactComponent as Templates } from '../../../svg/tools.svg'
+import { ReactComponent as Roller } from '../../../svg/roller.svg'
 import { SlideWrapper } from './SlideWrapper'
 
 export const Sidebar = observer((props) => {
@@ -28,7 +28,7 @@ export const Sidebar = observer((props) => {
     {
       label: 'Templates',
       id: 'templates',
-      icon: <Templates />
+      icon: <Roller style={{ height: '37px' }} />
     },
     {
       label: 'Build',

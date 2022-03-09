@@ -255,6 +255,14 @@ export const BottomToolbar = observer((props) => {
     return className
   }
   
+  const getSlicedClassname = (elemId, className) => {
+    let val = '.' + className.split(' ').join('.')
+    const item = document.querySelector(`[data-metaid="${elemId}"] .elem-class`)
+    if(item){
+    }
+    return val
+  }
+
   const getElems = (element, level = 0) => {
     const { childrenOpen } = element
     const isSelected = app.selectedElement === element.id
@@ -279,13 +287,13 @@ export const BottomToolbar = observer((props) => {
               <span className='elem-tag'>{element.tagName}</span>
             </button>
             {
-              element.className ? <button className='btn-none'><span className='elem-class'>.{element.className.split(' ').join('.')}</span></button> : undefined
-            }
-            {
               element.domID ? <button className='btn-none'><span className='elem-domID'>#{element.domID}</span></button> : undefined
             }
+            {
+              element.className ? <button className='btn-none'><span className='elem-class'>{getSlicedClassname(id, element.className)}</span></button> : undefined
+            }
           </div>
-          <div className='elem-meta_tools'>
+          <div className='elem-meta_tools' style={{ display: isSelected ? 'block' : 'none' }}>
             {
               element.toolbarOptionsOpen && isSelected ? (
                 getOptionsMenu(element)

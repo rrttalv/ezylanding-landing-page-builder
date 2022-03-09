@@ -79,6 +79,7 @@ class AppStore {
       active: true,
       name: `main.css`,
       content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`,
+      //content: ``
       paletteContent: ``
     },
   ]
