@@ -10,10 +10,29 @@ class SocketStore {
 
   //editor socketIO client that is used to save all the changes in real-time
   socket = null
+  roomId = null
+  _saveInterval = null
+  intervalCount = 0
 
   setSocket(socket){
-    console.log(socket)
     this.socket = socket
+    const id = uuidv4()
+    this.roomId = id
+    this.socket.emit('roomInit', { roomId: id })
+    this._saveInterval = setInterval(() => {
+      if(this.intervalCount === 4){
+        clearInterval(this._saveInterval)
+      }
+      this.saveTemplate()
+      this.intervalCount += 1
+    }, 20000)
+  }
+
+  saveTemplate(){
+    const { templateId, pages, cssTabs, palette, activeFramework } = this.app
+    const { title, id, scripts } = activeFramework
+    const frameworkMeta = { title, id, scripts }
+    this.socket.emit('saveTemplate', null, templateId, pages, cssTabs, palette, frameworkMeta)
   }
 
 }

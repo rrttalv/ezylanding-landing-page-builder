@@ -44,6 +44,8 @@ class AppStore {
   //The boolean value that will be set if the drag index is calculated for the element
   displayInsert = false
 
+  templateId = null
+
   currentSectionId = null
   elementLen = 0
   activeTextEditor = null
@@ -392,6 +394,16 @@ class AppStore {
       value: `rgb(255, 255, 255)`,
       isEditing: false
     })
+  }
+
+  setTemplateID(id){
+    localStorage.setItem('templateId', id)
+    this.templateId = id
+  }
+
+  createTemplateID(){
+    this.templateId = uuidv4()
+    localStorage.setItem('templateId', this.templateId)
   }
 
   removePaletteItem(id){

@@ -79,6 +79,25 @@ export const Editor = observer((props) => {
   }, [])
 
   useEffect(() => {
+    if(socket.socket){
+      const { socket: socketInstance } = socket
+      socketInstance.on('templateSaved', (template) => {
+      })
+    }
+  }, [socket.socket])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    let existing = params.get('templateId')
+    //check localstorage for templateID
+    if(!existing){
+      existing = localStorage.getItem('templateId')
+    }
+    if(existing){
+      app.setTemplateID(existing)
+    }else{
+      app.createTemplateID()
+    }
     const newSocket = io(`http://${window.location.hostname}:4000`)
     socket.setSocket(newSocket)
     return () => newSocket.close();
