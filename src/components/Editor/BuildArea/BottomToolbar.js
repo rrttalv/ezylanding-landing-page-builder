@@ -7,6 +7,7 @@ import { ReactComponent as Duplicate } from '../../../svg/duplicate.svg'
 import { ReactComponent as Arrows } from '../../../svg/multi-arrow.svg'
 import { ReactComponent as Caret } from '../../../svg/caret-down.svg'
 import { ReactComponent as GearIcon } from '../../../svg/gear.svg'
+import { ReactComponent as UploadIcon } from '../../../svg/upload.svg'
 import { ReactComponent as Move } from '../../../svg/move.svg'
 import { PropInput } from './ComponentTools/PropInput'
 
@@ -99,6 +100,13 @@ export const BottomToolbar = observer((props) => {
     )
   }
 
+  const startFiletransfer = (e, elementId) => {
+    e.preventDefault()
+    e.stopPropagation()
+    sidebar.setTargetedElement(elementId)
+    document.querySelector('#upload-input').click()
+  }
+
   const getOptionsMenu = element => {
     const menu = document.querySelector('.layer-toolbar-list')
     const parent = document.querySelector(`[data-metauuid="${element.id}"]`)
@@ -159,21 +167,30 @@ export const BottomToolbar = observer((props) => {
           {
             //Show SRC button
             element.tagName === 'img' ? (
-              <div className='option-wrapper'>
-                {getPropToggle(element, 'editingSrc', 'src', element.editingSrc)}
-                {
-                  element.editingSrc ? (
-                    <PropInput
-                      value={element.src}
-                      save={(value) => saveElementProp(element.id, 'src', 'editingSrc', value)}
-                      className={inputClass}
-                      label={'Set element src'}
-                    />
-                  )
-                  :
-                  undefined
-                }
-              </div>
+              <>
+                <div className='option-wrapper'>
+                  {getPropToggle(element, 'editingSrc', 'src', element.editingSrc)}
+                  {
+                    element.editingSrc ? (
+                      <PropInput
+                        value={element.src}
+                        save={(value) => saveElementProp(element.id, 'src', 'editingSrc', value)}
+                        className={inputClass}
+                        label={'Set element src'}
+                      />
+                    )
+                    :
+                    undefined
+                  }
+                </div>
+                <div className='option-wrapper'>
+                  {
+                    <button onClick={e => startFiletransfer(e, element.id)} className='btn-none'>
+                      <UploadIcon className='upload-icon' />
+                    </button>
+                  }
+                </div>
+              </>
             )
             :
             undefined

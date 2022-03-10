@@ -67,12 +67,8 @@ export const Editor = observer((props) => {
   }
 
   useEffect(() => {
-    app.setActivePage()
-    app.setIframeHeight()
-    app.syncPalette()
     window.addEventListener('resize', resizeHandler.bind(this))
     window.logContents = logHandler.bind(this)
-    app.setActiveFramework('bootstrap')
     return function cleanup() {
       window.removeEventListener('resize', resizeHandler)
     }
@@ -82,11 +78,12 @@ export const Editor = observer((props) => {
     if(socket.socket){
       const { socket: socketInstance } = socket
       socketInstance.on('templateSaved', (template) => {
+        //do whatever
       })
     }
   }, [socket.socket])
 
-  useEffect(() => {
+  useEffect(async () => {
     const params = new URLSearchParams(window.location.search)
     let existing = params.get('templateId')
     //check localstorage for templateID
@@ -95,13 +92,31 @@ export const Editor = observer((props) => {
     }
     if(existing){
       app.setTemplateID(existing)
+      await app.fetchTemplate()
     }else{
       app.createTemplateID()
+      //Load the initial default template for all users
+      app.setActivePage()
+      app.setIframeHeight()
+      app.syncPalette()
+      app.setActiveFramework('bootstrap')
+      app.setCompiled()
     }
+    return
     const newSocket = io(`http://${window.location.hostname}:4000`)
     socket.setSocket(newSocket)
     return () => newSocket.close();
   }, [])
+
+  const handleUpload = async e => {
+    const { files } = e.target
+    await sidebar.uploadAsset(files[0])
+  }
+
+  const handleUploadCancel = e => {
+    console.log('canceled')
+    sidebar.setTargetedElement(null)
+  }
 
   return (
     <div
@@ -109,6 +124,7 @@ export const Editor = observer((props) => {
       onPointerUp={e => handleMouseUp(e)}
       className='container-fluid editor'
     >
+      <input id="upload-input" type="file" style={{ display: 'none' }} onChange={e => handleUpload(e)} onAbort={e => handleUploadCancel(e)} />
       <div className='editor_area'>
         <Sidebar />
         <BuildArea />

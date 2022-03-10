@@ -17,7 +17,7 @@ export const BuildArea = observer((props) => {
     <div className='build-area'>
       <div className='build-area_frame'>
         {
-          activePage ? (
+          activePage && app.compiled ? (
             <div className='build-area_preview'>
               <IFrame />
               <Page page={activePage} />

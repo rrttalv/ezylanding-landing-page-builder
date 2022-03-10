@@ -172,11 +172,14 @@
           position: absolute;
           padding: 2px 5px;
           border-radius: 4px;
-          &_const-row {
+          &_const-row, &_misc-row {
             display: flex;
             .option-wrapper:last-of-type {
               margin-right: 0;
             }
+          }
+          &_misc-row {
+            margin-top: 2.5px;
           }
           &_prop-input {
             position: absolute;
@@ -231,6 +234,11 @@
           }
           .option-wrapper {
             margin-right: 5px;
+            .upload-icon {
+              fill: #eeeeee;
+              height: 15px;
+              margin-bottom: -2px;
+            }
           }
         }
         .element-options.top {

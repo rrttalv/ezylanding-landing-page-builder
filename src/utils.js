@@ -6,6 +6,10 @@ export const camelToDash = str => str
 
 //Dash to camelcase - https://lodash.com/docs#camelCase
 
+export const getAPIBase = () => {
+  return process.env.REACT_APP_API_BASE
+}
+
 export const getFlexKeys = () => {
   return [
     'flexDirection',

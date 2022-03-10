@@ -5,6 +5,7 @@ import cssParser from 'css'
 import { camelCase, replace, trim } from "lodash";
 import { camelToDash, getFlexKeys, textStyleKeys } from "../utils";
 import bootstrapCSS from '!!raw-loader!../libraries/bootstrap.css';
+import { fetchTemplate } from "../services/TemplateService";
 
 const initSectionProps = {
   insertBefore: null,
@@ -187,6 +188,31 @@ class AppStore {
       customCode: ''
     }
   ]
+  
+  compiled = false
+
+
+  async fetchTemplate(){
+    try{
+      const { data } = await fetchTemplate(this.templateId)
+      const { template: { pages, templateId, cssFiles, palette, framework } } = data
+      this.templateId = templateId
+      this.pages = pages
+      this.cssTabs = cssFiles
+      this.palette = palette
+      const { id: frameworkId } = framework
+      this.setActiveFramework(frameworkId)
+      this.setActivePage(pages[0].id)
+      this.setCompiled()
+    }catch(err){
+      //show error
+      console.log(err)
+    }
+  }
+
+  setCompiled(){
+    this.compiled = true
+  }
 
   toggleLayerToolbar(){
     this.layersOpen = !this.layersOpen
@@ -611,14 +637,15 @@ class AppStore {
         }
         if(propName === 'src'){
           domElement.setAttribute('src', propValue)
+          setTimeout(() => {
+            this.handleWindowResize()
+          }, 1000)
         }
       }
     }
     setTimeout(() => {
-      this.recalculateSizes(this.pages[0].elements)
-      this.sizeCalcChange = !this.sizeCalcChange
-      this.setIframeHeight()
-    }, 300)
+      this.handleWindowResize()
+    }, 400)
   }
 
   setSelectedElement(id, parentId){

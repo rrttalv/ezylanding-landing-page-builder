@@ -12,7 +12,6 @@ class SocketStore {
   socket = null
   roomId = null
   _saveInterval = null
-  intervalCount = 0
 
   setSocket(socket){
     this.socket = socket
@@ -20,11 +19,7 @@ class SocketStore {
     this.roomId = id
     this.socket.emit('roomInit', { roomId: id })
     this._saveInterval = setInterval(() => {
-      if(this.intervalCount === 4){
-        clearInterval(this._saveInterval)
-      }
       this.saveTemplate()
-      this.intervalCount += 1
     }, 20000)
   }
 
