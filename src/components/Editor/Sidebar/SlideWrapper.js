@@ -4,6 +4,7 @@ import { SlideHeader } from './SlideHeader'
 import { Components } from './Slides/Components'
 import { Code } from './Slides/Code'
 import { Routes } from './Slides/Routes'
+import { Assets } from './Slides/Assets'
 
 export const SlideWrapper = observer((props) => {
 
@@ -62,6 +63,8 @@ export const SlideWrapper = observer((props) => {
         return <Code />
       case 'routes':
         return <Routes />
+      case 'assets':
+        return <Assets />
       default:
         return <div />
     }

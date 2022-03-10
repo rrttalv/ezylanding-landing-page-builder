@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ReactComponent as Block } from '../../../svg/blocks.svg'
 import { ReactComponent as Code } from '../../../svg/code.svg'
 import { ReactComponent as Link } from '../../../svg/link.svg'
+import { ReactComponent as Folder } from '../../../svg/folder.svg'
 import { ReactComponent as Tools } from '../../../svg/tools.svg'
 import { ReactComponent as Roller } from '../../../svg/roller.svg'
 import { SlideWrapper } from './SlideWrapper'
@@ -24,6 +25,11 @@ export const Sidebar = observer((props) => {
       label: 'Routes',
       id: 'routes',
       icon: <Link />
+    },
+    {
+      label: 'Assets',
+      id: 'assets',
+      icon: <Folder style={{ height: '29px' }} />
     },
     {
       label: 'Templates',

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ReactComponent as Block } from '../../../svg/blocks.svg'
 import { ReactComponent as Code } from '../../../svg/code.svg'
 import { ReactComponent as Link } from '../../../svg/link.svg'
+import { ReactComponent as Folder } from '../../../svg/folder.svg'
 import { ReactComponent as Tools } from '../../../svg/tools.svg'
 import { ReactComponent as Templates } from '../../../svg/tools.svg'
 
@@ -19,6 +20,10 @@ export const SlideHeader = ((props) => {
     'routes': {
       icon: <Link style={{ marginTop: '2px', paddingBottom: '2px' }} />,
       title: 'Set up routing'
+    },
+    'assets': {
+      icon: <Folder style={{ marginTop: '2px', paddingBottom: '2px' }} width="23px" />,
+      title: 'Manage assets'
     },
   })
 

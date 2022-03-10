@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { uploadFile } from "../services/AssetService";
+import { fetchAssets, uploadFile } from "../services/AssetService";
 
 class SidebarStore {
   constructor(appStore) {
@@ -12,8 +12,13 @@ class SidebarStore {
 
   //The current target element which will have it's source changed
   targetedElement = null
+
+  //Assets fetching meta
   assets = []
   assetPageNo = 0
+  assetsLoading = false
+  assetSearchKeyword = null
+  moreAssets = true
   
   toggleItem(id){
     this.appStore.togglePaletteEditing(null)
@@ -31,6 +36,28 @@ class SidebarStore {
 
   setTargetedElement(id){
     this.targetedElement = id
+  }
+
+  async fetchAssets(){
+    try{
+      if(!this.moreAssets){
+        return
+      }
+      this.assetsLoading = true
+      const { data } = await fetchAssets(this.assetPageNo, this.assetSearchKeyword)
+      const { assets, isMore } = data
+      if(assets.length === 0 && isMore){
+        this.assetPageNo += 1
+        return this.fetchAssets()
+      }
+      this.moreAssets = isMore
+      this.assets = [...this.assets, ...assets]
+      this.assetPageNo += 1
+      this.assetsLoading = false
+    }catch(err){
+      console.log(err)
+      this.assetsLoading = false
+    }
   }
 
   async uploadAsset(file){
