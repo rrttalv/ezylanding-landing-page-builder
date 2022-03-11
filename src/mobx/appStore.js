@@ -1470,28 +1470,31 @@ class AppStore {
   }
 
   compileSVG(doc, comp){
-    const div = doc.createElement('div')
-    div.innerHTML = comp.content
-    const svg = div.firstChild
-    Object.keys(comp.style).forEach(key => {
-      svg.style[key] = comp.style[key]
-    })
-    if(comp.className){
-      svg.setAttribute('class', comp.className)
+    try{
+      const parser = new DOMParser().parseFromString(comp.content, 'application/xml')
+      const svg = parser.firstElementChild
+      Object.keys(comp.style).forEach(key => {
+        svg.style[key] = comp.style[key]
+      })
+      if(comp.className){
+        svg.setAttribute('class', comp.className)
+      }
+      if(comp.domID){
+        svg.setAttribute('id', comp.domID)
+      }
+      svg.setAttribute('data-uuid', comp.id)
+      svg.setAttribute('key', comp.id)
+      return parser.firstElementChild
+    }catch(err){
+      console.log(err)
     }
-    if(comp.domID){
-      svg.setAttribute('id', comp.domID)
-    }
-    svg.setAttribute('data-uuid', comp.id)
-    svg.setAttribute('key', comp.id)
-    return div
   }
 
   compileDomElement(doc, comp, addStyles = false){
     let domElement = doc.createElement(comp.tagName)
     if(comp.tagName === 'svg'){
       domElement = this.compileSVG(doc, comp)
-      return domElement.firstChild
+      return domElement
     }
     if(comp.src){
       domElement.src = comp.src
@@ -1525,6 +1528,7 @@ class AppStore {
     if(frame){
       const doc = frame.contentWindow.document
       const domElement = this.compileDomElement(doc, comp, pushToBody)
+      console.log(domElement)
       if(pushToBody){
         const pageBody = doc.querySelector('#PAGE-BODY')
         pageBody.appendChild(domElement)
@@ -1546,6 +1550,7 @@ class AppStore {
         }
       }
       const inserted = doc.querySelector(`[data-uuid="${comp.id}"]`)
+      console.log(inserted)
       if(inserted){
         Object.keys(inserted.style).forEach(styleKey => {
           if(!isNaN(Number(styleKey))){

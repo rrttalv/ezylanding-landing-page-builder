@@ -73,6 +73,7 @@ export const SlideWrapper = observer((props) => {
   return (
     <div 
       className={`slide-wrapper ${wrapperClass}`}
+      style={activeItem === 'assets' ? { backgroundColor: `rgba(238, 238, 238, 0.96)` } : {}}
     >
       <SlideHeader id={activeItem} />
       {getSlide()}

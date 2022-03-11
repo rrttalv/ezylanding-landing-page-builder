@@ -114,7 +114,6 @@ export const Editor = observer((props) => {
   }
 
   const handleUploadCancel = e => {
-    console.log('canceled')
     sidebar.setTargetedElement(null)
   }
 

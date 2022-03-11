@@ -61,9 +61,8 @@ export const IFrame = observer((props) => {
   }
 
   const getSVG = (element) => {
-    const div = document.createElement('div')
-    div.innerHTML = element.content
-    const svg = div.firstChild
+    const parser = new DOMParser().parseFromString(element.content, 'image/svg+xml')
+    const svg = parser.firstElementChild
     Object.keys(element.style).forEach(key => {
       svg.style[key] = element.style[key]
     })
@@ -75,6 +74,10 @@ export const IFrame = observer((props) => {
     }
     svg.setAttribute('data-uuid', element.id)
     svg.setAttribute('key', element.id)
+    svg.setAttribute('xmlns', "http://www.w3.org/2000/svg")
+    svg.setAttribute('xmlns:xlink', "http://www.w3.org/1999/xlink")
+    const div = document.createElement('div')
+    div.appendChild(parser.firstElementChild)
     return parse(div.innerHTML)
   }
 
@@ -184,6 +187,7 @@ export const IFrame = observer((props) => {
     )
     const head = (
       <head>
+        <meta charset="utf-8"></meta>
         <title>My Page</title>
         {
           app.activeFramework ? (

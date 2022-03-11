@@ -19,6 +19,9 @@ class SidebarStore {
   assetsLoading = false
   assetSearchKeyword = null
   moreAssets = true
+
+  //Asset upload data
+  uploadingAsset = false
   
   toggleItem(id){
     this.appStore.togglePaletteEditing(null)
@@ -38,6 +41,10 @@ class SidebarStore {
     this.targetedElement = id
   }
 
+  addAsset(data){
+    this.assets.splice(0, 0, data)
+  }
+
   async fetchAssets(){
     try{
       if(!this.moreAssets){
@@ -46,12 +53,12 @@ class SidebarStore {
       this.assetsLoading = true
       const { data } = await fetchAssets(this.assetPageNo, this.assetSearchKeyword)
       const { assets, isMore } = data
-      if(assets.length === 0 && isMore){
+      this.assets = [...this.assets, ...assets]
+      if(assets.length < 15 && isMore){
         this.assetPageNo += 1
         return this.fetchAssets()
       }
       this.moreAssets = isMore
-      this.assets = [...this.assets, ...assets]
       this.assetPageNo += 1
       this.assetsLoading = false
     }catch(err){
@@ -62,15 +69,22 @@ class SidebarStore {
 
   async uploadAsset(file){
     try{
+      this.uploadingAsset = true
       const { data } = await uploadFile(file)
+      const { asset } = data
+      console.log(this.assets.length)
+      this.addAsset(asset)
+      console.log(this.assets.length)
       if(this.targetedElement){
-        this.appStore.updateElementProp(this.targetedElement, 'src', data.assetUrl)
+        this.appStore.updateElementProp(this.targetedElement, 'src', asset.url)
         this.appStore.toggleElementProp(this.targetedElement, 'editingSrc', false)
         this.targetedElement = null
       }
     }catch(err){
       //show err
       console.log(err)
+    }finally{
+      this.uploadingAsset = false
     }
   }
   
