@@ -9,6 +9,7 @@ import { Assets } from './Slides/Assets'
 export const SlideWrapper = observer((props) => {
 
   const [wrapperClass, setClass] = useState('hidden')
+  const [assetScrollPos, setAssetScrollPos] = useState(0)
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -70,9 +71,23 @@ export const SlideWrapper = observer((props) => {
     }
   }
 
+  const handleSlideScroll = e => {
+    if(activeItem === 'assets'){
+      const { scrollTop, scrollHeight, clientHeight } = e.target
+      const shouldLoad = sidebar.moreAssets && !sidebar.assetsLoading
+      if(scrollTop < (scrollHeight - clientHeight + 300) && shouldLoad){
+        sidebar.fetchAssets()
+      }
+    }
+    if(activeItem === 'templates'){
+      return
+    }
+  }
+
   return (
     <div 
       className={`slide-wrapper ${wrapperClass}`}
+      onScroll={e => handleSlideScroll(e)}
       style={activeItem === 'assets' ? { backgroundColor: `rgba(238, 238, 238, 0.96)` } : {}}
     >
       <SlideHeader id={activeItem} />

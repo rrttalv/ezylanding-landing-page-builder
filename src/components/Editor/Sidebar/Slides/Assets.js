@@ -82,11 +82,11 @@ export const Assets = observer((props) => {
     return (
       <div className='asset-slide_cols'>
         {
-          assets.map(asset => {
+          assets.map((asset, idx) => {
             const { id, thumburl, url, rawSVG, originalName } = asset
             return (
               <div 
-                key={id} 
+                key={id + idx} 
                 draggable
                 className='asset-slide_item'
                 onMouseDown={e => handleItemDragStart(e, asset)}
