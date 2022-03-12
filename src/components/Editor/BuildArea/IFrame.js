@@ -129,7 +129,7 @@ export const IFrame = observer((props) => {
       case 'listItem':
         return (
           <li key={elem.id} data-uuid={elem.id} className={elem.className} style={style}>
-            {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : elem.content}
+            {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined}
           </li>
         )
       case 'text':
@@ -187,7 +187,7 @@ export const IFrame = observer((props) => {
     )
     const head = (
       <head>
-        <meta charset="utf-8"></meta>
+        <meta charSet="utf-8"></meta>
         <title>My Page</title>
         {
           app.activeFramework ? (

@@ -90,9 +90,9 @@ export const Components = observer((props) => {
                 const listClass = item.title.toLowerCase().split(' ').join('-')
                 const displayStyle = item.displayStyle ? item.displayStyle.wrapper : {...customStyle}
                 const imgStyle = item.displayStyle && item.displayStyle.image ? item.displayStyle.image : {}
-                if(item.type === 'section'){
-                  imgStyle.boxShadow = '0px 1px 3px 2px rgba(0, 0, 0, 0.065)'
-                  imgStyle.border = '1px solid rgba(62, 227, 197, 0.125)'
+                if(type === 'sections'){
+                  //imgStyle.boxShadow = '0px 1px 3px 2px rgba(0, 0, 0, 0.065)'
+                  imgStyle.border = '1px solid rgba(0, 0, 0, 0.1)'
                 }
                 return (
                   <div 

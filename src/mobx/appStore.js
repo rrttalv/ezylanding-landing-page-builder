@@ -176,6 +176,8 @@ class AppStore {
         metaImage: '',
         detailsOpen: false,
       },
+      footerId: null,
+      headerId: null,
       id: uuidv4(),
       elements: [],
       elementsHeight: 500,
@@ -191,6 +193,10 @@ class AppStore {
   
   compiled = false
 
+  getActivePageIndex(){
+    const idx = this.pages.find(({ id }) => id === this.activePage)
+    return idx
+  }
 
   async fetchTemplate(){
     try{
@@ -243,6 +249,7 @@ class AppStore {
       const { id: dropParentId, before: parentBefore } = this.toolbarDropParent
       const { allowBeforeParent } = this.movingElement
       //If the element will be inserted into the parent element only
+      const pageIdx = this.getActivePageIndex()
       if(dropParentId || targetId){
         const element = this.findElement(this.movingElement.id)
         const parent = this.findElement(dropParentId)
@@ -254,24 +261,24 @@ class AppStore {
         const domElem = this.compileDomElement(doc, copy, true)
         if(!targetId){
           if(allowBeforeParent){
-            const higherParent = this.findParentElementByChildID(this.pages[0].elements, dropParentId)
+            const higherParent = this.findParentElementByChildID(this.pages[pageIdx].elements, dropParentId)
             //Insert the element into the elements array on the page itself
             if(!higherParent){
-              const parentIndex = this.pages[0].elements.findIndex(({ id: topParentId }) => topParentId === dropParentId)
+              const parentIndex = this.pages[pageIdx].elements.findIndex(({ id: topParentId }) => topParentId === dropParentId)
               const docBody = doc.querySelector('#PAGE-BODY')
               if(this.toolbarDropParent.before){
                 const parentNode = doc.querySelector(`[data-uuid="${dropParentId}"]`)
                 docBody.insertBefore(domElem, parentNode)
-                this.pages[0].elements.splice(parentIndex, 0, copy)
+                this.pages[pageIdx].elements.splice(parentIndex, 0, copy)
               }else{
-                const nextParent = this.pages[0].elements[parentIndex + 1]
+                const nextParent = this.pages[pageIdx].elements[parentIndex + 1]
                 if(nextParent){
-                  const nextParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
-                  docBody.insertBefore(domElem, nextParent)
-                  this.pages[0].elements.splice(parentIndex + 1, 0, copy)
+                  const nextDomParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
+                  docBody.insertBefore(domElem, nextDomParent)
+                  this.pages[pageIdx].elements.splice(parentIndex + 1, 0, copy)
                 }else{
                   docBody.appendChild(domElem)
-                  this.pages[0].elements.push(copy)
+                  this.pages[pageIdx].elements.push(copy)
                 }
               }
             }else{
@@ -284,8 +291,8 @@ class AppStore {
               }else{
                 //Insert before the next parent otherwise push to previous parent
                 if(nextParent){
-                  const nextParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
-                  higherParentNode.insertBefore(domElem, nextParent)
+                  const nextDomParent = doc.querySelector(`[data-uuid="${nextParent.id}"]`)
+                  higherParentNode.insertBefore(domElem, nextDomParent)
                   higherParent.children.splice(parentIndex + 1, 0, copy)
                 }else{
                   higherParent.children.push(copy)
@@ -350,6 +357,7 @@ class AppStore {
     this.movingElement.yPos += dy
     this.mouseStartX = x
     this.mouseStartY = y
+    const pageIdx = this.getActivePageIndex()
     //Check the cordinates of other elements in the toolbar
     const { idList } = this.movingElement
     const posList = document.elementsFromPoint(rawX, rawY)
@@ -391,7 +399,7 @@ class AppStore {
           this.toolbarDropTarget = {...initToolbarTarget}
         }
       }else{
-        const parent = this.findParentElementByChildID(this.pages[0].elements, target)
+        const parent = this.findParentElementByChildID(this.pages[pageIdx].elements, target)
         const { y: elemY, height } = document.querySelector(`[data-metauuid="${target}"]`).getBoundingClientRect()
         const before = (elemY + height / 2) > rawY
         this.toolbarDropParent = { ...initToolbarParent, id: parent.id }
@@ -480,6 +488,10 @@ class AppStore {
     tab.unsaved = false
     this.cssSaved = !this.cssSaved
     this.handleWindowResize()
+    const codeEditor = document.querySelector('.container-code-editor__qxcy .code-editor__textarea__qxcy')
+    if(codeEditor){
+      codeEditor.setAttribute('maxLength', 25000)
+    }
   }
 
   changeActiveTab(tabId){
@@ -541,21 +553,24 @@ class AppStore {
     }else{
       this.activeFramework = null
     }
+    const pageIdx = this.getActivePageIndex()
     setTimeout(() => {
-      this.recalculateSizes(this.pages[0].elements)
+      this.recalculateSizes(this.pages[pageIdx].elements)
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }, 1000)
   }
 
   handleWindowResize(){
-    this.recalculateSizes(this.pages[0].elements)
+    const pageIdx = this.getActivePageIndex()
+    this.recalculateSizes(this.pages[pageIdx].elements)
     this.setIframeHeight()
     this.sizeCalcChange = !this.sizeCalcChange
   }
 
   findElement(id){
-    const elements = this.pages[0].elements
+    const pageIdx = this.getActivePageIndex()
+    const elements = this.pages[pageIdx].elements
     let target = null
     elements.forEach(element => {
       if(!target){
@@ -581,10 +596,11 @@ class AppStore {
   }
 
   changeElementProp(id, elementType, propName, propValue){
+    const pageIdx = this.getActivePageIndex()
     if(elementType === 'text' || elementType === 'button' || elementType === 'link'){
       const { parentId } = this.activeElementMeta
       const keys = propName.split('|')
-      const elements = this.pages[0].elements
+      const elements = this.pages[pageIdx].elements
       let target = null
       elements.forEach(element => {
         if(!target){
@@ -602,7 +618,7 @@ class AppStore {
       }
     }
     setTimeout(() => {
-      this.recalculateSizes(this.pages[0].elements)
+      this.recalculateSizes(this.pages[pageIdx].elements)
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }, 300)
@@ -748,6 +764,9 @@ class AppStore {
     }else{
       this.activePage = id
     }
+    setTimeout(() => {
+      this.handleWindowResize()
+    }, 1000)
   }
 
   getActivePage(){
@@ -794,7 +813,8 @@ class AppStore {
   
 
   checkDragIndex(clientX, clientY){
-    const elements = this.pages[0].elements
+    const pageIdx = this.getActivePageIndex()
+    const elements = this.pages[pageIdx].elements
     elements.forEach((section, idx) => {
       const elem = document.querySelector(`[data-uuid="${section.id}"]`)
       const nextIndex = idx + 1
@@ -881,7 +901,8 @@ class AppStore {
       })
       let metaFound = false
       if(target && !this.activeDrag.insertAsParent){
-        const isMainParent = this.pages[0].elements.find(({ id }) => id === target)
+        const pageIdx = this.getActivePageIndex()
+        const isMainParent = this.pages[pageIdx].elements.find(({ id }) => id === target)
         const targetElement = this.findElement(target)
         if(targetElement.tagName === 'div'){
           if(!targetElement.children){
@@ -940,6 +961,9 @@ class AppStore {
   setMouseUp(){
     this.mouseStartX = 0
     this.mouseStartY = 0
+    this.dragTarget = null
+    this.displayInsert = false
+    this.dragIndex = 0
     this.dragMetaData = {...initDragMeta}
     this.toggleActiveMouseEvent(null, false)
   }
@@ -1008,7 +1032,8 @@ class AppStore {
     }
     //this means the text editor is closed so all the heights of elements should be recalibrated
     if(!id){
-      this.recalculateSizes(this.pages[0].elements)
+      const pageIdx = this.getActivePageIndex()
+      this.recalculateSizes(this.pages[pageIdx].elements)
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }
@@ -1044,7 +1069,8 @@ class AppStore {
           }
         })
       }
-      this.recalculateSizes(this.pages[0].elements)
+      const pageIdx = this.getActivePageIndex()
+      this.recalculateSizes(this.pages[pageIdx].elements)
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }
@@ -1074,7 +1100,8 @@ class AppStore {
       })
       this.updateIframeAndComponentCSS(this.cssElement, cssMap)
     }catch(err){
-      this.recalculateSizes(this.pages[0].elements)
+      const pageIdx = this.getActivePageIndex()
+      this.recalculateSizes(this.pages[pageIdx].elements)
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
       return
@@ -1312,7 +1339,8 @@ class AppStore {
       let found = false
       const doc = frame.contentWindow.document
       if(!element.children){
-        element = this.findParentElementByChildID(this.pages[0].elements, id)
+        const pageIdx = this.getActivePageIndex()
+        element = this.findParentElementByChildID(this.pages[pageIdx].elements, id)
       }
       parent = element
       if(element.children && element.children.length === 0){
@@ -1570,7 +1598,8 @@ class AppStore {
         const { outerHeight } = frame.contentWindow
         const { scrollHeight } = frame.contentWindow.document.body
         let frameHeight = scrollHeight === 0 ? outerHeight : scrollHeight
-        this.pages[0].elementsHeight = frameHeight
+        const pageIdx = this.getActivePageIndex()
+        this.pages[pageIdx].elementsHeight = frameHeight
         this.frameWidth = frame.contentWindow.innerWidth
       }
     }catch(err){
@@ -1663,7 +1692,8 @@ class AppStore {
   }
 
   duplicateElement(id){
-    const elements = this.pages[0].elements
+    const pageIdx = this.getActivePageIndex()
+    const elements = this.pages[pageIdx].elements
     let parent = null
     let isParent = null
     let target = null
@@ -1707,7 +1737,7 @@ class AppStore {
         //Insert into iframe
         if(isParent){
           doc.querySelector('#PAGE-BODY').appendChild(domElement)
-          this.pages[0].elements.push(element)
+          this.pages[pageIdx].elements.push(element)
         }else{
           const domParent = doc.querySelector(`[data-uuid="${parent.id}"]`)
           domParent.appendChild(domElement)
@@ -1715,10 +1745,10 @@ class AppStore {
         }
       }else{
         if(isParent){
-          const nextSibling = this.pages[0].elements[nextSiblingIndex]
+          const nextSibling = this.pages[pageIdx].elements[nextSiblingIndex]
           const nextChild = doc.querySelector(`[data-uuid="${nextSibling.id}"]`)
           doc.querySelector('#PAGE-BODY').insertBefore(domElement, nextChild)
-          this.pages[0].elements.splice(nextSiblingIndex, 0, element)
+          this.pages[pageIdx].elements.splice(nextSiblingIndex, 0, element)
         }else{
           const nextSibling = parent.children[nextSiblingIndex]
           const nextChild = doc.querySelector(`[data-uuid="${nextSibling.id}"]`)
@@ -1731,13 +1761,15 @@ class AppStore {
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
       setTimeout(() => {
-        this.recalculateSizes(this.pages[0].elements)
+        const pageIdx = this.getActivePageIndex()
+        this.recalculateSizes(this.pages[pageIdx].elements)
       }, 100)
     }, 500)
   }
 
   deleteElement(id){
-    const elements = this.pages[0].elements
+    const pageIdx = this.getActivePageIndex()
+    const elements = this.pages[pageIdx].elements
     let parent = null
     let isParent = false
     elements.forEach(el => {
@@ -1757,8 +1789,8 @@ class AppStore {
         this.toggleCSSTab(id)
       }
       if(isParent){
-        const idx = this.pages[0].elements.findIndex(({ id: eid }) => eid === parent.id)
-        this.pages[0].elements.splice(idx, 1)
+        const idx = this.pages[pageIdx].elements.findIndex(({ id: eid }) => eid === parent.id)
+        this.pages[pageIdx].elements.splice(idx, 1)
       }else{
         const childIdx = parent.children.findIndex(({ id: eid }) => eid === id)
         parent.children.splice(childIdx, 1)
@@ -1776,8 +1808,9 @@ class AppStore {
   insertComponent(e){
     try{
       if(this.activeDrag){
+        const pageIdx = this.getActivePageIndex()
         const { clientX, clientY } = e
-        const activeArea = this.pages[0].elements
+        const activeArea = this.pages[pageIdx].elements
         const editor = document.querySelector('.editor')
         if(!activeArea || !editor){
           return
@@ -1854,7 +1887,7 @@ class AppStore {
             this.setSelectedElement(comp.id, null)
           }else{
             this.insertElementIntoIframe(comp, null, null, null, null, true)
-            this.pages[0].elements.push(comp)
+            this.pages[pageIdx].elements.push(comp)
             this.elementLen += 1
             this.setSelectedElement(comp.id, null)
           }
@@ -1862,7 +1895,7 @@ class AppStore {
         setTimeout(() => {
           this.setIframeHeight()
           this.sizeCalcChange = !this.sizeCalcChange
-          this.recalculateSizes(this.pages[0].elements)
+          this.recalculateSizes(this.pages[pageIdx].elements)
         }, 300)
       }
     }catch(err){

@@ -67,7 +67,7 @@ export const DragUpload = observer(props => {
       <span className='drag-upload_text' style={{ color: metaStyle }}>
         <Upload className='drag-upload_icon' style={{ fill: metaStyle }} />
         {
-          uploading ? 'Uploading...' : (dragging ? 'Drop the asset(s) here' : 'Drag and drop 1 or more assets here')
+          uploading ? 'Uploading...' : (dragging ? 'Drop the asset(s) here' : 'Drag & drop 1 or more assets here')
         }
       </span>
     </div>

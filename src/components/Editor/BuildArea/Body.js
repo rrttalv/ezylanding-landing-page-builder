@@ -163,7 +163,12 @@ export const Body = observer((props) => {
       if(!vals.includes(elem.activeStyleMap.display)){
         elem.activeStyleMap.display = 'block'
       }
-      //elem.activeStyleMap.whiteSpace = 'pre'
+      delete elem.activeStyleMap.width
+      delete elem.activeStyleMap.marginLeft
+      delete elem.activeStyleMap.marginRight
+      delete elem.activeStyleMap.marginTop
+      delete elem.activeStyleMap.marginBottom
+      elem.activeStyleMap.whiteSpace = 'pre'
     }
     return getEditingTextElem(elem, sectionId, wrapperStyle)
   }

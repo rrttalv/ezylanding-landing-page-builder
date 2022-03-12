@@ -153,7 +153,6 @@ const list = {
     {
       type: 'listItem',
       tagName: 'li',
-      content: 'Item #1',
       className: 'list-group-item',
       bootstrapClass: 'list-group-item',
       style: {},
@@ -171,7 +170,6 @@ const list = {
     {
       type: 'listItem',
       tagName: 'li',
-      content: 'Item #2',
       className: 'list-group-item',
       bootstrapClass: 'list-group-item',
       style: {},
@@ -189,7 +187,6 @@ const list = {
     {
       type: 'listItem',
       tagName: 'li',
-      content: 'Item #3',
       className: 'list-group-item',
       bootstrapClass: 'list-group-item',
       style: {},
@@ -207,7 +204,6 @@ const list = {
     {
       type: 'listItem',
       tagName: 'li',
-      content: 'Link #4',
       className: 'list-group-item',
       bootstrapClass: 'list-group-item',
       style: {},

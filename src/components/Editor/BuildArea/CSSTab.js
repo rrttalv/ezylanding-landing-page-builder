@@ -23,10 +23,11 @@ export const CSSTab = observer((props) => {
     const tb = document.querySelector('.layer-toolbar')
     let xPos = 0
     let yPos = 0
+    const { scrollTop } = document.querySelector('html')
     if(tb){
       const { x, y, height } = tb.getBoundingClientRect()
       xPos = x - 610
-      yPos = y - (450 - height / 1.5)
+      yPos = y - (450 - height / 1.5) + scrollTop
     }
     app.setCSSTabPosition(xPos, yPos)
     setStringStyle()

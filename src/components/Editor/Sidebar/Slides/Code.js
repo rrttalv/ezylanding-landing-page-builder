@@ -103,10 +103,16 @@ export const Code = observer((props) => {
 
   useEffect(() => {
     setCodeRows(activeTab.content)
-  }, [])
+    const codeEditor = document.querySelector('.container-code-editor__qxcy .code-editor__textarea__qxcy')
+    if(codeEditor){
+      codeEditor.setAttribute('maxLength', 25000)
+    }
+  }, [activeTab])
 
   const changeActiveTab = (id) => {
-    app.saveTabContent(activeTab.id, codeRows)
+    if(activeTab.unsaved){
+      app.saveTabContent(activeTab.id, codeRows)
+    }
     setTimeout(() => {
       app.changeActiveTab(id)
     }, 50)
