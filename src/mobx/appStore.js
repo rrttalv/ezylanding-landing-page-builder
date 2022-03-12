@@ -194,8 +194,8 @@ class AppStore {
   compiled = false
 
   getActivePageIndex(){
-    const idx = this.pages.find(({ id }) => id === this.activePage)
-    return idx
+    const idx = this.pages.findIndex(({ id }) => id === this.activePage)
+    return idx === -1 || !idx ? 0 : idx
   }
 
   async fetchTemplate(){
