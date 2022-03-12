@@ -90,6 +90,11 @@
   padding-top: 0;
   .slide-item {
     padding-bottom: 50px;
+    &_subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      display: block;
+    }
   }
   &_header {
     border-right: 1px solid rgba(0,0,0,0.1);
@@ -115,6 +120,62 @@
 
 //The palette part of the code slide
 .code-slide {
+  &_static {
+    margin: 10px 0 25px 0;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    &-subtitle {
+      margin-bottom: 10px;
+    }
+    &-element_meta {
+      span {
+        font-size: 13px;
+      }
+      .elem-tag {
+        font-size: 15px;
+        font-weight: 500;
+      }
+    }
+    &-wrapper {
+      padding: 15px 10px;
+      &:first-child {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.065);
+      }
+    }
+    &-empty {
+      display: block;
+      font-size: 14px;
+      color: #787878;
+      margin: 10px 0;
+    }
+    &-btn {
+      margin-top: 15px;
+      .btn-empty {
+        padding: 0.5rem 0;
+        width: 48%;
+        margin: 0 1%;
+        svg {
+          width: 15px;
+          height: 15px;
+          margin-right: 5px;
+          fill: var(--secondary);
+          margin-bottom: -2px;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .unset-static {
+        svg {
+          width: 15px;
+          margin-right: 5px;
+          fill: none;
+          stroke: var(--orange-red);
+        }
+      }
+    }
+  }
   &_palettes {
     margin-left: -10px;
     margin-right: -10px;

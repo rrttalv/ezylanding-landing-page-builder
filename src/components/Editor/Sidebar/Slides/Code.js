@@ -8,6 +8,8 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css"; //Example style, you can use another
 import { camelToDash } from '../../../../utils';
 import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
+import { ReactComponent as CursorIcon } from '../../../../svg/cursor.svg';
+import { ReactComponent as Trash } from '../../../../svg/trash.svg';
 import { camelCase as dashToCamel } from 'lodash'
 import { CodeEditorEditable } from 'react-code-editor-editable';
 import 'highlight.js/styles/tomorrow-night-eighties.css';
@@ -163,7 +165,7 @@ export const Code = observer((props) => {
   const getPaletteItems = () => {
     const editingItem = palette.find(({ isEditing }) => isEditing)
     return (
-      <div className='palette-items' style={{ paddingBottom: editingItem ? '200px' : '25px' }}>
+      <div className='palette-items'>
         {
           palette.map((item, idx) => {
             const { name, id, var: varName, value, isEditing } = item
@@ -191,6 +193,85 @@ export const Code = observer((props) => {
             )
           })
         }
+      </div>
+    )
+  }
+
+  const toggleStaticSelect = (e, type) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if(app.staticSelect){
+      app.setStaticSelect(null)
+    }else{
+      app.setStaticSelect(type)
+    }
+  }
+
+  const handleSelect = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setSelectedElement(id, null)
+  }
+
+  const unsetStaticItem = (e, type) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.unsetStaticItem(type)
+  }
+
+  const getStaticDisplay = (footer = false) => {
+    const element = app.findElement(footer ? app.footerId : app.headerId)
+    return (
+      <div className='code-slide_static-wrapper'>
+        <span className='slide-item_subtitle code-slide_static-subtitle'>This element will appear on every page as the {footer ? 'last' : 'first'} element</span>
+        {
+          element ? (
+            <button 
+              className='btn-none code-slide_static-element_meta'
+              onClick={e => handleSelect(e, element.id)}
+            >
+              <span className='code-slide_static-tagname elem-tag'>
+                {element.tagName}
+              </span>
+              {
+                element.domID ? (
+                  <span className='code-slide_static-id elem-domID'>
+                    #{element.domID.split(' ').join('#')}
+                  </span>
+                )
+                :
+                undefined
+              }
+              {
+                element.className ? (
+                  <span className='code-slide_static-classname elem-class'>
+                    .{element.className.split(' ').join('.')}
+                  </span>
+                )
+                :
+                undefined
+              }
+            </button>
+          )
+          :
+          (
+            <span className='code-slide_static-empty'>
+              No static {footer ? 'footer' : 'header'} selected.
+            </span>
+          )
+        }
+        <div className='code-slide_static-btn'>
+          <button 
+            onClick={e => toggleStaticSelect(e, footer ? 'footer' : 'header')}
+            className='btn-empty'>
+            <CursorIcon />Set {footer ? 'footer' : 'header'}
+          </button>
+          <button 
+            onClick={e => unsetStaticItem(e, footer ? 'footer' : 'header')}
+            className='btn-empty unset-static'>
+            <Trash />Unset {footer ? 'footer' : 'header'}
+          </button>
+        </div>
       </div>
     )
   }
@@ -267,6 +348,11 @@ export const Code = observer((props) => {
         <h6 className='code-slide_title' style={{ marginTop: '40px' }}>Customize template palettes</h6>
         <div className='code-slide_palettes'>
           {getPaletteItems()}
+        </div>
+        <h6 className='code-slide_title'>Choose static elements</h6>
+        <div className='code-slide_static'>
+          {getStaticDisplay()}
+          {getStaticDisplay(true)}
         </div>
       </div>
     </div>

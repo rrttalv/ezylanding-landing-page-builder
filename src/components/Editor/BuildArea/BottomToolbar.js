@@ -61,7 +61,11 @@ export const BottomToolbar = observer((props) => {
   }, [app.layersOpen])
 
   const selectElement = (id) => {
-    app.setSelectedElement(id, null)
+    if(app.staticSelect){
+      app.handleStaticSelect(id)
+    }else{
+      app.setSelectedElement(id, null)
+    }
   }
 
   const addLevel = (level) => {
@@ -373,7 +377,7 @@ export const BottomToolbar = observer((props) => {
   }
 
   const getLayerItems = () => {
-    const elements = app.pages[0].elements
+    const elements = app.pages[app.getActivePageIndex()].elements
     if(elements.length === 0){
       return (
         <div className='layer-toolbar_empty'>
@@ -411,8 +415,20 @@ export const BottomToolbar = observer((props) => {
 
   return (
     <div className={`layer-toolbar ${toolbarClass}`}>
+      {
+        app.staticSelect ? (
+          <div className='layer-toolbar_indicator'>
+            <div className='layer-toolbar_indicator-wrapper blinking'>
+              <div className='layer-toolbar_indicator-dot' />
+              <span>Select a static {app.staticSelect} element</span>
+            </div>
+          </div>
+        )
+        :
+        undefined
+      }
       <div 
-        className='layer-toolbar_header'
+        className={`layer-toolbar_header${app.staticSelect ? ' active-indicator' : ''}`}
         onClick={e => handleToggle(e)}
       >
         <span>Layers</span>

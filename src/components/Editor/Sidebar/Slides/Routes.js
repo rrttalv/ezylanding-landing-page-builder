@@ -2,6 +2,8 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
 import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
 import { ReactComponent as Caret } from '../../../../svg/caret-down.svg';
+import { ReactComponent as Dot } from '../../../../svg/active-dot.svg';
+import { ReactComponent as Trash } from '../../../../svg/trash.svg';
 
 
 export const Routes = observer((props) => {
@@ -14,7 +16,7 @@ export const Routes = observer((props) => {
 
   useEffect(() => {
     routes.getRouteList()
-  }, [])
+  }, [app.pages.length, app.activePage])
 
   const handleChange = (e, pageId) => {
     e.preventDefault()
@@ -28,6 +30,18 @@ export const Routes = observer((props) => {
     e.preventDefault()
     e.stopPropagation()
     routes.toggleDetails(pageId)
+  }
+
+  const setActivePage = (e, pageId) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setActivePage(pageId)
+  }
+
+  const deletePage = (e, pageId) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.deletePage(pageId)
   }
 
   const getRouteDetails = item => {
@@ -45,7 +59,10 @@ export const Routes = observer((props) => {
             onChange={e => handleChange(e, id)}
           />
         </div>
-        <div className='input-group'>
+        <div 
+          className='input-group'
+          style={{ width: `calc(50% - 6px)`, marginLeft: '6px' }}
+        >
           <label className='input-group_label'>
             Path
           </label>
@@ -68,6 +85,24 @@ export const Routes = observer((props) => {
           >
           </textarea>
         </div>
+        <div className='route-list_prefrences_settings'>
+          <button
+            onClick={e => setActivePage(e, id)}
+            disabled={app.activePage === id} 
+            className='btn btn-empty activate'
+          >
+            <Dot />
+            Set active   
+          </button>
+          <button
+            onClick={e => deletePage(e, id)}
+            disabled={app.pages.length === 1}
+            className='btn btn-empty delete'
+          >
+            <Trash />
+            Delete page  
+          </button>
+        </div>
       </div>
     )
   }
@@ -75,7 +110,7 @@ export const Routes = observer((props) => {
   const addRoute = e => {
     e.preventDefault()
     e.stopPropagation()
-    //Add a new page
+    app.addNewPage()
   }
 
   const renderRouteList = () => {
@@ -83,7 +118,7 @@ export const Routes = observer((props) => {
       <div className='route-list'>
         {
           routes.routeList.map(item => {
-            const { route, detailsOpen } = item
+            const { route, detailsOpen, id } = item
             return (
               <div key={item.id} className={`route-list_item${detailsOpen ? ' active' : ''}`}>
                 <div className='route-list_header'>
@@ -94,8 +129,11 @@ export const Routes = observer((props) => {
                     <span className='route-list_header_title'>
                       {route}
                     </span>
+                      {
+                        id === app.activePage ? (<span className='route-list_header_active blinking'><Dot /></span>) : undefined
+                      }
                       <Caret 
-                        style={{ transform: `rotate(${detailsOpen ? '180deg' : '0'})` }}
+                        style={{ transform: `rotate(${detailsOpen ? '180deg' : '0'})`, fill: `${detailsOpen ? '#3ee3c5' : 'var(--dim-gray)'}` }}
                       />
                     </button>
                 </div>

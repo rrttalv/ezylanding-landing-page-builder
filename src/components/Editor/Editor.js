@@ -107,6 +107,10 @@ export const Editor = observer((props) => {
     return () => newSocket.close();
   }, [])
 
+  useEffect(() => {
+
+  }, [app.activePage])
+
   const handleUpload = async e => {
     const { files } = e.target
     await sidebar.uploadAsset(files[0])

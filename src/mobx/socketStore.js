@@ -27,7 +27,12 @@ class SocketStore {
     const { templateId, pages, cssTabs, palette, activeFramework } = this.app
     const { title, id, scripts } = activeFramework
     const frameworkMeta = { title, id, scripts }
-    this.socket.emit('saveTemplate', null, templateId, pages, cssTabs, palette, frameworkMeta)
+    const templateMeta = {
+      customScripts: this.app.customScripts,
+      footerId: this.app.footerId,
+      headerId: this.app.headerId
+    }
+    this.socket.emit('saveTemplate', null, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
   }
 
 }

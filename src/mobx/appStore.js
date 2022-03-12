@@ -167,6 +167,13 @@ class AppStore {
 
   parentElements = ['section', 'header']
   activeFramework = null
+  staticSelect = null
+
+  //The ID of the component that will be loaded for every page as the last component
+  footerId = null
+  //The ID of the component that will be loaded for every page as the first component
+  headerId = null
+  customScripts = []
   pages = [
     {
       route: '/',
@@ -176,18 +183,12 @@ class AppStore {
         metaImage: '',
         detailsOpen: false,
       },
-      footerId: null,
-      headerId: null,
       id: uuidv4(),
       elements: [],
       elementsHeight: 500,
       style: {
         background: '#ffffff',
-      },
-      hideHeader: false,
-      hideBody: false,
-      hideFooter: false,
-      customCode: ''
+      }
     }
   ]
   
@@ -198,14 +199,113 @@ class AppStore {
     return idx === -1 || !idx ? 0 : idx
   }
 
+  setStaticSelect(type){
+    this.staticSelect = type
+    if(type){
+      if(!this.layersOpen){
+        this.toggleLayerToolbar()
+      }
+    }
+  }
+
+  unsetStaticItem(type){
+    const toCopy = type === 'footer' ? this.footerId : this.headerId
+    //When unsetting an element the current target should be copied so conflicts wont happen if the element is deleted
+    if(toCopy){
+      this.pages.forEach(page => {
+        if(page.id !== this.activePage){
+          const { target, parent } = this.findElementFromParent(toCopy, null, page.elements)
+          if(target){
+            const copy = this.duplicateChildren(target)
+            if(parent){
+              const itemIdx = parent.children.findIndex(({ id }) => id === target.id)
+              if(itemIdx > -1){
+                parent.children.splice(itemIdx, 1, copy)
+              }
+            }else{
+              const itemIdx = page.elements.findIndex(({ id }) => id === target.id)
+              if(itemIdx > -1){
+                page.elements.splice(itemIdx, 1, copy)
+              }
+            }
+          }
+        }
+      })
+    }
+    if(type === 'footer'){
+      this.footerId = null
+    }else{
+      this.headerId = null
+    }
+  }
+
+  handleStaticSelect(id){
+    if(this.staticSelect === 'footer'){
+      this.footerId = id
+    }else{
+      this.headerId = id
+    }
+    //SHOULD CHECK IF THE ELEMENT EXISTS ON ALL OTHER PAGES, IF IT DOESNT THEN INSERT IT AS EITHER FIRST OR LAST
+    this.pages.forEach(page => {
+      const { target } = this.findElementFromParent(id, null, page.elements)
+      const element = this.findElement(id)
+      //IDK IF WE SHOULD DO THIS.DUPLICATECHILDREN - THIS SHOULD BE AN OPTION IN THE PROJECT SETTINGS
+      if(!target){
+        if(this.staticSelect === 'footer'){
+          page.elements.push(element)
+        }else{
+          page.elements.splice(0, 0, element)
+        }
+      }
+    })
+    this.setStaticSelect(null)
+  }
+
+  addNewPage(){
+    const newPage = {
+      route: `/route-${this.pages.length}`,
+      routeMeta: {
+        metaDescription: '',
+        metaTitle: '',
+        metaImage: '',
+        detailsOpen: false,
+      },
+      id: uuidv4(),
+      elements: [],
+      elementsHeight: 500,
+      style: {
+        background: '#ffffff',
+      }
+    }
+    if(this.headerId){
+      const headerElement = this.findElement(this.headerId)
+      if(headerElement){
+        newPage.elements.push(headerElement)
+      }
+    }
+    if(this.footerId){
+      const footerElement = this.findElement(this.footerId)
+      if(footerElement){
+        newPage.elements.push(footerElement)
+      }
+    }
+    this.pages.push(newPage)
+  }
+
   async fetchTemplate(){
     try{
       const { data } = await fetchTemplate(this.templateId)
-      const { template: { pages, templateId, cssFiles, palette, framework } } = data
+      const { template: { pages, templateId, cssFiles, palette, framework, templateMeta } } = data
       this.templateId = templateId
       this.pages = pages
       this.cssTabs = cssFiles
       this.palette = palette
+      if(templateMeta){
+        const { headerId, footerId, customScripts } = templateMeta
+        this.headerId = headerId
+        this.footerId = footerId
+        this.customScripts = customScripts
+      }
       const { id: frameworkId } = framework
       this.setActiveFramework(frameworkId)
       this.setActivePage(pages[0].id)
@@ -568,6 +668,27 @@ class AppStore {
     this.sizeCalcChange = !this.sizeCalcChange
   }
 
+  findElementFromParent(elementId, parentElement, elements){
+    let target = null
+    let parent = null
+    elements.forEach(element => {
+      if(!target){
+        if(element.id === elementId){
+          parent = parentElement
+          target = element
+        }
+        if(!target && element.children){
+          const { target: ft, parent: fp } = {...this.findElementFromParent(elementId, element, element.children)}
+          if(ft){
+            target = ft
+            parent = fp
+          }
+        }
+      }
+    })
+    return { target, parent }
+  }
+
   findElement(id){
     const pageIdx = this.getActivePageIndex()
     const elements = this.pages[pageIdx].elements
@@ -756,6 +877,25 @@ class AppStore {
       }
     })
     return parent
+  }
+
+  deletePage(id){
+    if(this.pages.length === 1){
+      return
+    }
+    const idx = this.pages.findIndex(({ id: pid }) => pid === id)
+    if(idx > -1){
+      if(this.activePage === id){
+        let toSwitch = null
+        if(idx === 0){
+          toSwitch = this.pages[idx + 1].id
+        }else{
+          toSwitch = this.pages[idx - 1].id
+        }
+        this.setActivePage(toSwitch)
+      }
+      this.pages = this.pages.filter(({ id: pid }) => pid !== id)
+    }
   }
 
   setActivePage(id){
@@ -1772,6 +1912,12 @@ class AppStore {
     const elements = this.pages[pageIdx].elements
     let parent = null
     let isParent = false
+    if(this.footerId === id){
+      this.unsetStaticItem('footer')
+    }
+    if(this.headerId === id){
+      this.unsetStaticItem('header')
+    }
     elements.forEach(el => {
       if(!parent){
         parent = this.findNestedParent(el, id)

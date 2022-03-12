@@ -27,7 +27,7 @@ class RouteStore {
   routeList = []
 
   getRouteList(){
-    this.routeList = this.app.pages.map(page => ( {route: page.route, ...page.routeMeta, id: page.id}))
+    this.routeList = this.app.pages.map(page => ({route: page.route, ...page.routeMeta, id: page.id}))
     return this.routeList
   }
 

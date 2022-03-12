@@ -6,9 +6,13 @@
       background-color: #fff;
       box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
       &_header {
-        padding: 5px 12px;
+        border-bottom: 1px solid #eee;
+        padding: 8px 12px;
+        position: relative;
         &_title {
-          font-size: 18px;
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--dim-gray);
         }
         .btn-none {
           width: 100%;
@@ -20,20 +24,59 @@
           fill: #3ee3c5;
           margin-top: 3px;
         }
+        &_active {
+          position: absolute;
+          right: 38px;
+          top: 6px;
+          svg {
+            width: 15px;
+            height: 15px;
+            margin-top: 6px;
+          }
+        }
       }
       &_prefrences {
-        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
         padding: 10px 10px;
         display: flex;
         flex-wrap: wrap;
         .input-group {
           width: 50%;
+          &_input {
+            width: 170px;
+          }
         }
         .input-group.full-width {
           width: 100%;
           margin: 15px 0 5px 0px;
           textarea {
-            width: 360px;
+            width: 368px;
+          }
+        }
+        &_settings {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+          .btn {
+            width: 48%;
+            margin: 10px 1%;
+          }
+          .activate {
+            svg {
+              width: 10px;
+              margin-right: 5px;
+              margin-bottom: 0px;
+            }
+          }
+          .delete {
+            svg {
+              width: 15px;
+              margin-right: 5px;
+              margin-bottom: -2px;
+              fill: none;
+              stroke: var(--orange-red);
+            }
           }
         }
       }

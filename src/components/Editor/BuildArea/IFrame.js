@@ -31,7 +31,7 @@ export const IFrame = observer((props) => {
 
   useEffect(() => {
     parseElements()
-  }, [app.elementLen, app.activeFramework, app.cssSaved])
+  }, [app.elementLen, app.activeFramework, app.cssSaved, app.activePage])
 
   const getTextElement = (elem, style) => {
     const { className, content, tagName, id } = elem
@@ -249,7 +249,7 @@ export const IFrame = observer((props) => {
   }
 
   useEffect(() => {
-    setFh(app.pages[0].elementsHeight)
+    setFh(app.pages[app.getActivePageIndex()].elementsHeight)
   }, [app.sizeCalcChange])
 
   return (
