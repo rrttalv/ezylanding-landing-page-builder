@@ -181,8 +181,8 @@ export const Code = observer((props) => {
   }
 
   const handleColorChange = (color, id) => {
-    const { rgb: { r, g, b, a } } = color
-    app.editPaletteProp(id, 'value', `rgba(${r}, ${g}, ${b}, ${a})`)
+    const { rgb: { r, g, b } } = color
+    app.editPaletteProp(id, 'value', `${r}, ${g}, ${b}`)
   }
 
   const getPaletteItems = () => {
@@ -195,7 +195,7 @@ export const Code = observer((props) => {
             const isFirst = idx + 1 === 1 || idx % 3 === 0
             return (
               <div key={id} className={`palette-item${isFirst ? ' first-grid-item' : ''}`}>
-                <div className='palette-item_color' onClick={e => toggleEditing(e, id)} style={{ background: value }} />
+                <div className='palette-item_color' onClick={e => toggleEditing(e, id)} style={{ background: `rgb(${value})` }} />
                 {
                   isEditing ? (
                     <ChromePicker
@@ -204,7 +204,7 @@ export const Code = observer((props) => {
                           width: '100%'
                         }
                       }}
-                      color={value}
+                      color={`rgb(${value})`}
                       onChangeComplete={color => handleColorChange(color, id)}
                     />
                   )

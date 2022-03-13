@@ -97,42 +97,42 @@ class AppStore {
       name: 'main',
       id: uuidv4(),
       var: '--main',
-      value: 'rgba(79, 70, 229, 1)',
+      value: '79, 70, 229',
       isEditing: false
     },
     {
       name: 'secondary',
       id: uuidv4(),
       var: '--secondary',
-      value: 'rgba(224, 231, 255, 1)',
+      value: '224, 231, 255',
       isEditing: false
     },
     {
       name: 'third',
       id: uuidv4(),
       var: '--third',
-      value: 'rgba(5, 169, 133, 1)',
+      value: '5, 169, 133',
       isEditing: false
     },
     {
       name: 'light',
       id: uuidv4(),
       var: '--light',
-      value: 'rgba(255, 255, 255, 1)',
+      value: '255, 255, 255',
       isEditing: false
     },
     {
       name: 'gray',
       id: uuidv4(),
       var: '--gray',
-      value: 'rgba(108, 117, 125, 1)',
+      value: '108, 117, 125',
       isEditing: false
     },
     {
       name: 'dark',
       id: uuidv4(),
       var: '--dark',
-      value: 'rgba(52, 58, 64, 1)',
+      value: '52, 58, 64',
       isEditing: false
     },
   ]
@@ -526,7 +526,7 @@ class AppStore {
       id: uuidv4(),
       name: `color-${this.palette.length + 1}`,
       var: `--color-${this.palette.length + 1}`,
-      value: `rgb(255, 255, 255)`,
+      value: `255, 255, 255`,
       isCustom: true,
       isEditingName: false,
       isEditing: false
