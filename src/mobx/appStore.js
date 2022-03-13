@@ -62,6 +62,8 @@ class AppStore {
     after: false
   }
 
+  activeCSSTab = null
+
   toolbarDropParent = {
     id: null,
     before: false,
@@ -83,7 +85,8 @@ class AppStore {
       name: `main.css`,
       content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`,
       //content: ``
-      paletteContent: ``
+      paletteContent: ``,
+      scrollPosition: 0
     },
   ]
   cssSaved = false
@@ -199,6 +202,47 @@ class AppStore {
     return idx === -1 || !idx ? 0 : idx
   }
 
+  addCustomScript(){
+    const script = {
+      scriptURL: '',
+      id: uuidv4()
+    }
+    this.customScripts.push(script)
+  }
+
+  removeCustomScript(id){
+    this.customScripts = this.customScripts.filter(({ id: sid }) => sid !== id)
+    this.handleScriptSave(id, false)
+  }
+
+  handleScriptChange(id, value){
+    const script = this.customScripts.find(({ id: sid }) => sid === id)
+    script.scriptURL = value
+  }
+
+  handleScriptSave(id, add = true){
+    const frame = document.querySelector('iframe')
+    if(frame){
+      const doc = frame.contentWindow.document
+      const elem = doc.querySelector(`[data-uuid="${id}"]`)
+      if(add){
+        const script = this.customScripts.find(({ id: sid }) => sid === id)
+        if(!elem){
+          const newElement = doc.createElement('script')
+          newElement.src = script.scriptURL
+          newElement.crossOrigin
+          doc.head.appendChild(newElement)
+        }else{
+          elem.setAttribute('src', script.scriptURL)
+        }
+      }else{
+        if(elem){
+          elem.remove()
+        }
+      }
+    }
+  }
+
   setStaticSelect(type){
     this.staticSelect = type
     if(type){
@@ -261,6 +305,11 @@ class AppStore {
     this.setStaticSelect(null)
   }
 
+  setCSSScrollPosition(id, position){
+    const tab = this.cssTabs.find(({ id: tid }) => tid === id)
+    tab.scrollPosition = position
+  }
+
   addNewPage(){
     const newPage = {
       route: `/route-${this.pages.length}`,
@@ -298,7 +347,12 @@ class AppStore {
       const { template: { pages, templateId, cssFiles, palette, framework, templateMeta } } = data
       this.templateId = templateId
       this.pages = pages
-      this.cssTabs = cssFiles
+      this.cssTabs = cssFiles.map(tab => {
+        return {
+          ...tab,
+          active: true
+        }
+      })
       this.palette = palette
       if(templateMeta){
         const { headerId, footerId, customScripts } = templateMeta
@@ -345,6 +399,9 @@ class AppStore {
 
   setMovingElement(id, x, y){
     if(!id){
+      if(!this.movingElement){
+        return
+      }
       const { id: targetId, before } = this.toolbarDropTarget
       const { id: dropParentId, before: parentBefore } = this.toolbarDropParent
       const { allowBeforeParent } = this.movingElement
@@ -561,9 +618,7 @@ class AppStore {
   editPaletteProp(id, propName, propValue, changeOnly = false){
     if(!changeOnly){
       const item = this.palette.find(({ id: pid }) => pid === id)
-      console.log({...item})
       item[propName] = propValue
-      console.log({...item})
     }
     if(this._paletteBounce){
       clearTimeout(this._paletteBounce)
@@ -608,6 +663,7 @@ class AppStore {
   }
 
   changeActiveTab(tabId){
+    this.activeCSSTab = tabId
     this.cssTabs = this.cssTabs.map(tab => {
       return {
         ...tab,

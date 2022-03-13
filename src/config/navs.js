@@ -49,6 +49,7 @@ export const regularNav = {
       "tagName": "div",
       "className": "collapse navbar-collapse",
       "bootstrapClass": "collapse navbar-collapse",
+      domId: "navbarSupportedContent",
       "style": {},
       "children": [
         {

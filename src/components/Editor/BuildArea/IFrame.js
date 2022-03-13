@@ -205,6 +205,11 @@ export const IFrame = observer((props) => {
           ''
         }
         {
+          app.customScripts.map(script => (
+            <script src={script.scriptURL} key={script.id} data-uuid={script.id}></script>
+          ))
+        }
+        {
           app.cssTabs.map(tab => {
             const { id, content, name, paletteContent } = tab
             if(name === 'main.css'){

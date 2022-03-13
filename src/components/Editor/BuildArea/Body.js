@@ -77,6 +77,7 @@ export const Body = observer((props) => {
   const getEditingTextElem = (elem, parentId, style) => {
     let copy = {...elem.activeStyleMap }
     const { type } = elem
+    style.width += 15
     return <SlateEditor elem={elem} parentId={parentId} style={copy} editorStyle={{...style, position: 'relative'}} area={props.area} />
   }
 
@@ -168,7 +169,7 @@ export const Body = observer((props) => {
       delete elem.activeStyleMap.marginRight
       delete elem.activeStyleMap.marginTop
       delete elem.activeStyleMap.marginBottom
-      elem.activeStyleMap.whiteSpace = 'pre'
+      elem.activeStyleMap.whiteSpace = 'pre-wrap'
     }
     return getEditingTextElem(elem, sectionId, wrapperStyle)
   }

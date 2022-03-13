@@ -1,5 +1,5 @@
 import { MobXProviderContext, observer } from 'mobx-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import { List } from 'react-virtualized';
@@ -8,6 +8,7 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css"; //Example style, you can use another
 import { camelToDash } from '../../../../utils';
 import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
+import { ReactComponent as Check } from '../../../../svg/mint-check.svg';
 import { ReactComponent as CursorIcon } from '../../../../svg/cursor.svg';
 import { ReactComponent as Trash } from '../../../../svg/trash.svg';
 import { ReactComponent as Pen } from '../../../../svg/pen.svg';
@@ -100,14 +101,31 @@ export const Code = observer((props) => {
   }
 
   const { store: { sidebar, app } } = getStore()
+  
+  const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
 
   const activeTab = app.cssTabs.find(({ active, selected }) => active && selected)
 
   const { palette } = app
 
   useEffect(() => {
+  }, [app.palette.length, app.customScripts.length])
 
-  }, [app.palette.length, palette])
+  useEffect(() => {
+    const scrollSection = document.querySelector(`pre .code-editor__hlcode__qxcy`)
+    if(scrollSection){
+      scrollSection.addEventListener('scroll', handleScroll, false)
+      return () => scrollSection.removeEventListener(scroll, handleScroll, false)
+    }
+  }, [])
+  
+  const prevTabId = usePrevious(app.activeCSSTab)
 
   useEffect(() => {
     setCodeRows(activeTab.content)
@@ -115,7 +133,19 @@ export const Code = observer((props) => {
     if(codeEditor){
       codeEditor.setAttribute('maxLength', 25000)
     }
+    /*
+    const scrollSection = document.querySelector(`pre .code-editor__hlcode__qxcy`)
+    if(activeTab.scrollPosition && prevTabId !== app.activeCSSTab){
+      console.log('scrolled' + '\n')
+      scrollSection.scrollTo(0, activeTab.scrollPosition)
+    }
+    */
   }, [activeTab])
+
+  const handleScroll = e => {
+    const tab = app.cssTabs.find(({ active, selected }) => active && selected)
+    app.setCSSScrollPosition(tab.id, e.target.scrollTop + e.target.clientHeight)
+  }
 
   const changeActiveTab = (id) => {
     if(activeTab.unsaved){
@@ -245,10 +275,11 @@ export const Code = observer((props) => {
             )
           })
         }
-        <button onClick={e => addPalette(e)} className='btn-empty palette-items_add-item'>
-          <PlusIcon />
-          <span>Add color</span>
-        </button>
+        <div className='palette-items__add-wrapper'>
+          <button onClick={e => addPalette(e)} className='btn-empty palette-items_add-item'>
+            <PlusIcon />
+          </button>
+        </div>
       </div>
     )
   }
@@ -332,6 +363,72 @@ export const Code = observer((props) => {
     )
   }
 
+  const handleScriptChange = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    const { value, name: id } = e.target
+    app.handleScriptChange(id, value)
+  }
+
+  const addScript = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.addCustomScript()
+  }
+
+  const deleteScript = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.removeCustomScript(id)
+  }
+
+  const saveScript = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.handleScriptSave(id, true)
+  }
+
+  const getCustomScripts = () => {
+    const { customScripts } = app
+    return (
+      <div className='custom-scripts'>
+        {
+          customScripts.length === 0 ? (
+            <div className='custom-scripts_empty'>
+              <span>Your custom script URLS will appear here</span>
+            </div>
+          )
+          :
+          undefined
+        }
+        {
+          customScripts.map(item => {
+            const { id, scriptURL } = item
+            return (
+              <div className='custom-scripts_script'>
+                <input type='text' className="custom-scripts_script-input" placeholder='Custom script url e.g. https://fonts.googleapis.com' name={id} onChange={e => handleScriptChange(e)} value={scriptURL} />
+                <div className='custom-scripts_buttons'>
+                  <button onClick={e => saveScript(e, id)} className='btn-none'>
+                    <Check />
+                  </button>
+                  <button onClick={e => deleteScript(e, id)} className='btn-none'>
+                    <Trash className='trash' />
+                  </button>
+                </div>
+              </div>
+            )
+          })
+        }
+        <div className='custom-scripts_footer'>
+          <button onClick={e => addScript(e)} className='btn-none'>
+            <span>Add custom script</span>
+            <PlusIcon />
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div 
       className='code-slide slide-item'
@@ -343,9 +440,20 @@ export const Code = observer((props) => {
             app.cssTabs.map((tab, idx) => (
               <React.Fragment key={tab.id}>
               {
-                tab.active ? (
-                  tab.selected ? (
-                    <div key={tab.id} className='code-slide_tab active'>
+                <>
+                  {
+                    tab.selected ? (
+                      <div key={tab.id} className='code-slide_tab active'>
+                        {
+                          tab.name
+                        }
+                        {
+                          tab.unsaved ? '*' : undefined
+                        }
+                      </div>
+                    )
+                    :
+                    <div key={tab.id} className='code-slide_tab inactive' onClick={e => changeActiveTab(tab.id)} >
                       {
                         tab.name
                       }
@@ -353,19 +461,8 @@ export const Code = observer((props) => {
                         tab.unsaved ? '*' : undefined
                       }
                     </div>
-                  )
-                  :
-                  <div key={tab.id} className='code-slide_tab inactive' onClick={e => changeActiveTab(tab.id)} >
-                    {
-                      tab.name
-                    }
-                    {
-                      tab.unsaved ? '*' : undefined
-                    }
-                  </div>
-                )
-                :
-                undefined
+                  }
+                </>
               }
               {
                 app.cssTabs.length - 1 === idx ? (
@@ -400,6 +497,10 @@ export const Code = observer((props) => {
               Save File
             </button>
           </div>
+        </div>
+        <h6 className='code-slide_title' style={{ marginTop: '40px' }}>Add custom scripts</h6>
+        <div className='code-slide_scripts'>
+          {getCustomScripts()}
         </div>
         <h6 className='code-slide_title' style={{ marginTop: '40px' }}>Customize template palettes</h6>
         <div className='code-slide_palettes'>
