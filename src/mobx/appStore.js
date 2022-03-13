@@ -523,11 +523,15 @@ class AppStore {
 
   addPaletteItem(){
     this.palette.push({
+      id: uuidv4(),
       name: `color-${this.palette.length + 1}`,
       var: `--color-${this.palette.length + 1}`,
       value: `rgb(255, 255, 255)`,
+      isCustom: true,
+      isEditingName: false,
       isEditing: false
     })
+    this.editPaletteProp(null, null, null, true)
   }
 
   setTemplateID(id){
@@ -541,10 +545,8 @@ class AppStore {
   }
 
   removePaletteItem(id){
-    const idx = this.palette.find(({ id: pid }) => pid === id)
-    if(idx > -1){
-      this.palette.splice(idx, 1)
-    }
+    this.palette = this.palette.filter(({ id: pid }) => pid !== id)
+    this.editPaletteProp(null, null, null, true)
   }
 
   updateIFramePalette(newValue){
@@ -556,9 +558,13 @@ class AppStore {
     }
   }
 
-  editPaletteProp(id, propName, propValue){
-    const item = this.palette.find(({ id: pid }) => pid === id)
-    item[propName] = propValue
+  editPaletteProp(id, propName, propValue, changeOnly = false){
+    if(!changeOnly){
+      const item = this.palette.find(({ id: pid }) => pid === id)
+      console.log({...item})
+      item[propName] = propValue
+      console.log({...item})
+    }
     if(this._paletteBounce){
       clearTimeout(this._paletteBounce)
     }
@@ -570,15 +576,22 @@ class AppStore {
     }, 250)
   }
 
-  togglePaletteEditing(id){
+  togglePaletteEditing(id, name = false){
     this.palette.forEach(item => {
       if(item.id !== id){
         item.isEditing = false
+        if(name){
+          item.isEditingName = false
+        }
       }
     })
     const item = this.palette.find(({ id: pid }) => pid === id)
     if(item){
-      item.isEditing = !item.isEditing
+      if(name){
+        item.isEditingName = !item.isEditingName
+      }else{
+        item.isEditing = !item.isEditing
+      }
     }
   }
 
@@ -892,6 +905,7 @@ class AppStore {
         }else{
           toSwitch = this.pages[idx - 1].id
         }
+        this.unsetSelectedElement()
         this.setActivePage(toSwitch)
       }
       this.pages = this.pages.filter(({ id: pid }) => pid !== id)
@@ -899,6 +913,7 @@ class AppStore {
   }
 
   setActivePage(id){
+    this.unsetSelectedElement()
     if(!id){
       this.activePage = this.pages[0].id
     }else{

@@ -10,10 +10,12 @@ import { camelToDash } from '../../../../utils';
 import { ReactComponent as PlusIcon } from '../../../../svg/plus.svg';
 import { ReactComponent as CursorIcon } from '../../../../svg/cursor.svg';
 import { ReactComponent as Trash } from '../../../../svg/trash.svg';
+import { ReactComponent as Pen } from '../../../../svg/pen.svg';
 import { camelCase as dashToCamel } from 'lodash'
 import { CodeEditorEditable } from 'react-code-editor-editable';
 import 'highlight.js/styles/tomorrow-night-eighties.css';
 import { ChromePicker } from 'react-color'
+import { PropInput } from '../../BuildArea/ComponentTools/PropInput';
 
 
 
@@ -104,6 +106,10 @@ export const Code = observer((props) => {
   const { palette } = app
 
   useEffect(() => {
+
+  }, [app.palette.length, palette])
+
+  useEffect(() => {
     setCodeRows(activeTab.content)
     const codeEditor = document.querySelector('.container-code-editor__qxcy .code-editor__textarea__qxcy')
     if(codeEditor){
@@ -151,10 +157,27 @@ export const Code = observer((props) => {
     app.editPaletteProp(id, e.target.name, e.target.value)
   }
 
-  const toggleEditing = (e, id) => {
+  const handlePaletteNameChange = (id, value) => {
+    app.editPaletteProp(id, 'var', value)
+    app.togglePaletteEditing(id, true)
+  }
+
+  const addPalette = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    app.togglePaletteEditing(id)
+    app.addPaletteItem()
+  }
+
+  const deletePalette = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.removePaletteItem(id)
+  }
+
+  const toggleEditing = (e, id, name = false) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.togglePaletteEditing(id, name)
   }
 
   const handleColorChange = (color, id) => {
@@ -168,9 +191,10 @@ export const Code = observer((props) => {
       <div className='palette-items'>
         {
           palette.map((item, idx) => {
-            const { name, id, var: varName, value, isEditing } = item
+            const { name, id, var: varName, value, isEditing, isCustom, isEditingName } = item
+            const isFirst = idx + 1 === 1 || idx % 3 === 0
             return (
-              <div key={id} className={`palette-item${idx + 1 === 1 || (idx + 1) % 4 === 0 ? ' first-grid-item' : ''}`}>
+              <div key={id} className={`palette-item${isFirst ? ' first-grid-item' : ''}`}>
                 <div className='palette-item_color' onClick={e => toggleEditing(e, id)} style={{ background: value }} />
                 {
                   isEditing ? (
@@ -187,12 +211,44 @@ export const Code = observer((props) => {
                   :
                   undefined
                 }
-                <span className='palette-item_text'>{varName}</span>
+                {
+                  isCustom && isEditingName ? (
+                    <div className={`palette-item_name-editor${isFirst ? ' first-item' : ''}`}>
+                      <PropInput 
+                        value={varName}
+                        save={(value) => handlePaletteNameChange(id, value)}
+                        className={`palette-item_name-editor_proparea`}
+                        label={'Change palette var name'}
+                      />
+                    </div>) : undefined
+                }
+                <span className='palette-item_text'>{varName}
+                  {isCustom ? (
+                    <>
+                      <button className='btn-none palette-item_text_edit' onClick={e => toggleEditing(e, id, true)}><Pen /></button>
+                      <button className='btn-none palette-item_text_edit delete' onClick={e => deletePalette(e, id)}><Trash /></button>
+                    </>
+                    )
+                    :
+                    undefined
+                  }
+                </span>
                 <span className='palette-item_value'>{value}</span>
+                {
+                  isCustom ? (
+                    <div />
+                  )
+                  :
+                  undefined
+                }
               </div>
             )
           })
         }
+        <button onClick={e => addPalette(e)} className='btn-empty palette-items_add-item'>
+          <PlusIcon />
+          <span>Add color</span>
+        </button>
       </div>
     )
   }
@@ -349,7 +405,7 @@ export const Code = observer((props) => {
         <div className='code-slide_palettes'>
           {getPaletteItems()}
         </div>
-        <h6 className='code-slide_title'>Choose static elements</h6>
+        <h6 className='code-slide_title' style={{ marginTop: '40px' }}>Choose static elements</h6>
         <div className='code-slide_static'>
           {getStaticDisplay()}
           {getStaticDisplay(true)}

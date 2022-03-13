@@ -22,6 +22,7 @@ body {
   --secondary: rgba(113, 118, 236, 1);
   --dim-gray: rgba(105, 105, 105, 1);
   --orange-red: rgba(255, 87, 33, 1);
+  --secondary: rgba(113, 118, 236, 1)
 }
 
 code {
@@ -118,6 +119,35 @@ input {
   }
   &:disabled {
     opacity: 0.75;
+  }
+}
+
+
+.prop-input_label {
+  font-size: 13px;
+  color: #83a9f4;
+  position: absolute;
+  left: 17px;
+  top: 15px;
+  display: inline-block;
+  width: fit-content;
+}
+.prop-input_save {
+  margin-left: 8px;
+  margin-top: 17px;
+}
+.prop-input_input {
+  background-color: #2a2631;
+  color: #f8f8f8;
+  border-radius: 5px;
+  display: inline-block;
+  width: 210px;
+  border: 1px solid #060308;
+  padding-top: 30px;
+  padding-bottom: 6px;
+  padding-left: 8px;
+  &:focus {
+    border-color: #496295;
   }
 }
 

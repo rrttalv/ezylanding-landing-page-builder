@@ -1,6 +1,7 @@
 .prop-input {
   display: flex;
   flex-wrap: wrap;
+  z-index: 10000000;
   &_label {
     display: block;
     margin-bottom: 5px;
