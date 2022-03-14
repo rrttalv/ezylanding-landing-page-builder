@@ -120,8 +120,8 @@ export const Routes = observer((props) => {
           routes.routeList.map(item => {
             const { route, detailsOpen, id } = item
             return (
-              <div key={item.id} className={`route-list_item${detailsOpen ? ' active' : ''}`}>
-                <div className='route-list_header'>
+              <div key={item.id} className={`route-list_item${detailsOpen ? ' active' : ''}${id === app.pageDropTarget.id ? ' drop-target' : ''}`}>
+                <div className='route-list_header' data-pageid={id}>
                   <button 
                     className='btn-none'
                     onClick={e => toggleDetails(e, item.id)}

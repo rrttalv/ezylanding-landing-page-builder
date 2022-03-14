@@ -102,6 +102,7 @@ export const Editor = observer((props) => {
       app.setActiveFramework('bootstrap')
       app.setCompiled()
     }
+    return
     const newSocket = io(`http://${window.location.hostname}:4000`)
     socket.setSocket(newSocket)
     return () => newSocket.close();

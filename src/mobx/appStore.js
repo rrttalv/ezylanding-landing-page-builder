@@ -30,6 +30,10 @@ const initDragMeta = {
   after: false
 }
 
+const initPageDropTarget = {
+  id: null,
+}
+
 
 class AppStore {
   constructor() {
@@ -60,6 +64,10 @@ class AppStore {
     id: null,
     before: false,
     after: false
+  }
+
+  pageDropTarget = { 
+    id: null
   }
 
   activeCSSTab = null
@@ -402,6 +410,7 @@ class AppStore {
       if(!this.movingElement){
         return
       }
+      const { id: targetPageId } = this.pageDropTarget
       const { id: targetId, before } = this.toolbarDropTarget
       const { id: dropParentId, before: parentBefore } = this.toolbarDropParent
       const { allowBeforeParent } = this.movingElement
@@ -483,16 +492,28 @@ class AppStore {
           }
         }
       }
+      const isPageTarget = !!targetPageId
+      if(targetPageId){
+        const page = this.pages.find(({ id }) => id === targetPageId)
+        const element = this.findElement(this.movingElement.id)
+        this.deleteElement(this.movingElement.id)
+        page.elements.splice(0, 0, element)
+      }
+      this.pageDropTarget = { ...initPageDropTarget }
       this.toolbarDropParent = {...initToolbarParent}
       this.toolbarDropTarget = {...initToolbarTarget}
       this.movingElement = null
       setTimeout(() => {
         this.handleWindowResize()
+        if(isPageTarget){
+          //Change the active page - This should be an option in the project settings thingy
+        }
       }, 100)
     }else{
       const element = this.findElement(id)
       this.movingElement = { id, xPos: x, yPos: y, allowBeforeParent: false }
       this.movingElement.idList = this.getChildIDs(element)
+      this.pageDropTarget = { ...initPageDropTarget }
     }
     this.mouseStartX = x
     this.mouseStartY = y
@@ -530,14 +551,26 @@ class AppStore {
         this.handleToolbarMoveTimer(x, y, rawX, rawY)
       }, 1500)
     }
+    let pageTarget = null
     posList.forEach((item, idx) => {
-      if(!target){
+      if(!target && !pageTarget){
         const attr = item.getAttribute('data-metauuid')
         if(attr){
           target = attr
         }
+        if(!target){
+          const pageAttr = item.getAttribute('data-pageid')
+          if(pageAttr){
+            pageTarget = pageAttr
+          }
+        }
       }
     })
+    if(pageTarget){
+      this.pageDropTarget.id = pageTarget
+    }else{
+      this.pageDropTarget = { ...initPageDropTarget }
+    }
     if(target){
       if(idList.includes(target)){
         this.toolbarDropParent = { ...initToolbarParent }
