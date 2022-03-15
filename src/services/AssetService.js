@@ -4,7 +4,7 @@ import { getAPIBase } from '../utils'
 export const uploadFile = async (file) => {
   const data = new FormData()
   data.append('file', file)
-  return axios.post(`${getAPIBase()}/api/assets`, data)
+  return axios.post(`${getAPIBase()}/api/assets`, data,  { withCredentials: true })
 }
 
 export const fetchAssets = async (pageNo, keyword = null) => {
@@ -13,5 +13,5 @@ export const fetchAssets = async (pageNo, keyword = null) => {
     query += `&keyword=${keyword}`
   }
   const url = `${getAPIBase()}/api/assets${query}`
-  return axios.get(url)
+  return axios.get(url,  { withCredentials: true })
 }

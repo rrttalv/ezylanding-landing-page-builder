@@ -2,9 +2,10 @@ import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 
 class SocketStore {
-  constructor(app) {
+  constructor(app, auth) {
     makeAutoObservable(this)
     this.app = app
+    this.auth = auth
   }
 
 
@@ -32,7 +33,8 @@ class SocketStore {
       footerId: this.app.footerId,
       headerId: this.app.headerId
     }
-    this.socket.emit('saveTemplate', null, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
+    const { id: userId } = this.auth.userDetails
+    this.socket.emit('saveTemplate', userId, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
   }
 
 }

@@ -11,5 +11,5 @@ export const checkIfAuthenticated = async () => {
 }
 
 export const logout = async () => {
-  return axios.get(`${getAPIBase()}/auth/logout`)
+  return axios.get(`${getAPIBase()}/auth/logout`, { withCredentials: true })
 }

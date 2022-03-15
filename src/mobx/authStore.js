@@ -36,10 +36,10 @@ class AuthStore {
 
   async logout(){
     try{
-      const { data: { redirect } } = await logout()
+      await logout()
       this.auth = false
       this.userDetails = { ...initDetails }
-      window.location = redirect
+      window.location = '/auth'
     }catch(err){
       console.log(err)
     }

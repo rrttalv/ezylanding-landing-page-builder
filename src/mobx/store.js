@@ -10,7 +10,7 @@ const auth = new AuthStore()
 const app = new AppStore(auth)
 const sidebar = new SidebarStore(app)
 const routes = new RouteStore(app)
-const socket = new SocketStore(app)
+const socket = new SocketStore(app, auth)
 const header = new HeaderStore(app, sidebar)
 
 const store = {
