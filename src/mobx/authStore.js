@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
-import { handleRegularAuth } from "../services/AuthService";
+import { checkIfAuthenticated, handleRegularAuth, logout } from "../services/AuthService";
 
 const initDetails = {
   email: '',
@@ -20,11 +20,38 @@ class AuthStore {
     id: null,
   }
 
+  async checkAuth(){
+    try{
+      const { data: { user } } = await checkIfAuthenticated()
+      if(user){
+        this.auth = true
+        this.userDetails = { ...user }
+      }
+      return true
+    }catch(err){
+      this.auth = false
+      this.userDetails = { ...initDetails }
+    }
+  }
+
+  async logout(){
+    try{
+      const { data: { redirect } } = await logout()
+      this.auth = false
+      this.userDetails = { ...initDetails }
+      //window.location = redirect
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   async handleRegister(email, password) {
     try{
       this.authLoading = true
-      const { success, message, redirect } = await handleRegularAuth(email, password, false)
+      const { data: { success, message, redirect, user } } = await handleRegularAuth(email, password, false)
       if(success){
+        this.auth = true
+        this.userDetails = { ...user }
         window.location = redirect
       }else{
         //show error message
@@ -41,8 +68,10 @@ class AuthStore {
   async handleLogin(email, password) {
     try{
       this.authLoading = true
-      const { success, message, redirect } = await handleRegularAuth(email, password, true)
+      const { data: { success, message, redirect, user } } = await handleRegularAuth(email, password, true)
       if(success){
+        this.auth = true
+        this.userDetails = { ...user }
         window.location = redirect
       }else{
         //show error message

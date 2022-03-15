@@ -4,6 +4,7 @@ import { ReactComponent as Google } from '../../svg/google.svg'
 import { ReactComponent as Twitter } from '../../svg/twitter.svg'
 import { ReactComponent as Github } from '../../svg/github.svg'
 import { PropInput } from '../Editor/BuildArea/ComponentTools/PropInput'
+import { Spinner } from '../Static/Spinner'
 
 export const AuthArea = observer((props) => {
 
@@ -58,15 +59,19 @@ export const AuthArea = observer((props) => {
           </div>
           <div className='input-group auth-group'>
             <label className='input-group_label'>Password</label>
-            <input type='text' onChange={e => setPassword(e.target.value)} value={password} className='input-group_input' placeholder='********' />
+            <input type='password' onChange={e => setPassword(e.target.value)} value={password} className='input-group_input' placeholder='********' />
           </div>
         </div>
       </div>
       <div className='auth-card_footer'>
         <div className='auth-card_buttons'>
-          <button className='btn btn-empty auth-btn'>
-            {buttonText}
-          </button>
+          {
+            auth.authLoading ? ( <Spinner style={{height: '45px'}} center={true} scale={0.4} /> ) : (
+              <button onClick={() => handleAuth()} className='btn btn-empty auth-btn'>
+                {buttonText}
+              </button>
+            )
+          }
         </div>
         <span className='auth-card_separator'>OR</span>
         <div className='auth-card_oauth-buttons'>
