@@ -14,6 +14,7 @@ class AuthStore {
 
   auth = false
   subscription = false
+  authLoading = false
   userDetails = {
     email: '',
     id: null,
@@ -21,6 +22,7 @@ class AuthStore {
 
   async handleRegister(email, password) {
     try{
+      this.authLoading = true
       const { success, message, redirect } = await handleRegularAuth(email, password, false)
       if(success){
         window.location = redirect
@@ -28,14 +30,17 @@ class AuthStore {
         //show error message
         console.log(message)
       }
+      this.authLoading = false
     }catch(err){
       console.log(err)
+      this.authLoading = false
     }
   }
 
 
-  async handleRegister(email, password) {
+  async handleLogin(email, password) {
     try{
+      this.authLoading = true
       const { success, message, redirect } = await handleRegularAuth(email, password, true)
       if(success){
         window.location = redirect
@@ -43,8 +48,10 @@ class AuthStore {
         //show error message
         console.log(message)
       }
+      this.authLoading = false
     }catch(err){
       console.log(err)
+      this.authLoading = false
     }
   }
 

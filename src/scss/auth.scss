@@ -6,7 +6,8 @@
     min-height: inherit;
   }
   .auth-card {
-    max-width: 550px;
+    max-width: 450px;
+    width: 100%;
     margin: 0 auto;
     margin-top: -2rem;
     background: #f8f8f8;
@@ -17,6 +18,78 @@
       h2 {
         font-size: 1.5rem;
         margin: 1rem 0;
+      }
+    }
+    .btn {
+      padding: 0.6rem;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .btn-none.switch {
+      text-align: center;
+      width: 100%;
+      margin-top: 1rem;
+      color: var(--secondary);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    &_oauth-buttons {
+      display: flex;
+      flex-direction: column;
+      .btn {
+        color: var(--dim-gray);
+        width: 100%;
+        margin: 0.5rem auto;
+        svg {
+          width: 20px;
+          margin-right: 10px;
+          margin-bottom: -4px;
+        }
+      }
+      .btn.github {
+        svg {
+          margin-bottom: -3.5px;
+        }
+      }
+      .btn.twitter {
+        svg {
+          margin-bottom: -5px;
+        }
+      }
+    }
+    &_buttons {
+      margin-top: 3rem;
+      .auth-btn {
+        background: var(--main);
+        color: rgba(var(--dark), 0.9);
+        border: none;
+      }
+    }
+    &_separator {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      position: relative;
+      margin: 1rem 0;
+      color: var(--dim-gray);
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 45%;
+        border-top: 1px solid rgba(0,0,0,0.15);
+        top: 7px;
+      }
+      &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 45%;
+        border-top: 1px solid rgba(0,0,0,0.15);
+        top: 7px;
       }
     }
     .input-group {
