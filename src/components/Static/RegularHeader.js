@@ -11,7 +11,7 @@ export const RegularHeader = observer(() => {
 
   const handleLogout = async e => {
     e.preventDefault()
-    //await auth.logout()
+    await auth.logout()
   }
 
   const getAuthItems = () => {
@@ -22,6 +22,9 @@ export const RegularHeader = observer(() => {
           {email.slice(0, 1).toUpperCase()}
         </div>
         <div className='header_auth_btns'>
+          <button onClick={e => handleLogout(e)} className='btn-empty'>
+            Log out
+          </button>
         </div>
       </div>
     )

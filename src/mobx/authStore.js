@@ -39,7 +39,7 @@ class AuthStore {
       const { data: { redirect } } = await logout()
       this.auth = false
       this.userDetails = { ...initDetails }
-      //window.location = redirect
+      window.location = redirect
     }catch(err){
       console.log(err)
     }
