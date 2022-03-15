@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 export const RegularHeader = observer(() => {
 
+  const [menuOpen, setMenuOpen] = useState(false)
+
   const getStore = () => {
     return React.useContext(MobXProviderContext)
   }
@@ -17,15 +19,26 @@ export const RegularHeader = observer(() => {
   const getAuthItems = () => {
     const { email } = auth.userDetails
     return (
-      <div className='header_auth_content'>
-        <div className='header_auth_profile'>
-          {email.slice(0, 1).toUpperCase()}
-        </div>
-        <div className='header_auth_btns'>
-          <button onClick={e => handleLogout(e)} className='btn-empty'>
-            Log out
-          </button>
-        </div>
+      <div className='header_auth-content'>
+        <button onClick={e => setMenuOpen(!menuOpen)} className='btn-none'>
+          <div className='header_auth-profile'>
+           {email.slice(0, 1).toUpperCase()}
+          </div>
+          {
+            menuOpen ? (
+              <div className='header_auth-btns'>
+                <button onClick={e => handleLogout(e)} className='btn-none'>
+                  Settings
+                </button>
+                <button onClick={e => handleLogout(e)} className='btn-none'>
+                  Log out
+                </button>
+              </div>
+            )
+            :
+            undefined
+          }
+        </button>
       </div>
     )
   }

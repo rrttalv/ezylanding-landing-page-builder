@@ -94,6 +94,57 @@
 }
 
 
+.header {
+  &_auth {
+    display: flex;
+    margin-left: auto;
+    width: fit-content;
+    .btn-none {
+      position: relative;
+    }
+    &-profile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      width: 40px;
+      background: var(--secondary);
+      border-radius: 50%;
+      text-align: center;
+      position: relative;
+      color: white;
+      font-weight: 700;
+    }
+    &-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 50px;
+    }
+    &-btns {
+      border: 1px solid rgba(0,0,0,0.05);
+      position: absolute;
+      top: 2.75rem;
+      right: 0;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0px 2px 3px 1px rgba(0,0,0,0.1);
+      .btn-none {
+        padding: 0.25rem 0.5rem;
+        font-size: 14px;
+        font-weight: 500;
+        width: 150px;
+        height: 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        &:last-child {
+          border: none;
+        }
+      }
+    }
+  }
+}
+
 
 .header_settings_menu.visible {
   z-index: 20;
