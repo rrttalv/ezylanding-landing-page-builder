@@ -2,6 +2,7 @@ import { observer, MobXProviderContext } from 'mobx-react'
 import React from 'react'
 import { Header } from './components/Static/Header'
 import { Toaster } from 'react-hot-toast'
+import { RegularHeader } from './components/Static/RegularHeader'
 
 
 export const App = observer(() => {
@@ -10,11 +11,16 @@ export const App = observer(() => {
     return React.useContext(MobXProviderContext)
   }
 
-  const { store } = getStore()
-  
+  const { store: { router } } = getStore()
+
+  const getPath = () => {
+    console.log(router.currentRoute)
+    return router && router.currentRoute ? router.currentRoute.rootPath : ''
+  }
+
   return (
     <>
-      <Header />
+      {getPath() === '/editor' ? <Header /> : <RegularHeader />}
       <Toaster 
         position="top-center" 
         toastOptions={{
