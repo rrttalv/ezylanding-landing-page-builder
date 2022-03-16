@@ -1,0 +1,8 @@
+.dashboard {
+  display: flex;
+  .content {
+    width: 100%;
+    min-height: inherit;
+    flex: 1;
+  }
+}
