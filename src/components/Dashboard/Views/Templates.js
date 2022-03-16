@@ -21,6 +21,7 @@ export const Templates = observer((props) => {
   }, [])
 
   const openEditor = id => {
+    window.location.href = `/editor?templateId=${id}`
     //do smth
   }
 

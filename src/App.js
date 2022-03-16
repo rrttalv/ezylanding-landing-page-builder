@@ -19,7 +19,7 @@ export const App = observer(() => {
 
   useEffect(async () => {
     await auth.checkAuth()
-    const whitelist = ['/auth']
+    const whitelist = ['/auth', '/']
     if(auth.auth && whitelist.includes(window.location.pathname)){
       window.location.href = '/dashboard'
     }
