@@ -4,5 +4,104 @@
     width: 100%;
     min-height: inherit;
     flex: 1;
+    &_footer {
+      width: 100%;
+      height: 5rem;
+      margin-top: 2rem;
+    }
+  }
+  &_templates {
+    &-preview {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    &-loading-wrapper {
+      width: 100%;
+      height: 5rem;
+      margin-top: 1rem;
+    }
+    &-empty {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--secondary);
+      }
+    }
+  }
+  .template {
+    width: 50%;
+    max-width: 400px;
+    display: inline-block;
+    margin: 0.5rem 1rem;
+    &_wrapper {
+      background: red;
+      border-radius: 8px;
+      background: rgba(var(--dim-gray-rgb), 0.1);
+      border-radius: 8px;
+      &-preview {
+        padding: 0.5rem 1rem;
+        padding-top: 1rem;
+        img {
+          border-radius: 8px;
+          width: 100%;
+        }
+      }
+      &-options {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0.25rem 1rem;
+        padding-bottom: 1rem;
+        .trash {
+          svg {
+            stroke: rgba(var(--orange-red-rgb), 0.4);
+            margin-bottom: -4px;
+            margin-right: 5px;
+            width: 18px;
+            height: 18px;
+          }
+          &:hover {
+            svg {
+              stroke: rgba(var(--orange-red-rgb), 1);
+            }
+          }
+        }
+        .edit {
+          svg {
+            width: 15px;
+            height: 15px;
+            .tab {
+              fill: rgba(var(--dim-gray-rgb), 0.5);
+            }
+            margin-bottom: -3px;
+            margin-right: 5px;
+          }
+          &:hover {
+            .tab {
+              fill: rgba(var(--dim-gray-rgb), 1);
+            }
+          }
+        }
+        .btn-none {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--secondary);
+          border-radius: 4px;
+        }
+      }
+      &-meta {
+        span {
+          font-size: 14px;
+        }
+        padding: 0.25rem 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 }

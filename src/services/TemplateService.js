@@ -6,5 +6,5 @@ export const fetchTemplate = async id => {
 }
 
 export const fetchTemplateList = async () => {
-  return axios.get(`${getAPIBase()}/api/templates`)
+  return axios.get(`${getAPIBase()}/api/templates`, { withCredentials: true })
 }
