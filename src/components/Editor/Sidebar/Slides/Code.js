@@ -1,8 +1,6 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
-import { List } from 'react-virtualized';
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css"; //Example style, you can use another
@@ -17,80 +15,6 @@ import { CodeEditorEditable } from 'react-code-editor-editable';
 import 'highlight.js/styles/tomorrow-night-eighties.css';
 import { ChromePicker } from 'react-color'
 import { PropInput } from '../../BuildArea/ComponentTools/PropInput';
-
-
-
-const ListElement = (props) => {
-  
-  useEffect(() => {
-
-  }, [props.rows])
-  
-  const getValue = (value, index) => {
-    let elems = null
-    let set = false
-    if(value.indexOf('  ') === -1 && (value.includes('}') || value.includes('{') || value.includes(','))){
-      set = true
-      elems = <>
-          <code
-            className='hljs-selector-tag'
-            data-index={index}
-          >
-            {value}
-          </code>
-        </>
-    }
-    if(!set && (value.indexOf(';') !== -1 || value.indexOf(':') !== -1 || value.indexOf(' ') !== -1)){
-      elems = <>
-          <code
-            className='hljs-params'
-            data-index={index}
-          >
-            {value}
-          </code>
-        </>
-    }
-    return elems
-  }
-
-  function rowRenderer({
-    key, // Unique key within array of rows
-    index, // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible, // This row is visible within the List (eg it is not an overscanned row)
-    style, // Style object to be applied to row (to position it)
-  }) {
-    const value = String(props.codeValue[index])
-    return (
-      <div 
-        key={key} 
-        style={{
-          ...style, 
-          whiteSpace: 'nowrap'
-        }}
-      >
-        {
-          getValue(value, index)
-        }
-      </div>
-    );
-  }
-
-  return (
-    <List
-      style={{
-        background: '#282a36',
-        paddingTop: '10px'
-      }}
-      width={400}
-      height={500}
-      rowCount={props.codeValue.length}
-      rowHeight={20}
-      rowRenderer={rowRenderer}
-    />
-  )
-
-}
 
 export const Code = observer((props) => {
 

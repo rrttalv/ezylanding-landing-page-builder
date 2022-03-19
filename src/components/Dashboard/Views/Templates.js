@@ -1,6 +1,8 @@
 import { MobXProviderContext, observer } from 'mobx-react'
-import { ReactComponent as Trash } from '../../../svg/trash.svg'
 import { ReactComponent as NewTab } from '../../../svg/new-tab.svg'
+import { ReactComponent as Pages } from '../../../svg/pages.svg'
+import { ReactComponent as Eye } from '../../../svg/eye.svg'
+import moment from 'moment'
 import React, { useEffect } from 'react'
 import { Spinner } from '../../Static/Spinner'
 
@@ -32,7 +34,7 @@ export const Templates = observer((props) => {
   const getTemplates = () => {
     return (
       templates.map(template => {
-        const { pageLength, thumbnail, frameworkId, publicTemplate, templateId } = template
+        const { pageLength, thumbnail, title, frameworkId, tags, publicTemplate, templateId, updatedAt } = template
         return (
           <div key={templateId} className='template'>
             <div className='template_wrapper'>
@@ -40,25 +42,35 @@ export const Templates = observer((props) => {
                 <img src={thumbnail ? thumbnail : '/images/components/media/landscape-image.jpg'} />
               </div>
               <div className='template_wrapper-meta'>
-                <span>Pages: <strong>{pageLength}</strong></span>
-                <span>Framework: <strong>{frameworkId}</strong></span>
-              </div>
-              {
-                publicTemplate ? (
-                  <div />
-                ) 
-                : 
-                (
-                  <div className='template_wrapper-options'>
-                    <button className='btn-none trash'>
-                      <Trash />
+                <div className='template_wrapper-meta_left'>
+                  <h5>{title}</h5>
+                  <div className='template_wrapper-meta_body'>
+                    <Pages /> <span className='page-len'>{pageLength} Pages</span>
+                  </div>
+                </div>
+                <div className='template_wrapper-meta_right'>
+                  <div className='template_wrapper-meta_options'>
+                    <button className='btn-none'>
+                      <Eye className='template-preview-icon' />
                     </button>
-                    <button onClick={() => openEditor(templateId)} className='btn-none edit'>
-                      <NewTab />
+                    <button onClick={() => openEditor(templateId)} className='btn-none'>
+                      <NewTab className='template-open-icon' />
                     </button>
                   </div>
-                )
-              }
+                </div>
+                <div className='template_wrapper-bottom'>
+                  <div className='template_wrapper-meta_left' style={{ width: '65%' }}>
+                    <div className='template_wrapper-meta_tags'>
+                      <span>#{frameworkId}</span>
+                    </div>
+                  </div>
+                  <div className='template_wrapper-meta_right' style={{ width: '35%' }}>
+                    <div className='template_wrapper-meta_date'>
+                      <span>Edited {moment(updatedAt).fromNow(false)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )
@@ -68,6 +80,15 @@ export const Templates = observer((props) => {
 
   return (
     <div className='dashboard_templates content'>
+      <div className='dashboard_templates-header'>
+        <div className='dashboard_templates-discover'>
+          <h2>Looking for something new? 👀</h2>
+          <button className='btn-none' onClick={() => dashboard.changeActiveView('browse')}>
+            Discover templates
+          </button>
+        </div>
+        <h3>Saved templates</h3>
+      </div>
       <div className='dashboard_templates-preview'>
         {getTemplates()}
         {
