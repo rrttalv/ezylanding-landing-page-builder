@@ -202,6 +202,10 @@ class AppStore {
       }
     }
   ]
+  templateMetadata = {
+    title: 'new template',
+    tags: []
+  }
   
   compiled = false
 
@@ -352,9 +356,10 @@ class AppStore {
   async fetchTemplate(){
     try{
       const { data } = await fetchTemplate(this.templateId)
-      const { template: { pages, templateId, cssFiles, palette, framework, templateMeta } } = data
+      const { template: { pages, templateId, cssFiles, palette, framework, templateMeta }, metadata } = data
       this.templateId = templateId
       this.pages = pages
+      this.templateMetadata = { ...metadata }
       this.cssTabs = cssFiles.map(tab => {
         return {
           ...tab,

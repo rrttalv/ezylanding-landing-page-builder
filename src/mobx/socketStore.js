@@ -25,13 +25,14 @@ class SocketStore {
   }
 
   saveTemplate(){
-    const { templateId, pages, cssTabs, palette, activeFramework } = this.app
+    const { templateId, pages, cssTabs, palette, activeFramework, templateMetadata } = this.app
     const { title, id, scripts } = activeFramework
     const frameworkMeta = { title, id, scripts }
     const templateMeta = {
       customScripts: this.app.customScripts,
       footerId: this.app.footerId,
-      headerId: this.app.headerId
+      headerId: this.app.headerId,
+      ...templateMetadata
     }
     const { id: userId } = this.auth.userDetails
     this.socket.emit('saveTemplate', userId, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
