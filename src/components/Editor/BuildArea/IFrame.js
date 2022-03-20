@@ -119,7 +119,13 @@ export const IFrame = observer((props) => {
           </div>
         )
       case 'link':
-        return <a key={elem.id} data-uuid={elem.id} href={elem.href} className={elem.className} style={style}>{elem.content}</a>
+        return (
+          <a key={elem.id} data-uuid={elem.id} href={elem.href} className={elem.className} style={style}>
+            {
+              elem.children && elem.children.length && !elem.content ? elem.children.map(child => getCorrectElement(child)) : elem.content
+            }
+          </a>
+        )
       case 'list':
         return (
           <ul key={elem.id} data-uuid={elem.id} className={elem.className} style={style}>

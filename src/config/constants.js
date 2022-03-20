@@ -100,6 +100,7 @@ const a = {
     rawHeight: 25,
   },
   displayStyle: textDisplay,
+  children: [],
   style: {}
 }
 
