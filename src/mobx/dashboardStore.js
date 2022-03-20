@@ -36,7 +36,7 @@ class dashboardStore {
     }
     try{
       this.templatesLoading = true
-      const { data: { templates, isMore } } = await fetchTemplateList()
+      const { data: { templates, isMore } } = await fetchTemplateList(this.templatePage)
       this.templatePage += 1
       this.moreTemplates = isMore
       this.templates = [...this.templates, ...templates]

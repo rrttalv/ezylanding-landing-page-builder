@@ -62,6 +62,7 @@ export const Templates = observer((props) => {
                   <div className='template_wrapper-meta_left' style={{ width: '65%' }}>
                     <div className='template_wrapper-meta_tags'>
                       <span>#{frameworkId}</span>
+                      {tags.map((tag, idx) => (<span key={idx + '_' + templateId}>#{tag}</span>))}
                     </div>
                   </div>
                   <div className='template_wrapper-meta_right' style={{ width: '35%' }}>
@@ -87,7 +88,7 @@ export const Templates = observer((props) => {
             Discover templates
           </button>
         </div>
-        <h3>Saved templates</h3>
+        <h3 className='dashboard_section-title'>Saved templates</h3>
       </div>
       <div className='dashboard_templates-preview'>
         {getTemplates()}

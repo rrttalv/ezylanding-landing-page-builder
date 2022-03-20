@@ -36,7 +36,11 @@ class SocketStore {
   }
 
   async saveThumbnail(){
-    const { pages, activePage, templateId } = this.app
+    const { pages, activePage, templateId, publicTemplate } = this.app
+    //Public template thumbnails and preview pictures are generated manually to ensure the best quality
+    if(publicTemplate){
+      return
+    }
     let previewBlob = null
     if(activePage === pages[0].id){
       const frame = document.querySelector('iframe')

@@ -34,8 +34,8 @@ export const DashboardSidebar = observer((props) => {
   const getRow = item => {
     const { id, title, icon } = item
     return (
-      <button onClick={e => dashboard.changeActiveView(id)} className='btn-none dashboard-sidebar_toggle'>
-        <div key={id} className={`dashboard-sidebar_item ${id}${dashboard.activeView === id ? ' active' : ''}`}>
+      <button key={id} onClick={e => dashboard.changeActiveView(id)} className='btn-none dashboard-sidebar_toggle'>
+        <div className={`dashboard-sidebar_item ${id}${dashboard.activeView === id ? ' active' : ''}`}>
           {icon}
           <span className='dashboard-sidebar_item-title'>
             {title}

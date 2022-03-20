@@ -207,6 +207,8 @@ class AppStore {
     title: 'new template',
     tags: []
   }
+  //This is set when the template is first fetched. A public template doesnt get auto-generated preview images, etc
+  publicTemplate = false
   
   compiled = false
 
@@ -373,10 +375,11 @@ class AppStore {
   async fetchTemplate(){
     try{
       const { data } = await fetchTemplate(this.templateId)
-      const { template: { pages, templateId, cssFiles, palette, framework, templateMeta }, metadata } = data
+      const { template: { pages, templateId, cssFiles, palette, framework, templateMeta }, metadata, editorInfo } = data
       this.templateId = templateId
       this.pages = pages
       this.templateMetadata = { ...metadata }
+      this.publicTemplate = editorInfo.publicTemplate
       this.cssTabs = cssFiles.map(tab => {
         return {
           ...tab,
@@ -395,7 +398,10 @@ class AppStore {
       this.setActivePage(pages[0].id)
       this.setCompiled()
     }catch(err){
-      //show error
+      //Template not found so start with a new empty template
+      this.setActiveFramework('bootstrap')
+      this.setActivePage(pages[0].id)
+      this.setCompiled()
       console.log(err)
     }
   }
