@@ -179,6 +179,7 @@ class AppStore {
   parentElements = ['section', 'header']
   activeFramework = null
   staticSelect = null
+  saved = true
 
   //The ID of the component that will be loaded for every page as the last component
   footerId = null
@@ -222,6 +223,21 @@ class AppStore {
     this.customScripts.push(script)
   }
 
+  setSaved(status){
+    if(this.compiled){
+      this.saved = status
+    }else{
+      this.saved = true
+    }
+  }
+
+  setTemplateTitle(title) {
+    this.templateMetadata = {
+      ...this.templateMetadata,
+      title
+    }
+  }
+
   removeCustomScript(id){
     this.customScripts = this.customScripts.filter(({ id: sid }) => sid !== id)
     this.handleScriptSave(id, false)
@@ -252,6 +268,7 @@ class AppStore {
           elem.remove()
         }
       }
+      this.setSaved(false)
     }
   }
 
@@ -514,11 +531,13 @@ class AppStore {
           //Change the active page - This should be an option in the project settings thingy
         }
       }, 100)
+      this.setSaved(false)
     }else{
       const element = this.findElement(id)
       this.movingElement = { id, xPos: x, yPos: y, allowBeforeParent: false }
       this.movingElement.idList = this.getChildIDs(element)
       this.pageDropTarget = { ...initPageDropTarget }
+      this.setSaved(false)
     }
     this.mouseStartX = x
     this.mouseStartY = y
@@ -667,6 +686,7 @@ class AppStore {
       mainTab.paletteContent = newString
       this.updateIFramePalette(newString)
     }, 250)
+    this.setSaved(false)
   }
 
   togglePaletteEditing(id, name = false){
@@ -698,6 +718,7 @@ class AppStore {
     if(codeEditor){
       codeEditor.setAttribute('maxLength', 25000)
     }
+    this.setSaved(false)
   }
 
   changeActiveTab(tabId){
@@ -736,6 +757,7 @@ class AppStore {
     }
     this.cssTabs.push(tab)
     this.changeActiveTab(id)
+    this.setSaved(false)
   }
 
   createTab(type, id, name, content){
@@ -751,6 +773,10 @@ class AppStore {
   }
 
   setActiveFramework(id){
+    //This function is run when the template is fetched so we don't want to set unsaved from the get-go
+    if(this.activeFramework){
+      this.setSaved(false)
+    }
     const script = scripts.find(({ id: sid }) => sid === id)
     if(script && script.id === 'bootstrap'){
       script.rawCSS = bootstrapCSS
@@ -850,6 +876,7 @@ class AppStore {
       this.setIframeHeight()
       this.sizeCalcChange = !this.sizeCalcChange
     }, 300)
+    this.setSaved(false)
   }
 
   setElementToolbarMenu(id, status = false){
@@ -890,6 +917,7 @@ class AppStore {
     setTimeout(() => {
       this.handleWindowResize()
     }, 400)
+    this.setSaved(false)
   }
 
   setSelectedElement(id, parentId){
@@ -1003,6 +1031,7 @@ class AppStore {
         this.setActivePage(toSwitch)
       }
       this.pages = this.pages.filter(({ id: pid }) => pid !== id)
+      this.setSaved(false)
     }
   }
 
@@ -1058,8 +1087,6 @@ class AppStore {
       return this.findParentByClass(targetClass, element.parentElement)
     }
   }
-
-  
 
   checkDragIndex(clientX, clientY){
     const pageIdx = this.getActivePageIndex()
@@ -1348,6 +1375,7 @@ class AppStore {
         }
       })
       this.updateIframeAndComponentCSS(this.cssElement, cssMap)
+      this.setSaved(false)
     }catch(err){
       const pageIdx = this.getActivePageIndex()
       this.recalculateSizes(this.pages[pageIdx].elements)
@@ -1827,7 +1855,6 @@ class AppStore {
         }
       }
       const inserted = doc.querySelector(`[data-uuid="${comp.id}"]`)
-      console.log(inserted)
       if(inserted){
         Object.keys(inserted.style).forEach(styleKey => {
           if(!isNaN(Number(styleKey))){
@@ -2014,6 +2041,7 @@ class AppStore {
         this.recalculateSizes(this.pages[pageIdx].elements)
       }, 100)
     }, 500)
+    this.setSaved(false)
   }
 
   deleteElement(id){
@@ -2058,6 +2086,7 @@ class AppStore {
       }
     }
     this.handleWindowResize()
+    this.setSaved(false)
   }
 
   insertComponent(e){
@@ -2152,6 +2181,7 @@ class AppStore {
           this.sizeCalcChange = !this.sizeCalcChange
           this.recalculateSizes(this.pages[pageIdx].elements)
         }, 300)
+        this.setSaved(false)
       }
     }catch(err){
       this.activeDrag = null

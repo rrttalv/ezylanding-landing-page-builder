@@ -106,6 +106,38 @@ export const Header = observer(() => {
     )
   }
 
+  const { templateMetadata, compiled, saved } = app
+  const { metaOpen } = header
+
+  const handleTitleChange = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setTemplateTitle(e.target.value)
+  }
+
+  const getTemplateMetaEdit = () => {
+    if(!compiled){
+      return <div className='header_options' />
+    }
+    const { title } = templateMetadata
+    return (
+      <div className='header_options'>
+        <div className='header_options-menu'>
+          <span className='saved-indicator'>
+            {saved ? 'saved' : 'unsaved'}{' '}
+          </span>
+          <span className='separator'> / </span>
+          <input 
+            onChange={e => handleTitleChange(e)}
+            value={title}
+            className='input-none header_options-input'
+            type='text'  
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className='header'>
       <div className='header_wrapper'>
@@ -125,6 +157,7 @@ export const Header = observer(() => {
           :
           undefined
         }
+        {getTemplateMetaEdit()}
       </div>
     </div>
   )

@@ -36,6 +36,7 @@ class SocketStore {
     }
     const { id: userId } = this.auth.userDetails
     this.socket.emit('saveTemplate', userId, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
+    this.app.setSaved(true)
   }
 
 }

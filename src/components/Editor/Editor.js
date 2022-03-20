@@ -7,7 +7,6 @@ import io from 'socket.io-client';
 import { Sidebar } from './Sidebar/Sidebar'
 
 export const Editor = observer((props) => {
-
   
   const getStore = () => {
     return React.useContext(MobXProviderContext)

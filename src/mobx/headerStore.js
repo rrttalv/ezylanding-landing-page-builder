@@ -9,6 +9,7 @@ class HeaderStore {
   }
   
   settingsOpen = false
+  metaOpen = false
   settingsMenuContent = null
 
   toggleSettingsMenu(){
@@ -19,6 +20,10 @@ class HeaderStore {
         open: false
       }
     })
+  }
+
+  setMetaMenu(status){
+    this.metaOpen = status
   }
 
   closeAllMenus(){
