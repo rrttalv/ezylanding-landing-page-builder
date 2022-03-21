@@ -79,6 +79,11 @@ export const Templates = observer((props) => {
     )
   }
 
+  const createNewTemplate = () => {
+    localStorage.removeItem('templateId')
+    window.location.href = '/editor'
+  }
+
   return (
     <div className='dashboard_templates content'>
       <div className='dashboard_templates-header'>
@@ -88,7 +93,9 @@ export const Templates = observer((props) => {
             Discover templates
           </button>
         </div>
-        <h3 className='dashboard_section-title'>Saved templates</h3>
+      </div>
+      <div className='content-section_header'>
+        <h3 className='content-section_header-title'>Saved templates</h3>
       </div>
       <div className='dashboard_templates-preview'>
         {getTemplates()}

@@ -19,6 +19,7 @@ body {
 :root {
   --insert-bg: rgba(62, 227, 197, 0.6);
   --dark: 37, 37, 37;
+  --white: rgba(255, 255, 255, 1);
   --main: rgba(62, 227, 197, 1);
   --secondary: rgba(113, 118, 236, 1);
   --dim-gray: rgba(105, 105, 105, 1);
@@ -128,6 +129,10 @@ input {
   }
 }
 
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--white);
+}
 
 .prop-input_label {
   font-size: 13px;
@@ -226,6 +231,10 @@ input {
     display: block;
     margin: 12.5px auto;
     margin-bottom: 20px;
+    .cls-1 {
+      stroke: none;
+      fill: inherit;
+    }
   }
   &:hover {
     cursor: pointer;
