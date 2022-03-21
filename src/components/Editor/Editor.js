@@ -85,23 +85,29 @@ export const Editor = observer((props) => {
   useEffect(async () => {
     const params = new URLSearchParams(window.location.search)
     let existing = params.get('templateId')
+    let preload = params.get('targetTemplateId')
     //check localstorage for templateID
     if(!existing){
       existing = localStorage.getItem('templateId')
     }
-    if(existing){
+    if(existing && !preload){
       app.setTemplateID(existing)
       await app.fetchTemplate()
     }else{
-      app.createTemplateID()
-      //Load the initial default template for all users
-      app.setActivePage()
-      app.setIframeHeight()
-      app.syncPalette()
-      app.setActiveFramework('bootstrap')
-      app.setCompiled()
+      if(preload){
+        localStorage.removeItem('templateId')
+        await app.fetchTemplate(preload)
+      }else{
+        app.createTemplateID()
+        //Load the initial default template for all users
+        app.setActivePage()
+        app.setIframeHeight()
+        app.syncPalette()
+        app.setActiveFramework('bootstrap')
+        app.setCompiled()
+      }
     }
-    const newSocket = io(`http://${window.location.hostname}:4000`)
+    const newSocket = io(`http://${window.location.hostname}:4000`, { withCredentials: true })
     socket.setSocket(newSocket)
     return () => newSocket.close();
   }, [])

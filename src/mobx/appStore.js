@@ -372,9 +372,18 @@ class AppStore {
     this.pages.push(newPage)
   }
 
-  async fetchTemplate(){
+  async fetchTemplate(preload = false){
     try{
-      const { data } = await fetchTemplate(this.templateId)
+      let data = {}
+      if(preload){
+        const res = await fetchTemplate(preload, true)
+        this.createTemplateID()
+        data = res.data
+        data.template.templateId = this.templateId
+      }else{
+        const res = await fetchTemplate(this.templateId)
+        data = res.data
+      }
       const { template: { pages, templateId, cssFiles, palette, framework, templateMeta }, metadata, editorInfo } = data
       this.templateId = templateId
       this.pages = pages
@@ -398,9 +407,14 @@ class AppStore {
       this.setActivePage(pages[0].id)
       this.setCompiled()
     }catch(err){
-      //Template not found so start with a new empty template
+      //Template not found or belongs to another user so start with a new empty template
+      localStorage.removeItem('templateId')
+      this.templateId = null
+      this.createTemplateID()
+      this.setActivePage(this.pages[0].id)
       this.setActiveFramework('bootstrap')
-      this.setActivePage(pages[0].id)
+      this.setIframeHeight()
+      this.syncPalette()
       this.setCompiled()
       console.log(err)
     }

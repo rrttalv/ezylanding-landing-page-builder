@@ -1,8 +1,12 @@
 import axios from 'axios'
 import { getAPIBase } from '../utils'
 
-export const fetchTemplate = async id => {
-  return axios.get(`${getAPIBase()}/api/template?templateId=${id}`, { withCredentials: true })
+export const fetchTemplate = async (id, preload = false) => {
+  let params = `?templateId=${id}`
+  if(preload){
+    params += '&copy=true'
+  }
+  return axios.get(`${getAPIBase()}/api/template${params}`, { withCredentials: true })
 }
 
 export const fetchTemplateList = async pageNo => {
