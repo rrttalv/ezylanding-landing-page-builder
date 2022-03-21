@@ -89,6 +89,7 @@ class AppStore {
       id: uuidv4(),
       selected: true,
       unsaved: false,
+      contextMenuOpen: false,
       active: true,
       name: `main.css`,
       content: `html {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n}`,
@@ -772,12 +773,45 @@ class AppStore {
       selected: false,
       unsaved: false,
       active: true,
+      contextMenuOpen: false,
       name: `custom_${this.cssTabs.length + 1}.css`,
       content: ``
     }
     this.cssTabs.push(tab)
     this.changeActiveTab(id)
     this.setSaved(false)
+  }
+
+  deleteCSSTab(id){
+    if(this.cssTabs.length === 1){
+      return
+    }
+    const idx = this.cssTabs.findIndex(({ id: tid }) => tid === id)
+    const tab = this.cssTabs[idx]
+    if(!tab){
+      return
+    }
+    if(tab && tab.name === 'main.css'){
+      return
+    }
+    const { id: prevId } = this.cssTabs[idx - 1]
+    this.changeActiveTab(prevId)
+    this.cssTabs = this.cssTabs.filter(({ id: tid }) => tid !== id)
+    this.cssSaved = true
+    this.setSaved(false)
+  }
+
+  setCSSTabContextMenu(id, status){
+    const tab = this.cssTabs.find(({ id: tid }) => tid === id)
+    if(typeof(tab.contextMenuOpen) === 'undefined'){
+      tab.contextMenuOpen = true
+      return
+    }
+    if(status === null){
+      tab.contextMenuOpen = !tab.contextMenuOpen
+    }else{
+      tab.contextMenuOpen = status
+    }
   }
 
   createTab(type, id, name, content){
@@ -787,6 +821,7 @@ class AppStore {
       active: true,
       selected: true,
       unsaved: false,
+      contextMenuOpen: false,
       name,
       content
     }

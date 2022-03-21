@@ -34,7 +34,7 @@ export const Code = observer((props) => {
     return ref.current;
   }
 
-  const activeTab = app.cssTabs.find(({ active, selected }) => active && selected)
+  const activeTab = app.cssTabs.find(({ active, selected }) => selected)
 
   const { palette } = app
 
@@ -52,18 +52,15 @@ export const Code = observer((props) => {
   const prevTabId = usePrevious(app.activeCSSTab)
 
   useEffect(() => {
+    if(!activeTab){
+      app.changeActiveTab(app.cssTabs[0].id)
+      return
+    }
     setCodeRows(activeTab.content)
     const codeEditor = document.querySelector('.container-code-editor__qxcy .code-editor__textarea__qxcy')
     if(codeEditor){
       codeEditor.setAttribute('maxLength', 25000)
     }
-    /*
-    const scrollSection = document.querySelector(`pre .code-editor__hlcode__qxcy`)
-    if(activeTab.scrollPosition && prevTabId !== app.activeCSSTab){
-      console.log('scrolled' + '\n')
-      scrollSection.scrollTo(0, activeTab.scrollPosition)
-    }
-    */
   }, [activeTab])
 
   const handleScroll = e => {
@@ -353,6 +350,16 @@ export const Code = observer((props) => {
     )
   }
 
+  const handleTabRightClick = (e, id, status) => {
+    e.preventDefault()
+    e.stopPropagation()
+    app.setCSSTabContextMenu(id, status)
+  }
+
+  const deleteTab = (e, id) => {
+    app.deleteCSSTab(id)
+  }
+
   return (
     <div 
       className='code-slide slide-item'
@@ -364,10 +371,25 @@ export const Code = observer((props) => {
             app.cssTabs.map((tab, idx) => (
               <React.Fragment key={tab.id}>
               {
-                <>
+                <div 
+                  className='code-slide_tab-wrapper'
+                  key={tab.id}
+                >
+                  {
+                    tab.contextMenuOpen && idx > 0 ? (
+                      <div className='code-slide_ctx-menu'>
+                        <button onClick={e => deleteTab(e, tab.id)} className='btn-none'>
+                          <Trash className='trash' />
+                        </button>
+                      </div>
+                    ) : undefined
+                  }
                   {
                     tab.selected ? (
-                      <div key={tab.id} className='code-slide_tab active'>
+                      <div 
+                        className='code-slide_tab active'
+                        onContextMenu={e => handleTabRightClick(e, tab.id, !tab.contextMenuOpen)}
+                      >
                         {
                           tab.name
                         }
@@ -377,7 +399,11 @@ export const Code = observer((props) => {
                       </div>
                     )
                     :
-                    <div key={tab.id} className='code-slide_tab inactive' onClick={e => changeActiveTab(tab.id)} >
+                    <div 
+                      className='code-slide_tab inactive'
+                      onClick={e => changeActiveTab(tab.id)} 
+                      onContextMenu={e => handleTabRightClick(e, tab.id, !tab.contextMenuOpen)}
+                    >
                       {
                         tab.name
                       }
@@ -386,7 +412,7 @@ export const Code = observer((props) => {
                       }
                     </div>
                   }
-                </>
+                </div>
               }
               {
                 app.cssTabs.length - 1 === idx ? (
