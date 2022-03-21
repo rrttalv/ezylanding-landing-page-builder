@@ -196,7 +196,7 @@ export const Code = observer((props) => {
             )
           })
         }
-        <div className='palette-items__add-wrapper'>
+        <div className='palette-items_add-wrapper'>
           <button onClick={e => addPalette(e)} className='btn-empty palette-items_add-item'>
             <PlusIcon />
           </button>
