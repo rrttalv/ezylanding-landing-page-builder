@@ -45,7 +45,7 @@ export const Templates = observer((props) => {
                 <div className='template_wrapper-meta_left'>
                   <h5>{title}</h5>
                   <div className='template_wrapper-meta_body'>
-                    <Pages /> <span className='page-len'>{pageLength} Pages</span>
+                    <Pages /> <span className='page-len'>{pageLength} Page{pageLength > 1 ? 's' : ''}</span>
                   </div>
                 </div>
                 <div className='template_wrapper-meta_right'>
@@ -58,17 +58,17 @@ export const Templates = observer((props) => {
                     </button>
                   </div>
                 </div>
-                <div className='template_wrapper-bottom'>
-                  <div className='template_wrapper-meta_left' style={{ width: '65%' }}>
-                    <div className='template_wrapper-meta_tags'>
-                      <span>#{frameworkId}</span>
-                      {tags.map((tag, idx) => (<span key={idx + '_' + templateId}>#{tag}</span>))}
-                    </div>
+              </div>
+              <div className='template_wrapper-bottom'>
+                <div className='template_wrapper-meta_left' style={{ width: '65%' }}>
+                  <div className='template_wrapper-meta_tags'>
+                    <span>#{frameworkId}</span>
+                    {tags.map((tag, idx) => (<span key={idx + '_' + templateId}>#{tag}</span>))}
                   </div>
-                  <div className='template_wrapper-meta_right' style={{ width: '35%' }}>
-                    <div className='template_wrapper-meta_date'>
-                      <span>Edited {moment(updatedAt).fromNow(false)}</span>
-                    </div>
+                </div>
+                <div className='template_wrapper-meta_right' style={{ width: '35%' }}>
+                  <div className='template_wrapper-meta_date'>
+                    <span>Edited {moment(updatedAt).fromNow(false)}</span>
                   </div>
                 </div>
               </div>
