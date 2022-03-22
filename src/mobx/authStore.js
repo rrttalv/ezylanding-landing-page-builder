@@ -22,6 +22,7 @@ class AuthStore {
     email: '',
     id: null,
   }
+  
   activePlan = {
     id: null,
     expiry: null

@@ -169,11 +169,13 @@
       border-radius: 4px;
       box-shadow: 0px 2px 3px 1px rgba(0,0,0,0.1);
       .btn-none {
+        line-height: 30px;
         padding: 0.25rem 0.5rem;
         font-size: 14px;
         font-weight: 500;
         width: 150px;
         height: 30px;
+        display: block;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         &:last-child {
           border: none;

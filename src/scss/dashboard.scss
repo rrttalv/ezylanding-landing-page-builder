@@ -183,3 +183,16 @@
     }
   }
 }
+
+.profile {
+  display: flex;
+  &_billing, &_details {
+    width: 100%;
+    min-height: inherit;
+    flex: 1;
+  }
+  &_billing {
+    display: flex;
+    justify-content: center;
+  }
+}

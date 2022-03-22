@@ -1,5 +1,6 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import { ReactComponent as Profile } from '../../svg/profile.svg'
+import { ReactComponent as Caret } from '../../svg/caret-down.svg'
 import { ReactComponent as Card } from '../../svg/card.svg'
 import React, { useState } from 'react'
 
@@ -41,6 +42,12 @@ export const ProfileSidebar = observer((props) => {
   return (
     <div className='dashboard-sidebar profile-sidebar'>
       <div className='dashboard-sidebar_content'>
+        <div className='dashboard-sidebar_back'>
+          <a href="/dashboard" className='btn-none back-btn'>
+            <Caret style={{ transform: 'rotate(90deg)' }} />
+            Back to dashboard
+          </a>
+        </div>
         <div className='dashboard-sidebar_main-row sidebar-row'>
           {
             items.map(item => getRow(item))

@@ -1,6 +1,8 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React from 'react'
 import { ProfileSidebar } from './ProfileMenu'
+import { Billing } from './Views/Billing'
+import { Profile } from './Views/Profile'
 
 export const ProfilePage = observer((props) => {
 
@@ -14,9 +16,9 @@ export const ProfilePage = observer((props) => {
     const { activeProfileView } = auth
     switch(activeProfileView){
       case 'profile':
-        return <div />
+        return <Profile />
       case 'billing':
-        return <div />
+        return <Billing />
       default:
         return <div />
     }
@@ -25,6 +27,7 @@ export const ProfilePage = observer((props) => {
   return (
     <div className='container-fluid d-flex profile'>
       <ProfileSidebar />
+      {getView()}
     </div>
   )
 
