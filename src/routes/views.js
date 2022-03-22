@@ -3,6 +3,7 @@ import { Route } from 'mobx-router';
 import { Dashboard } from '../components/Dashboard/Dashboard';
 import { Editor } from '../components/Editor/Editor';
 import { AuthPage } from '../components/Auth/AuthPage';
+import { ProfilePage } from '../components/Profile/ProfilePage';
 
 const views = {
   home: new Route({
@@ -19,6 +20,11 @@ const views = {
     path: '/editor',
     component: <Editor />,
     title: 'Editor'
+  }),
+  profile: new Route({
+    path: '/profile',
+    component: <ProfilePage />,
+    title: 'Profile'
   })
 };
 

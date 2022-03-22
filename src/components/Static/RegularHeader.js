@@ -27,8 +27,10 @@ export const RegularHeader = observer(() => {
           {
             menuOpen ? (
               <div className='header_auth-btns'>
-                <button onClick={e => handleLogout(e)} className='btn-none'>
-                  Settings
+                <button className='btn-none'>
+                  <a href='/profile' className='btn-link'>
+                    Profile
+                  </a>
                 </button>
                 <button onClick={e => handleLogout(e)} className='btn-none'>
                   Log out

@@ -61,6 +61,24 @@
       fill: rgba(var( --secondary-rgb), 0.5);
     }
   }
+  &_item.profile, &_item.billing {
+    stroke: none;
+    .circleItem, .card-second-color {
+      fill: rgba(var(--dim-gray-rgb), 0.5)
+    }
+    .profileItem, .card-first-color {
+      fill: white;
+    }
+  }
+  &_item.profile.active, &_item.billing.active {
+    stroke: none;
+    .circleItem, .card-second-color {
+      fill: rgba(var(--secondary-rgb), 0.4);
+    }
+    .profileItem, .card-first-color {
+      fill: rgba(var(--secondary-rgb), 1);
+    }
+  }
   &_item.active {
     color: var(--secondary);
     &-title {

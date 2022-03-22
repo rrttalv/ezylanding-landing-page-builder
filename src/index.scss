@@ -241,6 +241,14 @@ input {
   }
 }
 
+.btn-link {
+  color: #252525;
+  text-decoration: none;
+  &:visited {
+    color: #252525;
+  }
+}
+
 textarea {
   &:focus-visible {
     outline: none;

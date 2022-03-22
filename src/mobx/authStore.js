@@ -15,9 +15,20 @@ class AuthStore {
   auth = false
   subscription = false
   authLoading = false
+
+  activeProfileView = 'profile'
+
   userDetails = {
     email: '',
     id: null,
+  }
+  activePlan = {
+    id: null,
+    expiry: null
+  }
+
+  changeActiveProfileView(id){
+    this.activeProfileView = id
   }
 
   async checkAuth(){
