@@ -194,5 +194,75 @@
   &_billing {
     display: flex;
     justify-content: center;
+    padding-top: 2rem;
+  }
+}
+
+.billing-plan {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background: rgb(113,118,236);
+  background: linear-gradient(180deg, rgba(113,118,236,1) 67%, rgba(135,62,227,1) 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(0,0,0,0.4);
+  box-shadow: 2px 0px 3px 0px rgba(0,0,0,0.065), -2px 2px 3px 0px rgba(0,0,0,0.065);
+  &_header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+  }
+  &_name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--white);
+  }
+  &_price {
+    font-size: 1rem;
+    margin-left: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .billing-price-extra {
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+  &_body {
+    color: #fff;
+    margin-top: 2rem;
+    &-text {
+      font-size: 1rem;
+      font-weight: 400;
+      margin: 0;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    &-list {
+      padding-left: 1rem;
+      li {
+        font-weight: 500;
+        padding: 0.45rem 0;
+        color: rgba(255, 255, 255, 0.85);
+      }
+    }
+  }
+  &_footer {
+    margin-top: 3rem;
+  }
+  &_btn {
+    width: 100%;
+    padding: 0.75rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: #fff;
+    border: 2px solid rgba(0,0,0,1);
+    border-radius: 8px;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }

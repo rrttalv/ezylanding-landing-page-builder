@@ -50,12 +50,18 @@ export const Stripe = observer((props) => {
 
   return (
     <div className='stripe'>
-      <div className='stripe_form-wrapper'>
-        <form onSubmit={handleSubmit}>
-          
-        </form>
+      {
+        auth.purchaseInProgress ? (
+          <div className='stripe_form-wrapper'>
+            <form onSubmit={handleSubmit}>
+              
+            </form>
+          </div>
+        )
+        :
+        undefined
+      }
       </div>
-    </div>
   )
 
 })

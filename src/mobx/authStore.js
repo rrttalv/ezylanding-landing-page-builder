@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
-import { checkIfAuthenticated, handleRegularAuth, logout } from "../services/AuthService";
+import { checkIfAuthenticated, getPaymentIntent, handleRegularAuth, logout } from "../services/AuthService";
 
 const initDetails = {
   email: '',
@@ -18,11 +18,13 @@ class AuthStore {
 
   activeProfileView = 'profile'
 
+  purchaseInProgress = false
+
   userDetails = {
     email: '',
     id: null,
   }
-  
+
   activePlan = {
     id: null,
     expiry: null
@@ -30,6 +32,10 @@ class AuthStore {
 
   changeActiveProfileView(id){
     this.activeProfileView = id
+  }
+
+  setPurchaseStatus(status){
+    this.purchaseInProgress = status
   }
 
   async checkAuth(){

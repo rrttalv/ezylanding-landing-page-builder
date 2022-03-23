@@ -13,3 +13,7 @@ export const checkIfAuthenticated = async () => {
 export const logout = async () => {
   return axios.get(`${getAPIBase()}/auth/logout`, { withCredentials: true })
 }
+
+export const getPaymentIntent = async tag => {
+  return axios.post(`${getAPIBase()}/api/payment-intent`, { tag }, { withCredentials: true })
+}
