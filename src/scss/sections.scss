@@ -18,3 +18,116 @@
     }
   }
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &-wrapper {
+    max-width: 500px;
+    background: #fff;
+    width: 40%;
+    height: fit-content;
+    max-height: 700px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1), 0px 0px 1px 1px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+  &-header {
+    display: flex;
+    align-items: center;
+    .close-modal {
+      width: 10px;
+      height: 10px;
+      height: 100%;
+      svg {
+        fill: var(--light-gray);
+      }
+    }
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    h2 {
+      width: 100%;
+      flex: 1;
+      margin: 0;
+      text-transform: capitalize;
+    }
+  }
+  &-body {
+    padding: 2rem;
+    padding-top: 2rem;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .stripe {
+      width: 100%;
+    }
+  }
+}
+
+.modal {
+  &-body {
+    .stripe {
+      &_form-wrapper {
+        .stripe-error {
+          background-color: rgba(var(--orange-red-rgb), 0.75);
+          padding: 0.5rem 1rem;
+          text-align: center;
+          border-radius: 8px;
+          box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.05);
+          margin-top: -1rem;
+          margin-bottom: 1rem;
+          span {
+            font-size: 0.925em;
+            font-weight: 300;
+            color: var(--white);
+          }
+        }
+        .form-row {
+          display: flex;
+          flex-direction: column;
+          padding-bottom: 1rem;
+          label {
+            font-size: 1em;
+            color: var(--dim-gray);
+            margin-bottom: 0.5rem;
+          }
+          input {
+            border: none;
+            padding: 0.5rem 0;
+            font-size: 1em;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 4px;
+            text-indent: 0.5rem;
+            &:focus {
+              border: 1px solid rgba(0,0,0,0.1);
+            }
+          }
+        }
+      }
+      #submit {
+        width: 100%;
+        padding: 0.75rem 0;
+        text-align: center;
+        font-size: 1.1rem;
+        background-color: #fff;
+        border: 2px solid rgba(0,0,0,1);
+        border-radius: 8px;
+        margin-top: 2rem;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

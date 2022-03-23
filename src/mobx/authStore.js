@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
-import { checkIfAuthenticated, getPaymentIntent, handleRegularAuth, logout } from "../services/AuthService";
+import { checkIfAuthenticated, fetchPaymentMethods, getPaymentIntent, handleRegularAuth, logout } from "../services/AuthService";
 
 const initDetails = {
   email: '',
@@ -24,6 +24,8 @@ class AuthStore {
     email: '',
     id: null,
   }
+
+  paymentMethods = []
 
   activePlan = {
     id: null,
@@ -50,6 +52,19 @@ class AuthStore {
       this.auth = false
       this.userDetails = { ...initDetails }
     }
+  }
+
+  async fetchPaymentMethods(){
+    try{
+      const { data: { methods } } = await fetchPaymentMethods()
+      this.paymentMethods = methods
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  setPaymentMethods(methods){
+    this.paymentMethods = methods
   }
 
   async logout(){

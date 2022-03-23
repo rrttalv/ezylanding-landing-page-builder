@@ -3,12 +3,16 @@ import React, { useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Spinner } from '../../Static/Spinner'
-import { getPaymentIntent } from '../../../services/AuthService';
+import { discardSubscription, getPaymentIntent } from '../../../services/AuthService';
+import { ReactComponent as Close } from '../../../svg/close.svg'
+import { Stripe } from './Stripe';
 
 export const Billing = observer((props) => {
   
   const [period, setPeriod] = useState('yearly')
   const [clientSecret, setClientSecret] = useState('')
+  const [subscriptionId, setsubscriptionId] = useState('')
+  const [intentId, setIntentId] = useState('')
 
   const getStore = () => {
     return React.useContext(MobXProviderContext)
@@ -16,7 +20,7 @@ export const Billing = observer((props) => {
 
   const { store: { auth } } = getStore()
 
-  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK || 'pk_test_51KfMstDNHncdiETbAnk1hogbgOr7iJCO9oRrX9Xb857upjTqYORCuL3elUhPxTYc3m42e2Mc50xojzKEDEnQgogu00JhPybTGJ')
+  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK)
 
   const togglePeriod = () => {
     if(period === 'yearly'){
@@ -29,12 +33,34 @@ export const Billing = observer((props) => {
   const handlePurchaseStart = async () => {
     try{
       auth.setPurchaseStatus(true)
-      const { data: { client_secret } } = await getPaymentIntent(period)
+      const { data: { clientSecret: secret, subscriptionId: subid, paymentIntentId } } = await getPaymentIntent(period)
+      setClientSecret(secret)
+      setIntentId(paymentIntentId)
+      setsubscriptionId(subid)
     }catch(err){
       console.log(err)
       auth.setPurchaseStatus(false)
     }
   }
+
+  const appearance = {
+    theme: 'stripe',
+  }
+
+  const options = {
+    clientSecret,
+    appearance,
+  }
+
+  const handleDiscard = async () => {
+    try{
+      auth.setPurchaseStatus(false)
+      await discardSubscription(subscriptionId)
+    }catch(err){
+      console.log(err)
+    }
+  }
+
 
   return (
     <div className='profile_billing'>
@@ -45,6 +71,7 @@ export const Billing = observer((props) => {
         )
         :
         (
+          <>
           <div className='billing_plans'>
             <div className='billing_plans-header'>
               <h2>
@@ -105,6 +132,28 @@ export const Billing = observer((props) => {
               </div>
             </div>
           </div>
+          {
+            auth.purchaseInProgress && clientSecret ? (
+              <div className='modal stripe-modal'>
+                <div className='modal-wrapper'>
+                  <div className='modal-header'>
+                    <h2>Start your {period} subscription</h2>
+                    <button onClick={() => handleDiscard()} className='btn-none close-modal'>
+                      <Close />
+                    </button>
+                  </div>
+                  <div className='modal-body'>
+                    <Elements options={options} stripe={stripePromise}>
+                      <Stripe subscriptionId={subscriptionId} intentId={intentId} clientSecret={clientSecret} />
+                    </Elements>
+                  </div>
+                </div>
+              </div>
+            )
+            :
+            undefined
+          }
+          </>
         )
       }
     </div>
