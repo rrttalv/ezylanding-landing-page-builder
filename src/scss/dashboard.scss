@@ -198,6 +198,87 @@
   }
 }
 
+.billing {
+  &_plans {
+    &-header {
+      padding: 2rem 0;
+      text-align: center;
+      &_title {
+        font-size: 1.5rem;
+        text-transform: capitalize;
+        font-weight: 500;
+        margin: 0;
+        margin-bottom: 1rem;
+      }
+      &_subtitle {
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 1rem;
+        color: var(--dim-gray);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding-bottom: 1rem;
+      }
+    }
+    &-options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      &_title {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+      }
+      &_interactive {
+        display: flex;
+        flex-direction: row;
+      }
+      .toggle {
+        margin: 0 0.75rem;
+      }
+      &_text {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(var(--dim-gray-rgb), 0.8);
+        position: relative;
+      }
+      &_highlighted {
+        position: absolute;
+        left: 65.5px;
+        font-size: 13px;
+        color: var(--secondary);
+        display: block;
+        width: 130px;
+        font-weight: 600;
+        top: -2px;
+        padding: 5px 3px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.05);
+        &::after {
+          content: '';
+          position: absolute;
+          left: -17.5px;
+          top: 5px;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 11px solid transparent;
+          border-top: 15px solid rgba(0, 0, 0, 0.05);
+          clear: both;
+          transform: rotate(90deg);
+        }
+      }
+      &_highlighted.active {
+        left: 66px;
+      }
+      &_text.active {
+        color: rgba(var(--purple-rgb), 0.95);
+        font-weight: 600;
+      }
+    }
+  }
+}
+
 .billing-plan {
   max-width: 400px;
   margin: 0 auto;
@@ -218,14 +299,15 @@
   &_name {
     font-size: 1.75rem;
     font-weight: 700;
+    text-transform: capitalize;
     margin: 0;
     color: var(--white);
   }
   &_price {
     font-size: 1rem;
-    margin-left: 1rem;
+    margin-left: 0.75rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(var(--light-rgb), 1);
   }
   .billing-price-extra {
     font-size: 0.8rem;

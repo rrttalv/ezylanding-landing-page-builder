@@ -74,17 +74,32 @@ export const Billing = observer((props) => {
           <>
           <div className='billing_plans'>
             <div className='billing_plans-header'>
-              <h2>
+              <h2 className='billing_plans-header_title'>
                 No active subscription
               </h2>
-              <p>
+              <p className='billing_plans-header_subtitle'>
                 With a subscription you will have access to all of our templates. It takes just 2 minutes to subscribe!
               </p>
+              <div className='billing_plans-options'>
+                <span className='billing_plans-options_title'>Choose a billing period</span>
+                <div className='billing_plans-options_interactive'>
+                  <span className={`billing_plans-options_text${period === 'monthly' ? ' active' : ''}`}>
+                    Monthly
+                  </span>
+                  <input className='toggle' checked={period === 'yearly'} type="checkbox" onChange={() => togglePeriod()}/>
+                  <span className={`billing_plans-options_text${period === 'yearly' ? ' active' : ''}`}>
+                    Yearly
+                    <span className={`billing_plans-options_highlighted${period === 'yearly' ? ' active' : ''}`}>
+                      Save 20% per year
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
             <div className='billing_plans-body'>
               <div className='billing-plan'>
                 <div className='billing-plan_header'>
-                  <h3 className='billing-plan_name'>Standard Plan</h3>
+                  <h3 className='billing-plan_name'>Standard {period} Plan</h3>
                   {
                     period === 'monthly' ? (
                       <span className='billing-plan_price'>$20 <span className='billing-price-extra'>/mo</span></span>
