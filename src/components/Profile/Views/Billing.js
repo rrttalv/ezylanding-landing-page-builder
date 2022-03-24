@@ -83,7 +83,7 @@ export const Billing = observer((props) => {
     const nextBill = moment(currentPeriodEnd).format(dateFormat)
     return (
       <div className='billing_subscription-details'>
-        <div className='billing_subscription-card'>
+        <div className='billing_subscription-card card-shadow'>
           <div className='billing_subscription-card_header'>
             <h5>{interval} subscription</h5>
             <span className={`billing_subscription-card_status ${cancelled ? 'canceled' : 'active'}`}>
@@ -166,7 +166,7 @@ export const Billing = observer((props) => {
     const dateFormat = 'DD/MM/YYYY'
     return (
       <div className='billing_invoices-details'>
-        <div className='billing_invoices-card'>
+        <div className='billing_invoices-card card-shadow'>
           <div className='billing_invoices-card_header'>
             <h5>Subscription invoices</h5>
           </div>
