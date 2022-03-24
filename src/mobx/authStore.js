@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
-import { checkIfAuthenticated, fetchPaymentMethods, getPaymentIntent, getSubscriptionDetails, handleRegularAuth, logout } from "../services/AuthService";
+import { checkIfAuthenticated, fetchPaymentMethods, getCustomerInvoices, getPaymentIntent, getSubscriptionDetails, handleRegularAuth, logout } from "../services/AuthService";
 
 const initDetails = {
   email: '',
@@ -31,9 +31,24 @@ class AuthStore {
   subMeta = {}
   subscriptionLoading = false
   subscriptionDetails = {}
+  invoices = []
+  invoicesLoading = false
 
   changeActiveProfileView(id){
     this.activeProfileView = id
+  }
+
+  async fetchInvoices(){
+    try{
+      this.invoicesLoading = true
+      const { data: { invoiceList } } = await getCustomerInvoices(true)
+      this.invoices = invoiceList
+    }catch(err){
+      console.log(err)
+      this.alerts.createToast('Failed to fetch invoices', 'error', 5000)
+    }finally{
+      this.invoicesLoading = false
+    }
   }
 
   setPurchaseStatus(status){
@@ -55,6 +70,7 @@ class AuthStore {
 
   async checkAuth(){
     try{
+      this.authLoading = true
       const { data: { user, subscription } } = await checkIfAuthenticated()
       if(user){
         this.auth = true
@@ -72,6 +88,9 @@ class AuthStore {
       this.subMeta = {}
       this.subscription = false
       this.userDetails = { ...initDetails }
+      this.authLoading = false
+    }finally{
+      this.authLoading = false
     }
   }
 

@@ -16,6 +16,20 @@ body {
   background: #f8f8f8;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+.title {
+  margin-bottom: 1rem;
+}
+
+.loading-wrapper {
+  width: 100%;
+  flex: 1;
+  padding-top: 25%;
+}
+
 :root {
   --insert-bg: rgba(62, 227, 197, 0.6);
   --dark: 37, 37, 37;

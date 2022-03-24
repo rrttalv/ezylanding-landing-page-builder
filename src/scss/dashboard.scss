@@ -188,7 +188,6 @@
   display: flex;
   &_billing, &_details {
     width: 100%;
-    min-height: inherit;
     flex: 1;
   }
   &_billing {
@@ -196,6 +195,10 @@
   }
   &_billing.padded {
     padding: 2rem 4rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
   &_billing.center {
     display: flex;
@@ -281,6 +284,114 @@
         font-weight: 600;
       }
     }
+  }
+  &_subscription, &_invoices {
+    flex: 1;
+    min-width: 500px;
+    &-details {
+      width: 95%;
+      max-width: 600px;
+      margin-right: 5%;
+      height: 100%;
+    }
+    margin-bottom: 1rem;
+    height: 100%;
+    min-height: 400px;
+  }
+  &_invoices {
+    &-card {
+      min-height: 290px;
+      height: 290px;
+      &_body {
+        overflow-y: auto;
+        &-row {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          padding: 0.75rem 1rem;
+          margin: 0 -1rem;
+          &:first-of-type {
+            padding-top: 0.25rem;
+          }
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+    .invoice {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      &_detail {
+        font-size: 0.9rem;
+        .btn-none.download {
+          svg {
+            width: 15px;
+            height: 15px;
+            stroke: rgba(var(--dim-gray-rgb), 1);
+          }
+        }
+      }
+    }
+  }
+  &_subscription, &_invoices {
+    margin-right: 1rem;
+    &-card {
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      width: 100%;
+      &_header {
+        padding: 1rem;
+        display: flex;
+        text-transform: capitalize;
+        h5 {
+          margin-right: 0.6rem;
+          font-size: 1rem;
+        }
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      &_body {
+        padding: 0.5rem 1rem;
+        &_row {
+          display: flex;
+          width: 100%;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+      }
+      &_meta-title {
+        font-weight: 500;
+        color: rgba(var(--dim-gray-rgb), 0.8);
+        width: 50%;
+      }
+      &_meta-text {
+        text-align: right;
+        display: block;
+        width: 50%;
+        font-weight: 300;
+      }
+      &_meta-text.capitalize {
+        text-transform: capitalize;
+      }
+      &_status {
+        font-size: 14px;
+        font-weight: 500;
+        background: rgba(var(--dim-gray-rgb), 0.9);
+        border-radius: 4px;
+        padding: 1.5px 5px;
+        color: var(--white);
+      }
+      &_status.active {
+        background: rgba(var(--secondary-rgb), 0.9);
+      }
+    }
+  }
+  &_orders {
+    width: 100%;
+    height: fit-content;
   }
 }
 

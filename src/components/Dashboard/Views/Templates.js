@@ -88,7 +88,7 @@ export const Templates = observer((props) => {
     <div className='dashboard_templates content'>
       <div className='dashboard_templates-header'>
         <div className='dashboard_templates-discover'>
-          <h2>Looking for something new? 👀</h2>
+          <h2 className='title'>Looking for something new? 👀</h2>
           <button className='btn-none' onClick={() => dashboard.changeActiveView('browse')}>
             Discover templates
           </button>

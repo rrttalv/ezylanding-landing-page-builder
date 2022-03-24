@@ -5,6 +5,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Spinner } from '../../Static/Spinner'
 import { discardSubscription, getPaymentIntent } from '../../../services/AuthService';
 import { ReactComponent as Close } from '../../../svg/close.svg'
+import { ReactComponent as Download } from '../../../svg/download.svg'
+import moment from 'moment'
 import { Stripe } from './Stripe';
 
 export const Billing = observer((props) => {
@@ -23,6 +25,9 @@ export const Billing = observer((props) => {
   useEffect(() => {
     if(auth.subscription && !auth.subscriptionDetails.interval){
       auth.fetchSubscriptionDetails()
+    }
+    if(auth.subscription && !auth.invoices.length){
+      auth.fetchInvoices()
     }
   }, [auth.auth, auth.subscription])
 
@@ -67,32 +72,191 @@ export const Billing = observer((props) => {
     }
   }
 
+  const getSubscriptionCard = () => {
+    if(auth.subscriptionLoading || !auth.subscriptionDetails.interval){
+      return <div />
+    }
+    const { subscriptionDetails: { active, cancelled, interval, amountConverted, created, currentPeriodEnd, currentPeriodStart } } = auth
+    const dateFormat = 'DD MMMM YYYY'
+    const startDate = moment(created).format(dateFormat)
+    const lastBilled = moment(currentPeriodStart).format(dateFormat)
+    const nextBill = moment(currentPeriodEnd).format(dateFormat)
+    return (
+      <div className='billing_subscription-details'>
+        <div className='billing_subscription-card'>
+          <div className='billing_subscription-card_header'>
+            <h5>{interval} subscription</h5>
+            <span className={`billing_subscription-card_status ${cancelled ? 'canceled' : 'active'}`}>
+              {
+                cancelled ? 'Canceled' : 'Active'
+              }
+            </span>
+          </div>
+          <div className='billing_subscription-card_body'>
+            <div className='billing_subscription-card_body_row'>
+              <span className='billing_subscription-card_meta-title'>
+                Created at
+              </span>
+              <span className='billing_subscription-card_meta-text'>
+                {startDate}
+              </span>
+            </div>
+            <div className='billing_subscription-card_body_row'>
+              <span className='billing_subscription-card_meta-title'>
+                Last invoice date
+              </span>
+              <span className='billing_subscription-card_meta-text'>
+                {lastBilled}
+              </span>
+            </div>
+            {
+              cancelled ? (
+                <div className='billing_subscription-card_body_row'>
+                  <span className='billing_subscription-card_meta-title'>
+                    Valid until
+                  </span>
+                  <span className='billing_subscription-card_meta-text'>
+                    {nextBill}
+                  </span>
+                </div>
+              )
+              :
+              (
+                <div className='billing_subscription-card_body_row'>
+                  <span className='billing_subscription-card_meta-title'>
+                    Next invoice due
+                  </span>
+                  <span className='billing_subscription-card_meta-text'>
+                    {nextBill}
+                  </span>
+                </div>
+              )
+            }
+            <div className='billing_subscription-card_body_row'>
+              <span className='billing_subscription-card_meta-title'>
+                Billing interval
+              </span>
+              <span className='billing_subscription-card_meta-text capitalize'>
+                {interval}
+              </span>
+            </div>
+            <div className='billing_subscription-card_body_row'>
+              <span className='billing_subscription-card_meta-title'>
+                Next charge amount
+              </span>
+              <span className='billing_subscription-card_meta-text capitalize'>
+                ${((amountConverted * 100) / 100).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const downloadInvoice = url => {
+
+  }
+
+  const getInvoicesCard = () => {
+    if(auth.invoicesLoading){
+      return <div />
+    }
+    const { invoices } = auth
+    const dateFormat = 'DD/MM/YYYY'
+    return (
+      <div className='billing_invoices-details'>
+        <div className='billing_invoices-card'>
+          <div className='billing_invoices-card_header'>
+            <h5>Subscription invoices</h5>
+          </div>
+          <div className='billing_invoices-card_body' style={{ maxHeight: 'calc(235px - 1rem)' }}>
+            {invoices.map(invoice => {
+              const { paid, created, invoice_pdf: invoiceLink, next_payment_attempt: nextAttemptDate, number, amount_due: dueAmount, total: amount } = invoice
+              return (
+                <div className={`billing_invoices-card_body-row ${paid ? 'paid' : 'due'}`}>
+                  {
+                    paid ? (
+                      <div className='paid-invoice invoice'>
+                        <div className='invoice_detail'>
+                          <span>#{number}</span>
+                        </div>
+                        <div className='invoice_detail'>
+                          <span>${(amount / 100).toFixed(2)}</span>
+                        </div>
+                        <div className='invoice_detail'>
+                          <span>Date: </span>
+                          <span>{moment(new Date(created * 1000)).format(dateFormat)}</span>
+                        </div>
+                        <div className='invoice_detail button'>
+                          <a href={invoiceLink} target='_blank' className='btn-none download'>
+                            <Download />
+                          </a>
+                        </div>
+                      </div>
+                    )
+                    :
+                    (
+                      <div className='unpaid-invoice'>
+
+                      </div>
+                    )
+                  }
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`profile_billing ${!auth.subscription ? 'center' : 'padded'}`}>
       {
         auth.subscription ? (
-          <div className='billing_subscription'>
-            <h2 className='title'>
-              Subscription details
-            </h2>
-            {
-              auth.subscriptionLoading ? (
-                <Spinner center={true} scale={0.8} />
-              )
-              :
-              (
-                <div className='billing_subscription-details'>
-                </div>
-              )
-            }
-          </div>
+          <>
+            <div className='billing_subscription'>
+              <h2 className='title'>
+                Subscription details
+              </h2>
+              {
+                auth.subscriptionLoading ? (
+                  <Spinner center={true} scale={0.8} style={{ marginTop: '2rem' }} />
+                )
+                :
+                (
+                  getSubscriptionCard()
+                )
+              }
+            </div>
+            <div className='billing_invoices'>
+              <h2 className='title'>
+                Invoices
+              </h2>
+              {
+                auth.invoicesLoading ? (
+                  <Spinner center={true} scale={0.8} style={{ marginTop: '2rem' }} />
+                )
+                :
+                (
+                  getInvoicesCard()
+                )
+              }
+            </div>
+            <div className='billing_orders'>
+              <h2 className='title'>
+                Single orders
+              </h2>
+            </div>
+          </>
         )
         :
         (
           <>
           <div className='billing_plans'>
             <div className='billing_plans-header'>
-              <h2 className='billing_plans-header_title'>
+              <h2 className='billing_plans-header_title title'>
                 No active subscription
               </h2>
               <p className='billing_plans-header_subtitle'>

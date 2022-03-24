@@ -32,6 +32,14 @@ export const getSubscriptionDetails = async () => {
   return axios.get(`${getAPIBase()}/api/billing/subscription`, config)
 }
 
+export const getCustomerInvoices = async (subscriptionOnly = false) => {
+  let params = ''
+  if(subscriptionOnly){
+    params = `?subscriptionInvoices=true`
+  }
+  return axios.get(`${getAPIBase()}/api/billing/invoices${params}`, config)
+}
+
 export const fetchPaymentMethods = async () => {
   return axios.post(`${getAPIBase()}/api/billing/payment-methods`, config)
 }
