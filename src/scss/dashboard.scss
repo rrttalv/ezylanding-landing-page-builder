@@ -192,9 +192,14 @@
     flex: 1;
   }
   &_billing {
+    padding-top: 2rem;
+  }
+  &_billing.padded {
+    padding: 2rem 4rem;
+  }
+  &_billing.center {
     display: flex;
     justify-content: center;
-    padding-top: 2rem;
   }
 }
 

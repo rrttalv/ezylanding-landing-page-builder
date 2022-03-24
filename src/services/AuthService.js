@@ -28,6 +28,10 @@ export const discardSubscription = async subscriptionId => {
   return axios.put(`${getAPIBase()}/api/billing/discard-subscription`, { subscriptionId }, config)
 }
 
+export const getSubscriptionDetails = async () => {
+  return axios.get(`${getAPIBase()}/api/billing/subscription`, config)
+}
+
 export const fetchPaymentMethods = async () => {
   return axios.post(`${getAPIBase()}/api/billing/payment-methods`, config)
 }

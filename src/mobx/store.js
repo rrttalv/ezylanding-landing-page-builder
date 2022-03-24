@@ -6,17 +6,20 @@ import HeaderStore from './headerStore';
 import SocketStore from './socketStore';
 import DashboardStore from './dashboardStore';
 import AuthStore from './authStore';
+import AlertStore from './alertStore';
 
-const auth = new AuthStore()
-const dashboard = new DashboardStore(auth)
-const app = new AppStore(auth)
-const sidebar = new SidebarStore(app)
+const alerts = new AlertStore()
+const auth = new AuthStore(alerts)
+const dashboard = new DashboardStore(auth, alerts)
+const app = new AppStore(auth, alerts)
+const sidebar = new SidebarStore(app, alerts)
 const routes = new RouteStore(app)
-const socket = new SocketStore(app, auth)
+const socket = new SocketStore(app, auth, alerts)
 const header = new HeaderStore(app, sidebar)
 
 const store = {
   auth,
+  alerts,
   dashboard,
   app,
   sidebar,

@@ -38,15 +38,13 @@ export const App = observer(() => {
         position="top-center" 
         toastOptions={{
           style: {
-            background:'#9163ff',
-            maxWidth: '375px',
+            maxWidth: '400px',
             color:'#fff'
           },
         }} 
-          containerStyle={{
-            position: 'sticky',
-            top: '50px',
-          }}
+        containerStyle={{
+          position: 'sticky',
+        }}
       />
     </>
   )

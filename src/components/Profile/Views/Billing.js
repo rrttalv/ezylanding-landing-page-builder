@@ -1,5 +1,5 @@
 import { MobXProviderContext, observer } from 'mobx-react'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Spinner } from '../../Static/Spinner'
@@ -19,6 +19,12 @@ export const Billing = observer((props) => {
   }
 
   const { store: { auth } } = getStore()
+
+  useEffect(() => {
+    if(auth.subscription && !auth.subscriptionDetails.interval){
+      auth.fetchSubscriptionDetails()
+    }
+  }, [auth.auth, auth.subscription])
 
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK)
 
@@ -61,12 +67,24 @@ export const Billing = observer((props) => {
     }
   }
 
-
   return (
-    <div className='profile_billing'>
+    <div className={`profile_billing ${!auth.subscription ? 'center' : 'padded'}`}>
       {
         auth.subscription ? (
-          <div className='billing_active-subscription'>
+          <div className='billing_subscription'>
+            <h2 className='title'>
+              Subscription details
+            </h2>
+            {
+              auth.subscriptionLoading ? (
+                <Spinner center={true} scale={0.8} />
+              )
+              :
+              (
+                <div className='billing_subscription-details'>
+                </div>
+              )
+            }
           </div>
         )
         :

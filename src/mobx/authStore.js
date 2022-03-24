@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
-import { checkIfAuthenticated, fetchPaymentMethods, getPaymentIntent, handleRegularAuth, logout } from "../services/AuthService";
+import { checkIfAuthenticated, fetchPaymentMethods, getPaymentIntent, getSubscriptionDetails, handleRegularAuth, logout } from "../services/AuthService";
 
 const initDetails = {
   email: '',
@@ -8,8 +8,9 @@ const initDetails = {
 }
 
 class AuthStore {
-  constructor() {
+  constructor(alerts) {
     makeAutoObservable(this)
+    this.alerts = alerts
   }
 
   auth = false
@@ -27,10 +28,9 @@ class AuthStore {
 
   paymentMethods = []
 
-  activePlan = {
-    id: null,
-    expiry: null
-  }
+  subMeta = {}
+  subscriptionLoading = false
+  subscriptionDetails = {}
 
   changeActiveProfileView(id){
     this.activeProfileView = id
@@ -40,16 +40,37 @@ class AuthStore {
     this.purchaseInProgress = status
   }
 
+  async fetchSubscriptionDetails(){
+    try{
+      this.subscriptionLoading = true
+      const { data: { subscriptionDetails } } = await getSubscriptionDetails()
+      this.subscriptionDetails = subscriptionDetails
+    }catch(err){
+      console.log(err)
+      this.alerts.createToast('Failed to fetch subscription details', 'error', 5000)
+    }finally{
+      this.subscriptionLoading = false
+    }
+  }
+
   async checkAuth(){
     try{
-      const { data: { user } } = await checkIfAuthenticated()
+      const { data: { user, subscription } } = await checkIfAuthenticated()
       if(user){
         this.auth = true
         this.userDetails = { ...user }
       }
+      if(subscription){
+        this.subscription = subscription.valid
+        this.subMeta = {
+          ...subscription
+        }
+      }
       return true
     }catch(err){
       this.auth = false
+      this.subMeta = {}
+      this.subscription = false
       this.userDetails = { ...initDetails }
     }
   }
@@ -88,7 +109,7 @@ class AuthStore {
         window.location = redirect
       }else{
         //show error message
-        console.log(message)
+        this.alerts.createToast(`Failed to register: ${message}`, 'error', 5000)
       }
       this.authLoading = false
     }catch(err){
@@ -108,7 +129,7 @@ class AuthStore {
         window.location = redirect
       }else{
         //show error message
-        console.log(message)
+        this.alerts.createToast(`Failed to login: ${message}`, 'error', 5000)
       }
       this.authLoading = false
     }catch(err){

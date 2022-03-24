@@ -36,6 +36,32 @@ body {
   --secondary-rgb: 113, 118, 236;
 }
 
+.animated-toast {
+  font-size: 14px;
+  padding-right: 5px;
+  max-width: 400px;
+  line-height: 17px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.react-toast-wrapper {
+  div {
+    &:nth-child(2) {
+      margin-left: 5px;
+    }
+  }
+}
+
+.react-toast-success {
+  background-color: rgba(var(--secondary-rgb), 0.8);
+}
+
+.react-toast-error {
+  background-color: rgba(var(--orange-red-rgb), 0.75);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
