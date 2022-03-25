@@ -395,7 +395,7 @@ const constants = {
           width: '100%',
           display: 'block'
         },
-        src: "http://localhost:3000/images/static/office-worker.jpeg"
+        src: "http://localhost:3001/images/static/office-worker.jpeg"
       }
     ]
   }

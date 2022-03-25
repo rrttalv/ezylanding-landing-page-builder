@@ -925,6 +925,7 @@ class AppStore {
         target[keys[0]] = propValue
         this.updateInsideFrame(target, 'innerText', propValue)
       }
+      this.updateElementInsideStaticElement(id, propName, propValue)
     }
     setTimeout(() => {
       this.recalculateSizes(this.pages[pageIdx].elements)
@@ -937,6 +938,72 @@ class AppStore {
   setElementToolbarMenu(id, status = false){
     const element = this.findElement(id)
     element.toolbarOptionsOpen = status
+  }
+
+  checkIfElementInsideStaticElement(targetParentId, id){
+    let inside = false
+    if(!targetParentId){
+      return { isSelf: false, inside }
+    }
+    const isSelf = targetParentId === id
+    if(isSelf){
+      return { inside: false, isSelf }
+    }
+    const parent = this.findElement(targetParentId)
+    const target = this.findNestedChild(parent.children, id)
+    if(target){
+      inside = true
+      return { isSelf, inside }
+    }else{
+      return { isSelf, inside }
+    }
+  }
+
+  updateElementInsideStaticElement(id, propName, propValue){
+    let insideH = false
+    let isH = false
+
+    let insideF = false
+    let isF = false
+
+    if(this.headerId){
+      const { inside: insideHeader, isSelf: isHeader } = this.checkIfElementInsideStaticElement(this.headerId, id)
+      insideH = insideHeader
+      isH = isHeader
+    }
+    if(!insideH && !isH && this.footerId){
+      const { inside: insideFooter, isSelf: isFooter } = this.checkIfElementInsideStaticElement(this.footerId, id)
+      insideF = insideFooter
+      isF = isFooter
+    }
+    if(insideH || isH){
+      this.pages.forEach(page => {
+        if(page.id !== this.activePage){
+          const headerElement = this.findNestedChild(page.elements, this.headerId)
+          if(isH){
+            headerElement[propName] = propValue
+          }
+          if(insideH){
+            const child = this.findNestedChild(headerElement.children, id)
+            child[propName] = propValue
+          }
+        }
+      })
+    }
+    if(insideF || isF){
+      this.pages.forEach(page => {
+        if(page.id !== this.activePage){
+          const footerElement = this.findNestedChild(page.elements, this.footerId)
+          if(isF){
+            footerElement[propName] = propValue
+          }
+          if(insideF){
+            const child = this.findNestedChild(footerElement.children, id)
+            child[propName] = propValue
+          }
+        }
+      })
+    }
   }
 
   updateElementProp(id, propName, propValue){
@@ -961,6 +1028,12 @@ class AppStore {
         if(propName === 'domID'){
           domElement.id = propValue
         }
+        if(propName === 'href'){
+          element.href = propValue
+        }
+        if(propName === 'placeholder'){
+          element.placeholder = propValue
+        }
         if(propName === 'src'){
           domElement.setAttribute('src', propValue)
           setTimeout(() => {
@@ -968,6 +1041,7 @@ class AppStore {
           }, 1000)
         }
       }
+      this.updateElementInsideStaticElement(id, propName, propValue)
     }
     setTimeout(() => {
       this.handleWindowResize()

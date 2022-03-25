@@ -40,23 +40,23 @@ export const IFrame = observer((props) => {
     }
     switch(tagName){
       case 'h1':
-        return <h1 data-uuid={id} key={id} className={className} style={style}>{content}</h1>
+        return <h1 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</h1>
       case 'h2':
-        return <h2 data-uuid={id} key={id} className={className} style={style}>{content}</h2>
+        return <h2 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</h2>
       case 'h3':
-        return <h3 data-uuid={id} key={id}className={className} style={style}>{content}</h3>
+        return <h3 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h3>
       case 'h4':
-        return <h4 data-uuid={id} key={id}className={className} style={style}>{content}</h4>
+        return <h4 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h4>
       case 'h5':
-        return <h5 data-uuid={id} key={id}className={className} style={style}>{content}</h5>
+        return <h5 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h5>
       case 'h6':
-        return <h6 data-uuid={id} key={id}className={className} style={style}>{content}</h6>
+        return <h6 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h6>
       case 'label':
-        return <label data-uuid={id} key={id} className={className} style={style}>{content}</label>
+        return <label data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</label>
       case 'span':
-        return <span data-uuid={id} key={id} className={className} style={style}>{content}</span>
+        return <span data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</span>
       default:
-        return <p data-uuid={id} key={id} className={className} style={style}>{content}</p>
+        return <p data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</p>
     }
   }
 
@@ -99,6 +99,7 @@ export const IFrame = observer((props) => {
               data-uuid={elem.id}
               className={elem.className} 
               style={elemStyle}
+              id={elem.domID}
             >
               {
                 elem.children ? elem.children.map(child => getCorrectElement(child, true)) : undefined
@@ -112,6 +113,7 @@ export const IFrame = observer((props) => {
             style={elem.style}
             data-uuid={elem.id}
             key={elem.id}
+            id={elem.domID}
           >
             {
               elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined
@@ -120,7 +122,7 @@ export const IFrame = observer((props) => {
         )
       case 'link':
         return (
-          <a key={elem.id} data-uuid={elem.id} href={elem.href} className={elem.className} style={style}>
+          <a key={elem.id} id={elem.domID} data-uuid={elem.id} href={elem.href} className={elem.className} style={style}>
             {
               elem.children && elem.children.length && !elem.content ? elem.children.map(child => getCorrectElement(child)) : elem.content
             }
@@ -128,13 +130,13 @@ export const IFrame = observer((props) => {
         )
       case 'list':
         return (
-          <ul key={elem.id} data-uuid={elem.id} className={elem.className} style={style}>
+          <ul key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}>
             {elem.children.map(child => getCorrectElement(child))}
           </ul>
         )
       case 'listItem':
         return (
-          <li key={elem.id} data-uuid={elem.id} className={elem.className} style={style}>
+          <li key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}>
             {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined}
           </li>
         )
@@ -145,13 +147,13 @@ export const IFrame = observer((props) => {
         if(app.activeTextEditor === elem.id){
           styleCopy.opacity = '0.25'
         }
-        return <button key={elem.id} data-uuid={elem.id} style={styleCopy} className={elem.className || elem.tagName}>{elem.content}</button>
+        return <button key={elem.id} data-uuid={elem.id} id={elem.domID} style={styleCopy} className={elem.className}>{elem.content}</button>
       case 'input':
-        return <input key={elem.id} placeholder={elem.placeholder} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
+        return <input key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
       case 'textarea':
-        return <textarea key={elem.id} placeholder={elem.placeholder} data-uuid={elem.id} className={elem.className} style={style}></textarea>
+        return <textarea key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}></textarea>
       case 'img':
-        return <img key={elem.id} data-uuid={elem.id} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
+        return <img key={elem.id} data-uuid={elem.id} id={elem.domID} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
       case 'svg':
         return getSVG(elem)
       case 'style':
@@ -200,10 +202,10 @@ export const IFrame = observer((props) => {
             app.activeFramework.scripts.map((tag, idx) => {
               const origin = window.location.origin
               if(tag.type === 'style'){
-                return <style type='text/css'>{app.activeFramework.rawCSS}</style>
+                return <style key={tag.path} type='text/css'>{app.activeFramework.rawCSS}</style>
               }
               if(tag.type === 'script'){
-                return <script key={idx} src={`${origin}${tag.path}`}></script>
+                return <script key={tag.path} src={`${origin}${tag.path}`}></script>
               }
             })
           )

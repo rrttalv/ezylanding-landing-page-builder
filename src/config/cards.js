@@ -19,7 +19,7 @@ export const singleCard = {
       type: 'img',
       tagName: 'img',
       className: 'card-image',
-      src: 'http://localhost:3000/images/icons/rocket.svg',
+      src: 'http://localhost:3001/images/icons/rocket.svg',
       style: {
         width: '50px',
         display: 'block',
@@ -102,7 +102,7 @@ export const cardSection = {
           type: 'img',
           tagName: 'img',
           className: 'card-image',
-          src: 'http://localhost:3000/images/icons/rocket.svg',
+          src: 'http://localhost:3001/images/icons/rocket.svg',
           style: {
             width: '50px',
             display: 'block',
@@ -166,7 +166,7 @@ export const cardSection = {
           type: 'img',
           tagName: 'img',
           className: 'card-image',
-          src: 'http://localhost:3000/images/icons/rocket.svg',
+          src: 'http://localhost:3001/images/icons/rocket.svg',
           style: {
             width: '50px',
             display: 'block',
@@ -230,7 +230,7 @@ export const cardSection = {
           type: 'img',
           tagName: 'img',
           className: 'card-image',
-          src: 'http://localhost:3000/images/icons/rocket.svg',
+          src: 'http://localhost:3001/images/icons/rocket.svg',
           style: {
             width: '50px',
             display: 'block',

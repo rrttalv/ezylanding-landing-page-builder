@@ -139,7 +139,7 @@ export const flexRow2Col = {
                   type: 'img',
                   tagName: 'img',
                   className: 'rounded large-image',
-                  src: 'http://localhost:3000/images/static/office-worker.jpeg',
+                  src: 'http://localhost:3001/images/static/office-worker.jpeg',
                   style: {
                     width: '95%',
                     display: 'block',
@@ -201,7 +201,7 @@ export const largeColumn = {
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'column',
-                background: 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(http://localhost:3000/images/static/office-worker.jpeg)',
+                background: 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(http://localhost:3001/images/static/office-worker.jpeg)',
                 borderRadius: '10px',
               },
               children: [

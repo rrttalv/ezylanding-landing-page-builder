@@ -246,7 +246,7 @@ export const Billing = observer((props) => {
             </div>
             <div className='billing_orders'>
               <h2 className='title'>
-                Single orders
+                Single order invoices
               </h2>
             </div>
           </>

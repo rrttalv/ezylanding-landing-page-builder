@@ -1,7 +1,6 @@
 import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useState } from 'react';
 import { CardElement, Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { Spinner } from '../../Static/Spinner';
 import { createPaymentMethod } from '../../../services/AuthService';
 

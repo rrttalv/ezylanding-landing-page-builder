@@ -132,7 +132,7 @@
                   "type": "img",
                   "tagName": "img",
                   "className": "rounded large-image",
-                  "src": "http://localhost:3000/images/static/office-worker.jpeg",
+                  "src": "http://localhost:3001/images/static/office-worker.jpeg",
                   "style": {},
                   "domID": ""
                 }
