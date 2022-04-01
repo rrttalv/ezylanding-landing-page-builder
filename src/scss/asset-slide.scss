@@ -13,6 +13,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    &_link {
+      all: unset;
+      visibility: hidden;
+      opacity: 0;
+      transition: linear 0.1s;
+      position: absolute;
+      top: calc(50% - 10px);
+      background: rgba(var(--secondary-rgb), 0.65);
+      padding: 4px 4px 1px;
+      border-radius: 4px;
+      svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--white);
+      }
+    }
+    &:hover {
+      .asset-slide_item_link {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
     .svg-wrapper {
       width: 100%;
       height: 100%;

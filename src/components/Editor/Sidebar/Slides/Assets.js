@@ -2,6 +2,7 @@ import { MobXProviderContext, observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
 import constants from '../../../../config/constants'
 import { DragUpload } from '../../../Static/DragUpload'
+import { ReactComponent as Link } from '../../../../svg/link.svg' 
 import { Spinner } from '../../../Static/Spinner'
 import { SlideMenu } from './SlideMenu'
 
@@ -12,7 +13,7 @@ export const Assets = observer((props) => {
     return React.useContext(MobXProviderContext)
   }
 
-  const { store: { sidebar, app } } = getStore()
+  const { store: { sidebar, app, alerts } } = getStore()
 
   const handleMenuItemClick = id => {
     sidebar.setFocusedComponent(id)
@@ -76,6 +77,16 @@ export const Assets = observer((props) => {
     e.preventDefault()
   }
 
+  const copyLink = async (e, url) => {
+    e.preventDefault()
+    try{
+      await navigator.clipboard.writeText(url)
+      alerts.createToast('Copied link to clipboard', 'success', 3000)
+    }catch(err){
+      alerts.createToast('Failed to copy link')
+    }
+  }
+
   const { assetsLoading, assets } = sidebar
 
   const getAssetColumns = () => {
@@ -99,6 +110,9 @@ export const Assets = observer((props) => {
                   (
                     <img src={thumburl ? thumburl : url} alt={originalName} />
                   )
+                }
+                {
+                  rawSVG ? undefined : (<button className='asset-slide_item_link' onClick={e => copyLink(e, url)}><Link /></button>)
                 }
               </div>
             )
