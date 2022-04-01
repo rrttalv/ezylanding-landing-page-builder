@@ -284,6 +284,11 @@ class AppStore {
     }
   }
 
+  /*
+  THIS SHOULD HAVE A TOGGLE THINGY IN THE FUCKIN PROJECT SETTINGS MENU
+
+  THE TOGGLE SHOULD BE TRUE/FALSE AND IT WILL DECIDE IF THE ELEMENT WILL BE REMOVED FROM ALL PAGES WHEN UNSETTING
+  */
   unsetStaticItem(type){
     const toCopy = type === 'footer' ? this.footerId : this.headerId
     //When unsetting an element the current target should be copied so conflicts wont happen if the element is deleted
@@ -2124,6 +2129,27 @@ class AppStore {
     return copy
   }
 
+  duplicateInsideStaticElement(staticParentId, parentId, elementId, newElement){
+    const { isSelf, inside } = this.checkIfElementInsideStaticElement(staticParentId, elementId)
+    if(isSelf){
+      return
+    }
+    if(inside){
+      this.pages.forEach(page => {
+        if(page.id !== this.activePage){
+          const targetParent = this.findNestedChild(page.elements, parentId)
+          if(isSelf){
+            const idx = page.elements.findIndex(({ id }) => id === targetParent.id)
+            page.elements.splice(idx + 1, 0, newElement)
+          }else{
+            const idx = targetParent.children.findIndex(({ id }) => id === elementId)
+            targetParent.children.splice(idx + 1, 0, newElement)
+          }
+        }
+      })
+    }
+  }
+
   duplicateElement(id){
     const pageIdx = this.getActivePageIndex()
     const elements = this.pages[pageIdx].elements
@@ -2165,6 +2191,12 @@ class AppStore {
       }
       const frame = document.querySelector('iframe')
       const doc = frame.contentWindow.document
+      if(this.headerId){
+        this.duplicateInsideStaticElement(this.headerId, parent.id, id, element)
+      }
+      if(this.footerId){
+        this.duplicateInsideStaticElement(this.footerId, parent.id, id, element)
+      }
       const domElement = this.compileDomElement(doc, element, true)
       if(pushToParent){
         //Insert into iframe
@@ -2201,6 +2233,23 @@ class AppStore {
     this.setSaved(false)
   }
 
+  deleteInsideStaticElement(staticParentId, parentId, elementId){
+    const { inside } = this.checkIfElementInsideStaticElement(staticParentId, elementId)
+    if(inside){
+      this.pages.forEach(page => {
+        if(page.id !== this.activePage){
+          const parent = this.findNestedChild(page.elements, parentId)
+          if(parent){
+            const idx = parent.children.findIndex(({ id: eid }) => eid === elementId)
+            if(idx > -1){
+              parent.children.splice(idx, 1)
+            }
+          }
+        }
+      })
+    }
+  }
+
   deleteElement(id){
     const pageIdx = this.getActivePageIndex()
     const elements = this.pages[pageIdx].elements
@@ -2222,6 +2271,12 @@ class AppStore {
       }
     })
     if(parent){
+      if(this.footerId){
+        this.deleteInsideStaticElement(this.footerId, parent.id, id)
+      }
+      if(this.headerId){
+        this.deleteInsideStaticElement(this.headerId, parent.id, id)
+      }
       if(this.selectedElement === id){
         this.selectedElement = isParent ? null : parent.id
       }

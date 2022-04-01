@@ -54,6 +54,11 @@
       stroke: #000;
     }
   }
+  &_toggle.routes {
+    svg {
+      fill: #000;
+    }
+  }
   &_toggle.active:not(.customize):not(.routes):not(.assets) {
     span {
       color: #fff;
