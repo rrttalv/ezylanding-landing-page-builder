@@ -1011,8 +1011,20 @@ class AppStore {
     const frame = document.querySelector('iframe')
     if(element && frame){
       const doc = frame.contentWindow.document
-      element[propName] = propValue
+      //Remove the old element attributes
       const domElement = doc.querySelector(`[data-uuid="${id}"]`)
+      if(propName === 'attributes'){
+        if(element.attributes){
+          element.attributes.forEach(item => {
+            const [key, val] = item.split(':')
+            if(!key || !val){
+              return
+            }
+            domElement.removeAttribute(key.trim(), val.trim())
+          })
+        }
+      }
+      element[propName] = propValue
       //Custom flow for SVG elements
       if(element.tagName === 'svg'){
         if(propName === 'className'){
@@ -1022,6 +1034,19 @@ class AppStore {
           domElement.setAttribute('id', propValue)
         }
       }else{
+        if(propName === 'attributes'){
+          //Set the new element attributes
+          propValue.forEach(item => {
+            const [key, val] = item.split(':')
+            if(!key || !val){
+              return
+            }
+            if(key.trim() === 'data-uuid'){
+              return
+            }
+            domElement.setAttribute(key.trim(), val.trim())
+          })
+        }
         if(propName === 'className'){
           domElement.className = propValue
         }
@@ -1069,6 +1094,9 @@ class AppStore {
 
   toggleElementProp(id, propName, status){
     const element = this.findElement(id)
+    if(!element.hasOwnProperty(propName)){
+      element[propName] = status
+    }
     if(propName === 'editingID' && status){
       element.editingClass = false
     }
@@ -1962,7 +1990,6 @@ class AppStore {
     if(frame){
       const doc = frame.contentWindow.document
       const domElement = this.compileDomElement(doc, comp, pushToBody)
-      console.log(domElement)
       if(pushToBody){
         const pageBody = doc.querySelector('#PAGE-BODY')
         pageBody.appendChild(domElement)
@@ -2015,6 +2042,7 @@ class AppStore {
 
   assignStyles(comp, CSSValues){
     comp.childrenOpen = true
+    comp.attributes = []
     if(comp.tagName === 'img'){
       comp.editingSrc = false
     }
@@ -2211,7 +2239,10 @@ class AppStore {
       const frame = document.querySelector('iframe')
       if(frame){
         const doc = frame.contentDocument
-        doc.querySelector(`[data-uuid="${id}"]`).remove()
+        const el = doc.querySelector(`[data-uuid="${id}"]`)
+        if(el){
+          el.remove()
+        }
       }
     }
     this.handleWindowResize()

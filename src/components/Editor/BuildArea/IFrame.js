@@ -89,6 +89,15 @@ export const IFrame = observer((props) => {
       ...elemStyle
     }
     const divWl = [...wl, 'div']
+    const elemAttributes = {}
+    if(elem.attributes){
+      elem.attributes.forEach(attr => {
+        const [key, val] = attr.split(':')
+        if(key && val){
+          elemAttributes[key.trim()] = val.trim()
+        }
+      })
+    }
     switch(elem.type){
       case 'header':
         return getHeader(elem)
@@ -100,6 +109,7 @@ export const IFrame = observer((props) => {
               className={elem.className} 
               style={elemStyle}
               id={elem.domID}
+              {...elemAttributes}
             >
               {
                 elem.children ? elem.children.map(child => getCorrectElement(child, true)) : undefined
@@ -114,6 +124,7 @@ export const IFrame = observer((props) => {
             data-uuid={elem.id}
             key={elem.id}
             id={elem.domID}
+            {...elemAttributes}
           >
             {
               elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined
@@ -122,7 +133,15 @@ export const IFrame = observer((props) => {
         )
       case 'link':
         return (
-          <a key={elem.id} id={elem.domID} data-uuid={elem.id} href={elem.href} className={elem.className} style={style}>
+          <a 
+            key={elem.id} 
+            id={elem.domID} 
+            data-uuid={elem.id} 
+            href={elem.href}
+            className={elem.className} 
+            style={style}
+            {...elemAttributes}
+          >
             {
               elem.children && elem.children.length && !elem.content ? elem.children.map(child => getCorrectElement(child)) : elem.content
             }
@@ -130,13 +149,20 @@ export const IFrame = observer((props) => {
         )
       case 'list':
         return (
-          <ul key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}>
+          <ul 
+            key={elem.id} 
+            id={elem.domID} 
+            data-uuid={elem.id} 
+            className={elem.className}
+            style={style}
+            {...elemAttributes}
+          >
             {elem.children.map(child => getCorrectElement(child))}
           </ul>
         )
       case 'listItem':
         return (
-          <li key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}>
+          <li key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style} {...elemAttributes}>
             {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined}
           </li>
         )
@@ -147,13 +173,13 @@ export const IFrame = observer((props) => {
         if(app.activeTextEditor === elem.id){
           styleCopy.opacity = '0.25'
         }
-        return <button key={elem.id} data-uuid={elem.id} id={elem.domID} style={styleCopy} className={elem.className}>{elem.content}</button>
+        return <button key={elem.id} data-uuid={elem.id} id={elem.domID} style={styleCopy} className={elem.className} {...elemAttributes}>{elem.content}</button>
       case 'input':
-        return <input key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} />
+        return <input key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} type={elem.inputType} className={elem.className} style={style} {...elemAttributes} />
       case 'textarea':
-        return <textarea key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style}></textarea>
+        return <textarea key={elem.id} placeholder={elem.placeholder} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style} {...elemAttributes}></textarea>
       case 'img':
-        return <img key={elem.id} data-uuid={elem.id} id={elem.domID} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} />
+        return <img key={elem.id} data-uuid={elem.id} id={elem.domID} style={style} src={elem.src} className={elem.className} alt={elem.alt || ''} {...elemAttributes} />
       case 'svg':
         return getSVG(elem)
       case 'style':

@@ -68,8 +68,12 @@ class SocketStore {
       ...templateMetadata
     }
     const { _id: userId } = this.auth.userDetails
-    this.socket.emit('saveTemplate', userId, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
-    this.app.setSaved(true)
+    if(!this.app.saved){
+      this.socket.emit('saveTemplate', userId, templateId, pages, cssTabs, palette, frameworkMeta, templateMeta)
+      this.app.setSaved(true)
+    }else{
+      return
+    }
   }
 
 }

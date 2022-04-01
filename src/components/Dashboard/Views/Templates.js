@@ -60,7 +60,7 @@ export const Templates = observer((props) => {
                 </div>
               </div>
               <div className='template_wrapper-bottom'>
-                <div className='template_wrapper-meta_left' style={{ width: '65%' }}>
+                <div className='template_wrapper-meta_left' style={{ width: '65%', wordBreak: 'break-word' }}>
                   <div className='template_wrapper-meta_tags'>
                     <span>#{frameworkId}</span>
                     {tags.map((tag, idx) => (<span key={idx + '_' + templateId}>#{tag}</span>))}

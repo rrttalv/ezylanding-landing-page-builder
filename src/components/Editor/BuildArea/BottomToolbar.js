@@ -83,7 +83,14 @@ export const BottomToolbar = observer((props) => {
   }
 
   const saveElementProp = (id, propName, toggleName, propValue) => {
-    app.updateElementProp(id, propName, propValue)
+    let value = propValue
+    if(propName === 'attributes'){
+      const temp = propValue.split(',')
+      console.log(temp)
+      value = temp.map(val => val.trim())
+    }
+    console.log(value)
+    app.updateElementProp(id, propName, value)
     app.toggleElementProp(id, toggleName, false)
   }
 
@@ -109,6 +116,13 @@ export const BottomToolbar = observer((props) => {
     e.stopPropagation()
     sidebar.setTargetedElement(elementId)
     document.querySelector('#upload-input').click()
+  }
+
+  const formatAttributes = list => {
+    if(!list){
+      return ''
+    }
+    return list.join(', ')
   }
 
   const getOptionsMenu = element => {
@@ -168,6 +182,24 @@ export const BottomToolbar = observer((props) => {
           </div>
         </div>
         <div className='element-options_misc-row'>
+          {
+            <div className='option-wrapper attributes'>
+              {getPropToggle(element, 'editingAttributes', 'attr', element.editingAttributes)}
+                  {
+                    element.editingAttributes ? (
+                      <PropInput
+                        value={formatAttributes(element.attributes)}
+                        save={(value) => saveElementProp(element.id, 'attributes', 'editingAttributes', value)}
+                        className={inputClass}
+                        placeholder={'attr1: value1, attr2: value2'}
+                        label={'Set element attributes'}
+                      />
+                    )
+                    :
+                    undefined
+                  }
+            </div>
+          }
           {
             //Show SRC button
             element.tagName === 'img' ? (
