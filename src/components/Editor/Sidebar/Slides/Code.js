@@ -360,6 +360,16 @@ export const Code = observer((props) => {
     app.deleteCSSTab(id)
   }
 
+  const setEditingFilename = (id) => {
+    app.setEditingCSSFilename(id)
+  }
+
+  const handleFilenameChange = (value, id) => {
+    app.editCSSFilename(id, value)
+    setEditingFilename(id)
+    app.setCSSTabContextMenu(id, false)
+  }
+
   return (
     <div 
       className='code-slide slide-item'
@@ -372,7 +382,7 @@ export const Code = observer((props) => {
               <React.Fragment key={tab.id}>
               {
                 <div 
-                  className='code-slide_tab-wrapper'
+                  className={`code-slide_tab-wrapper${tab.editingFilename ? ' editing' : ''}`}
                   key={tab.id}
                 >
                   {
@@ -381,8 +391,25 @@ export const Code = observer((props) => {
                         <button onClick={e => deleteTab(e, tab.id)} className='btn-none'>
                           <Trash className='trash' />
                         </button>
+                        <button onClick={e => setEditingFilename(tab.id)} className='btn-none'>
+                          <Pen className='pen' />
+                        </button>
                       </div>
                     ) : undefined
+                  }
+                  {
+                    tab.editingFilename ? (
+                      <div className='css-filename-input'>
+                        <PropInput
+                          value={tab.name}
+                          save={(value) => handleFilenameChange(value, tab.id)}
+                          className={`css-filename-input_editor`}
+                          label={'Change CSS file name'}
+                        />
+                      </div>
+                    )
+                    :
+                    undefined
                   }
                   {
                     tab.selected ? (

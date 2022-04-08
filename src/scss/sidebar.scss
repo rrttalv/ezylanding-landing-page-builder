@@ -434,6 +434,7 @@
 .code-slide, .route-slide {
   &_wrapper {
     margin-top: 1.5rem;
+    overflow-y: visible;
   }
   &_title {
     text-align: left;
@@ -444,25 +445,50 @@
   &_tabs {
     overflow-x: auto;
     display: flex;
+    position: relative;
     overflow-y: visible;
+  }
+  .css-filename-input {
+    overflow: visible;
+    z-index: 10000000;
+    position: absolute;
+    width: 250px;
+    padding: 8px;
+    background: #16151c;
+    border-radius: 4px;
+    top: 0px;
   }
   &_tab-wrapper {
     position: relative;
     overflow: visible;
     padding-top: 20px;
   }
+  &_tab-wrapper.editing {
+    padding-top: 45px;
+  }
   &_ctx-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: visible;
     position: absolute;
     top: 2.5px;
-    width: 20px;
+    width: 100%;
     height: 20px;
     .btn-none {
       background: transparent;
+      &:last-of-type {
+        margin-left: 0.25rem;
+      }
     }
-    svg {
-      stroke: red;
+    .trash {
+      stroke: rgba(var(--orange-red-rgb), 1);
       width: 15px;
       height: 15px;
+    }
+    .pen {
+      width: 15px;
+      height: 15px;
+      fill: rgba(var(--secondary-rgb), 1);
     }
   }
   &_tab, &_add-file {
@@ -482,6 +508,7 @@
     }
     &:last-child {
       border-top-right-radius: 4px;
+      max-height: 22px;
     }
   }
   &_add-file {

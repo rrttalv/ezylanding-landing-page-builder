@@ -778,6 +778,7 @@ class AppStore {
       selected: false,
       unsaved: false,
       active: true,
+      editingFilename: false,
       contextMenuOpen: false,
       name: `custom_${this.cssTabs.length + 1}.css`,
       content: ``
@@ -803,6 +804,38 @@ class AppStore {
     this.changeActiveTab(prevId)
     this.cssTabs = this.cssTabs.filter(({ id: tid }) => tid !== id)
     this.cssSaved = true
+    this.setSaved(false)
+  }
+
+  setEditingCSSFilename(id){
+    if(this.cssTabs.length === 1){
+      return
+    }
+    const idx = this.cssTabs.findIndex(({ id: tid }) => tid === id)
+    const tab = this.cssTabs[idx]
+    if(!tab || (tab && tab.name === 'main.css')){
+      return
+    }
+    tab.editingFilename = !tab.editingFilename
+  }
+
+  editCSSFilename(id, name){
+    if(this.cssTabs.length === 1){
+      return
+    }
+    const idx = this.cssTabs.findIndex(({ id: tid }) => tid === id)
+    const tab = this.cssTabs[idx]
+    if(!tab || (tab && tab.name === 'main.css')){
+      return
+    }
+    let copy = name
+    if(!copy.includes('.css')){
+      copy += '.css'
+    }
+    if(!copy.includes('css')){
+      copy += 'css'
+    }
+    tab.name = name
     this.setSaved(false)
   }
 
