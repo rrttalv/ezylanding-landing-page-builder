@@ -104,6 +104,20 @@ const a = {
   style: {}
 }
 
+const form = {
+  title: 'Form',
+  type: 'form',
+  tagName: 'form',
+  className: 'form',
+  bootstrapClass: 'form',
+  dragProps: {
+    rawWidth: 150,
+    rawHeight: 200,
+  },
+  style: {},
+  children: []
+}
+
 const textInput = {
   title: 'Text input',
   type: 'input',
@@ -299,7 +313,8 @@ const constants = {
         }
       },
       textInput,
-      textarea
+      textarea,
+      form
     ]
   },
   text: {

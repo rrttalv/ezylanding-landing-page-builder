@@ -1967,7 +1967,15 @@ class AppStore {
       domElement.src = comp.src
     }
     if(comp.content){
-      domElement.textContent = comp.content
+      if(comp.tagName === 'li'){
+        if(comp.children && comp.children.length){
+          domElement.textContent = ''
+        }else{
+          domElement.textContent = comp.content
+        }
+      }else{
+        domElement.textContent = comp.content
+      }
     }
     if(comp.inputType){
       domElement.type = comp.inputType

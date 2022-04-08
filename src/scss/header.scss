@@ -188,6 +188,7 @@
 
 .header_settings_menu.visible {
   z-index: 20;
+  top: 50px;
 }
 
 .header_settings_menu.hidden {
@@ -197,10 +198,12 @@
 
 .header_settings_menu.animating-open {
   z-index: 20;
+  top: 50px;
   animation: openModal 0.2s ease-out forwards;
 }
 
 .header_settings_menu.animating-close {
+  top: 50px;
   animation: closeModal 0.2s ease-out forwards;
   z-index: 20;
 }

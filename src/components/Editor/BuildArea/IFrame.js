@@ -116,6 +116,21 @@ export const IFrame = observer((props) => {
               }
             </section>
           )
+      case 'form':
+        return (
+          <div 
+            className={elem.className} 
+            style={elem.style}
+            data-uuid={elem.id}
+            key={elem.id}
+            id={elem.domID}
+            {...elemAttributes}
+          >
+            {
+              elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined
+            }
+          </div>
+        )
       case 'div':
         return (
           <div 
@@ -163,7 +178,7 @@ export const IFrame = observer((props) => {
       case 'listItem':
         return (
           <li key={elem.id} id={elem.domID} data-uuid={elem.id} className={elem.className} style={style} {...elemAttributes}>
-            {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : undefined}
+            {elem.children && elem.children.length ? elem.children.map(child => getCorrectElement(child)) : elem.content}
           </li>
         )
       case 'text':
