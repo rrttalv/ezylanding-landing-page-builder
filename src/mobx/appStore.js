@@ -1156,7 +1156,11 @@ class AppStore {
         if(style){
           //update element style
         }else{
-          el[propName] = propValue
+          if(propName === 'innerText'){
+            el.firstChild.textContent = propValue
+          }else{
+            el[propName] = propValue
+          }
         }
       }
     }

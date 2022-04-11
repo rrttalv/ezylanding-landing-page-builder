@@ -523,6 +523,9 @@
       vertical-align: -webkit-baseline-middle;
     }
   }
+  &_tab {
+    white-space: nowrap;
+  }
   &_tab.active {
     background: #3c405a;
   }

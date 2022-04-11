@@ -217,7 +217,7 @@ export const Body = observer((props) => {
             }
         </div>
       case 'link':
-        if(elem.content && (!elem.children || !elem.children.length)){
+        if(elem.content){
           if(app.activeTextEditor === elem.id){
             return getTextEditor(elem, style, sectionId)
           }

@@ -86,10 +86,8 @@ export const BottomToolbar = observer((props) => {
     let value = propValue
     if(propName === 'attributes'){
       const temp = propValue.split(',')
-      console.log(temp)
       value = temp.map(val => val.trim())
     }
-    console.log(value)
     app.updateElementProp(id, propName, value)
     app.toggleElementProp(id, toggleName, false)
   }

@@ -24,6 +24,7 @@ export const PropInput = (props) => {
         {props.label}
       </label>
       <input 
+        onDoubleClick={e => e.stopPropagation()}
         placeholder={props.placeholder || 'Set a custom prop...'}
         className='prop-input_input'
         type="text"

@@ -40,23 +40,23 @@ export const IFrame = observer((props) => {
     }
     switch(tagName){
       case 'h1':
-        return <h1 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</h1>
+        return <h1 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h1>
       case 'h2':
-        return <h2 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</h2>
+        return <h2 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h2>
       case 'h3':
-        return <h3 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h3>
+        return <h3 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h3>
       case 'h4':
-        return <h4 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h4>
+        return <h4 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h4>
       case 'h5':
-        return <h5 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h5>
+        return <h5 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h5>
       case 'h6':
-        return <h6 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}</h6>
+        return <h6 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h6>
       case 'label':
-        return <label data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</label>
+        return <label data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</label>
       case 'span':
-        return <span data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</span>
+        return <span data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</span>
       default:
-        return <p data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}</p>
+        return <p data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</p>
     }
   }
 
@@ -158,7 +158,7 @@ export const IFrame = observer((props) => {
             {...elemAttributes}
           >
             {
-              elem.children && elem.children.length && !elem.content ? elem.children.map(child => getCorrectElement(child)) : elem.content
+              elem.children && elem.children.length ? <>{elem.content ? elem.content : undefined}{elem.children.map(child => getCorrectElement(child))}</> : elem.content
             }
           </a>
         )
