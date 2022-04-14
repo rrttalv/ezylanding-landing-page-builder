@@ -38,25 +38,29 @@ export const IFrame = observer((props) => {
     if(app.activeTextEditor === elem.id){
       style.opacity = 0
     }
+    let children = undefined
+    if(elem.children && elem.children.length){
+      children = elem.children.map(child => getCorrectElement(child))
+    }
     switch(tagName){
       case 'h1':
-        return <h1 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h1>
+        return <h1 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{children}</h1>
       case 'h2':
-        return <h2 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h2>
+        return <h2 data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{children}</h2>
       case 'h3':
-        return <h3 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h3>
+        return <h3 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{children}</h3>
       case 'h4':
-        return <h4 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h4>
+        return <h4 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{children}</h4>
       case 'h5':
-        return <h5 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h5>
+        return <h5 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{children}</h5>
       case 'h6':
-        return <h6 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</h6>
+        return <h6 data-uuid={id} key={id}className={className} style={style} id={elem.domID}>{content}{children}</h6>
       case 'label':
-        return <label data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</label>
+        return <label data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{children}</label>
       case 'span':
-        return <span data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</span>
+        return <span data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{children}</span>
       default:
-        return <p data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{elem.children ? elem.children.map(child => getCorrectElement(child)) : undefined}</p>
+        return <p data-uuid={id} key={id} className={className} style={style} id={elem.domID}>{content}{children}</p>
     }
   }
 
@@ -283,7 +287,6 @@ export const IFrame = observer((props) => {
             padding: 0;
             width: 100%;
             pointer-events: none;
-            overflow: hidden;
           } 
           #PAGE-BODY, #PAGE-HEADER {
             position: relative;

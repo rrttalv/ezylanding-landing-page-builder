@@ -29,28 +29,21 @@ class SocketStore {
     }, 15000)
     setTimeout(() => {
       this.saveThumbnail()
-    }, 20000)
+    }, 10 * 1000)
     this._thumbnailInterval = setInterval(() => {
       this.saveThumbnail()
-    }, 120 * 1000)
+    }, 180 * 1000)
   }
 
   async saveThumbnail(){
-    const { pages, activePage, templateId, publicTemplate } = this.app
+    const { pages, activePage, templateId } = this.app
     //Public template thumbnails and preview pictures are generated manually to ensure the best quality
     let previewBlob = null
     if(activePage === pages[0].id){
       const frame = document.querySelector('iframe')
-      if(frame){
-        const root = frame.contentDocument.documentElement
-        previewBlob = await toBlob(root, { quality: 1, backgroundColor: '#fff' })
-      }
-    }
-    if(previewBlob){
-      const fd = new FormData()
-      const file = new File([previewBlob], `${new Date().getTime()}.png`)
-      fd.append('thumbnail', file)
-      await saveThumbnail(fd, templateId)
+      const root = frame.contentDocument.documentElement
+      const html = root.innerHTML
+      this.socket.emit('thumbnail', templateId, html)
     }
   }
 
