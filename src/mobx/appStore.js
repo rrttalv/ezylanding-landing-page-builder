@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, configure } from "mobx";
 import { v4 as uuidv4 } from 'uuid'
 import { scripts } from "../config/constants";
 import cssParser from 'css'
@@ -6,6 +6,10 @@ import { camelCase, replace, trim } from "lodash";
 import { camelToDash, getFlexKeys, textStyleKeys } from "../utils";
 import bootstrapCSS from '!!raw-loader!../libraries/bootstrap.css';
 import { fetchTemplate } from "../services/TemplateService";
+
+configure({
+  enforceActions: "never",
+})
 
 const initSectionProps = {
   insertBefore: null,
@@ -1379,11 +1383,12 @@ class AppStore {
         const pageIdx = this.getActivePageIndex()
         const isMainParent = this.pages[pageIdx].elements.find(({ id }) => id === target)
         const targetElement = this.findElement(target)
+        const { tagName } = this.activeDrag
         if(targetElement.tagName === 'div'){
           if(!targetElement.children){
             targetElement.children = []
           }
-          const insertable = this.activeDrag.tagName === 'div' || this.activeDrag.tagName === 'section'
+          const insertable = tagName === 'div' || tagName === 'section' || tagName === 'form'
           if(this.activeDrag.parent && this.activeDrag.children && !this.activeDrag.children.length && !insertable){
             delete this.activeDrag.children
             this.activeDrag.parent = false
@@ -1401,7 +1406,7 @@ class AppStore {
               this.dragMetaData.after = true
             }
           }
-          const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section'
+          const insertable = targetElement.tagName === 'div' || targetElement.tagName === 'section' || tagName === 'form'
           if(insertable && !targetElement.children){
             targetElement.children = []
           }
@@ -2349,6 +2354,44 @@ class AppStore {
     this.setSaved(false)
   }
 
+  //In this context the inside static element means that the new element is being inserted directly into the static parent element
+  insertIntoStaticElement(staticParentId, targetParentId, newElement, insertIndex){
+    const { inside } = this.checkIfElementInsideStaticElement(staticParentId, targetParentId)
+    const isSelf = staticParentId === targetParentId
+    if(!isSelf && !inside){
+      return
+    }
+    this.pages.forEach((page, pageIdx) => {
+      if(page.id !== this.activePage){
+        const parent = this.findNestedChild(this.pages[pageIdx].elements, targetParentId)
+        if(isSelf){
+          const staticParentIndex = page.elements.findIndex(({ id }) => id === staticParentId)
+          //Insertindex -1 means that the element should be pushed to the target parent elements array
+          if(insertIndex === -1){
+            this.pages[pageIdx].elements[staticParentIndex].children.push(newElement)
+          }else{
+            this.pages[pageIdx].elements[staticParentIndex].children.splice(insertIndex, 0, newElement)
+          }
+        }
+        if(!isSelf && inside && parent){
+          //SOME WEIRD ASS SHIT HAPPENS WITH MOBX OBSERVABLES WHEN INSERTING INTO PARENT SO DO A STUPID CHECK HEERE
+          const existing = parent.children.find(({ id: newElemenetId }) => newElemenetId === newElement.id)
+          if(existing){
+            return
+          }
+          if(!parent.children){
+            parent.children = []
+          }
+          if(insertIndex === -1){
+            parent.children.push(newElement)
+          }else{
+            parent.children.splice(insertIndex, 0, newElement)
+          }
+        }
+      }
+    })
+  }
+
   insertComponent(e){
     try{
       if(this.activeDrag){
@@ -2402,6 +2445,7 @@ class AppStore {
         if(comp.children && comp.children.length){
           this.assignChildIds(comp.children)
         }
+        let insertIndex = -1
         //If the parent element is a section
         if((this.parentElements.includes(this.activeDrag.type) && !targetParent) || this.activeDrag.insertAsParent){
           comp.position.xPos -= editorX
@@ -2416,6 +2460,7 @@ class AppStore {
           if(targetParent){
             if(insertBeforeID){
               const idx = targetParent.children.findIndex(({ id: insertItemID }) => insertItemID === insertBeforeID)
+              insertIndex = idx
               targetParent.children.splice(idx, 0, comp)
               this.insertElementIntoIframe(comp, targetParent, insertBeforeID)
             }
@@ -2424,6 +2469,7 @@ class AppStore {
               targetParent.children.push(comp)
             }
             if(!pushToParentElem && insertAsFirst){
+              insertIndex = 0
               targetParent.children.splice(-1, 0, comp)
               this.insertElementIntoIframe(comp, targetParent, null, false, true)
             }
@@ -2436,11 +2482,19 @@ class AppStore {
             this.setSelectedElement(comp.id, null)
           }
         }
+        if(targetParent){
+          if(this.footerId){
+            this.insertIntoStaticElement(this.footerId, targetParent.id, comp, insertIndex) 
+          }
+          if(this.headerId){
+            this.insertIntoStaticElement(this.headerId, targetParent.id, comp, insertIndex) 
+          }
+        }
         setTimeout(() => {
           this.setIframeHeight()
           this.sizeCalcChange = !this.sizeCalcChange
           this.recalculateSizes(this.pages[pageIdx].elements)
-        }, 300)
+        }, 400)
         this.setSaved(false)
       }
     }catch(err){

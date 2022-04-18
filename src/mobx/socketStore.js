@@ -42,7 +42,7 @@ class SocketStore {
     if(activePage === pages[0].id){
       const frame = document.querySelector('iframe')
       const root = frame.contentDocument.documentElement
-      const html = root.innerHTML
+      const html = '<html style="overflow-x: hidden;">' + root.innerHTML + '</html>'
       this.socket.emit('thumbnail', templateId, html)
     }
   }
