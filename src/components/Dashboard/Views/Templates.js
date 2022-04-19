@@ -35,6 +35,8 @@ export const Templates = observer((props) => {
     return (
       templates.map(template => {
         const { pageLength, thumbnail, title, frameworkId, tags, publicTemplate, templateId, updatedAt } = template
+        const editStr = moment(updatedAt).fromNow(false)
+        const editDateStr = editStr.includes('a few seconds ago') ? 'just seconds ago' : editStr
         return (
           <div key={templateId} className='template'>
             <div className='template_wrapper'>
@@ -68,7 +70,7 @@ export const Templates = observer((props) => {
                 </div>
                 <div className='template_wrapper-meta_right' style={{ width: '35%' }}>
                   <div className='template_wrapper-meta_date'>
-                    <span>Edited {moment(updatedAt).fromNow(false)}</span>
+                    <span>Edited {editDateStr}</span>
                   </div>
                 </div>
               </div>
