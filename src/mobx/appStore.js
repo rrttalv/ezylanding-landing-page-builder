@@ -457,6 +457,42 @@ class AppStore {
     return ids
   }
 
+  syncStaticElement(children, id, newElement){
+    let synced = false
+    children.forEach((child, index) => {
+      if(child.id === id){
+        children[index] = { ...newElement }
+        synced = true
+      }
+      if(!synced && child.children){
+        this.syncStaticElement(child.children, id, newElement)
+      }
+    })
+    return synced
+  }
+
+  syncStatic(){
+    const activePage = this.getActivePage()
+    let header = null
+    let footer = null
+    if(this.headerId){
+      header = this.findElement(this.headerId)
+    }
+    if(this.footerId){
+      footer = this.findElement(this.footerId)
+    }
+    this.pages.forEach(page => {
+      if(page.id !== this.activePage){
+        if(header){
+          this.syncStaticElement(page.elements, this.headerId, header)
+        }
+        if(footer){
+          this.syncStaticElement(page.elements, this.footerId, footer)
+        }
+      }
+    })
+  }
+
   setMovingElement(id, x, y){
     if(!id){
       if(!this.movingElement){
@@ -472,7 +508,7 @@ class AppStore {
         const element = this.findElement(this.movingElement.id)
         const parent = this.findElement(dropParentId)
         const copy = this.duplicateChildren(element)
-        this.deleteElement(this.movingElement.id)
+        this.deleteElement(this.movingElement.id, true)
         const frame = document.querySelector('iframe')
         const doc = frame.contentWindow.document
         const parentDomNode = doc.querySelector(`[data-uuid="${parent.id}"]`)
@@ -555,6 +591,7 @@ class AppStore {
       this.toolbarDropParent = {...initToolbarParent}
       this.toolbarDropTarget = {...initToolbarTarget}
       this.movingElement = null
+      this.syncStatic()
       setTimeout(() => {
         this.handleWindowResize()
         if(isPageTarget){
@@ -2300,7 +2337,7 @@ class AppStore {
     }
   }
 
-  deleteElement(id){
+  deleteElement(id, ignoreStatic = false){
     const pageIdx = this.getActivePageIndex()
     const elements = this.pages[pageIdx].elements
     let parent = null
@@ -2321,11 +2358,13 @@ class AppStore {
       }
     })
     if(parent){
-      if(this.footerId){
-        this.deleteInsideStaticElement(this.footerId, parent.id, id)
-      }
-      if(this.headerId){
-        this.deleteInsideStaticElement(this.headerId, parent.id, id)
+      if(!ignoreStatic){
+        if(this.footerId){
+          this.deleteInsideStaticElement(this.footerId, parent.id, id)
+        }
+        if(this.headerId){
+          this.deleteInsideStaticElement(this.headerId, parent.id, id)
+        }
       }
       if(this.selectedElement === id){
         this.selectedElement = isParent ? null : parent.id
@@ -2363,29 +2402,29 @@ class AppStore {
     }
     this.pages.forEach((page, pageIdx) => {
       if(page.id !== this.activePage){
-        const parent = this.findNestedChild(this.pages[pageIdx].elements, targetParentId)
+        const parentElement = this.findNestedChild(page.elements, targetParentId)
         if(isSelf){
           const staticParentIndex = page.elements.findIndex(({ id }) => id === staticParentId)
           //Insertindex -1 means that the element should be pushed to the target parent elements array
           if(insertIndex === -1){
-            this.pages[pageIdx].elements[staticParentIndex].children.push(newElement)
+            parentElement.children.push(newElement)
           }else{
-            this.pages[pageIdx].elements[staticParentIndex].children.splice(insertIndex, 0, newElement)
+            parentElement.children.splice(insertIndex, 0, newElement)
           }
         }
-        if(!isSelf && inside && parent){
+        if(!isSelf && inside && parentElement){
           //SOME WEIRD ASS SHIT HAPPENS WITH MOBX OBSERVABLES WHEN INSERTING INTO PARENT SO DO A STUPID CHECK HEERE
-          const existing = parent.children.find(({ id: newElemenetId }) => newElemenetId === newElement.id)
+          const existing = parentElement.children.find(({ id: newElemenetId }) => newElemenetId === newElement.id)
           if(existing){
             return
           }
-          if(!parent.children){
-            parent.children = []
+          if(!parentElement.children){
+            parentElement.children = []
           }
           if(insertIndex === -1){
-            parent.children.push(newElement)
+            parentElement.children.push(newElement)
           }else{
-            parent.children.splice(insertIndex, 0, newElement)
+            parentElement.children.splice(insertIndex, 0, newElement)
           }
         }
       }
@@ -2484,7 +2523,7 @@ class AppStore {
         }
         if(targetParent){
           if(this.footerId){
-            this.insertIntoStaticElement(this.footerId, targetParent.id, comp, insertIndex) 
+            this.insertIntoStaticElement(this.footerId, targetParent.id, comp, insertIndex)
           }
           if(this.headerId){
             this.insertIntoStaticElement(this.headerId, targetParent.id, comp, insertIndex) 
